@@ -101,7 +101,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'import.urls'
+ROOT_URLCONF = 'blackspots_import.urls'
 
 TEMPLATES = [
     {
