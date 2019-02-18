@@ -31,7 +31,7 @@ node {
 
     stage("Build develop image") {
         tryStep "build", {
-            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/blackspots:${env.BUILD_NUMBER}", "web")
+            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/blackspots:${env.BUILD_NUMBER}", "./import")
             image.push()
         }
     }
