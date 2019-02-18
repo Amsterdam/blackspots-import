@@ -11,13 +11,22 @@ services:
     volumes:
       - "~/.ssh/datapunt.key:/root/.ssh/datapunt.key"
 
-  import:
+  web:
     build: ./import
+    ports:
+    - "8150:8000"
     links:
     - database
     environment:
+    - DATAPUNT_API_URL=${DATAPUNT_API_URL:-https://api.data.amsterdam.nl/}
     - SECRET_KEY=insecure
     - DATABASE_NAME=blackspots
     - DATABASE_USER=blackspots
     - DATABASE_PASSWORD=insecure
     - BLACKSPOTS_OBJECTSTORE_PASSWORD=insecure
+    - CONSUL_HOST=${CONSUL_HOST:-notset}
+    - CONSUL_PORT=${CONSUL_PORT:-8500}
+    - UWSGI_HTTP=0.0.0.0:8000
+    - UWSGI_MODULE=blackspots_import.wsgi:application
+    - UWSGI_MASTER=1
+    - UWSGI_STATIC_MAP=/static=/static

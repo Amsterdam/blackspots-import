@@ -88,7 +88,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'datasets.blackspots'
+    'datasets.blackspots',
+    'health'
 ]
 
 MIDDLEWARE = [
@@ -119,8 +120,8 @@ TEMPLATES = [
     },
 ]
 
-# No WSGI application since we don't need a web server
-# WSGI_APPLICATION = 'import.wsgi.application'
+
+WSGI_APPLICATION = 'blackspots_import.wsgi.application'
 
 
 # Database
@@ -184,3 +185,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
