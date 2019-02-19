@@ -1,7 +1,3 @@
-"""
-Tellus views
-"""
-
 from api import serializers
 
 from datapunt_api.rest import DatapuntViewSet
