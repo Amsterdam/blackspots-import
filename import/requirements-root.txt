@@ -4,3 +4,5 @@ python-swiftclient
 python-keystoneclient
 git+https://github.com/Amsterdam/objectstore.git
 xlrd
+djangorestframework
+drf-amsterdam

@@ -18,4 +18,5 @@ from django.urls import include
 
 urlpatterns = [
     url(r'^status/', include('health.urls')),
+    url(r'^blackspots/', include('api.urls')),
 ]

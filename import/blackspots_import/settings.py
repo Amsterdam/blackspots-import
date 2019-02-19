@@ -88,8 +88,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+
+    'datapunt_api',
     'datasets.blackspots',
-    'health'
+    'health',
+    'api',
 ]
 
 MIDDLEWARE = [
