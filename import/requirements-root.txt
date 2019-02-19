@@ -5,5 +5,6 @@ python-keystoneclient
 git+https://github.com/Amsterdam/objectstore.git
 xlrd
 djangorestframework
+django-filter
 drf-amsterdam
 pyyaml>=4.2b1
