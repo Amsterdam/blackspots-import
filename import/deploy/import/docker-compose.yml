@@ -1,0 +1,25 @@
+version: "3.0"
+services:
+  database:
+    image: amsterdam/postgres
+    environment:
+      POSTGRES_PASSWORD: insecure
+      POSTGRES_USER: blackspots
+    volumes:
+      - ./backups:/tmp/backups
+
+  importer:
+    image: build.datapunt.amsterdam.nl:5000/datapunt/blackspots:${ENVIRONMENT}
+    links:
+      - database
+    environment:
+      BLACKSPOTS_OBJECTSTORE_PASSWORD:
+      DATABASE_NAME: blackspots
+      DATABASE_USER: blackspots
+      DATABASE_PASSWORD: insecure
+      DATABASE_HOST_OVERRIDE: database
+      DATABASE_PORT_OVERRIDE: 5432
+      DATAPUNT_API_URL: ${DATAPUNT_API_URL:-https://api.data.amsterdam.nl/}
+    volumes:
+      - ./import-run.sh:/app/import-run.sh
+    command: /app/import-run.sh
