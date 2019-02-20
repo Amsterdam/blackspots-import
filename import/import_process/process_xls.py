@@ -30,7 +30,7 @@ def process_xls(xls_path):
         latitude = sheet.cell(row_idx, 2).value
         longitude = sheet.cell(row_idx, 3).value
         try:
-            point = Point(latitude, longitude)
+            point = Point(longitude, latitude)
         except TypeError as e:
             log_error(f"Unkown point: {latitude}, {longitude}: \"{e}\", skipping")
             continue
