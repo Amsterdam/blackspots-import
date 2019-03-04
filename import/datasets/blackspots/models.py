@@ -10,6 +10,14 @@ class Spot(models.Model):
         ('Uitvoering', 'Uitvoering'),
         ('Onbekend', 'Onbekend'),
     )
+    SPOT_TYPES = (
+        ('Blackspot', 'Blackspot'),
+        ('Wegvak', 'Wegvak'),
+        ('Protocol_ernstig', 'Protocol ernstig'),
+        ('Protocol_dodelijk', 'Protocol dodelijk'),
+        ('Risico', 'Risico'),
+    )
+    spot_type = models.CharField(max_length=24, choices=SPOT_TYPES)
     spot_id = models.CharField(max_length=16)
     description = models.CharField(max_length=120)
     point = models.PointField(srid=4326)

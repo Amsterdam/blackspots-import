@@ -1,4 +1,5 @@
 import logging
+import random
 
 from django.contrib.gis.geos import Point
 from xlrd import open_workbook
@@ -21,6 +22,17 @@ def get_integer(field, field_name):
         return None
 
 
+def get_spot_type(jaar_blackspotslijst, jaar_quickscan):
+    if jaar_blackspotslijst:
+        return 'Blackspot'
+    if jaar_quickscan:
+        if random.choice([True, False]):
+            return 'Protocol_ernstig'
+        else:
+            return 'Protocol_dodelijk'
+    return random.choice(['Risico', 'Wegvak'])
+
+
 def process_xls(xls_path):
     book = open_workbook(xls_path)
 
@@ -40,14 +52,18 @@ def process_xls(xls_path):
             log_error(f"Unkown stadsdeel: {stadsdeel}, skipping")
             continue
 
+        jaar_blackspotlijst = get_integer(sheet.cell(row_idx, 14).value, 'blackspotlijst')
+        jaar_quickscan = get_integer(sheet.cell(row_idx, 15).value, 'quickscan')
+        spot_type = get_spot_type(jaar_blackspotlijst, jaar_quickscan)
         spot_data = {
             "spot_id": sheet.cell(row_idx, 0).value,
+            "spot_type": spot_type,
             "description": sheet.cell(row_idx, 1).value,
             "point": point,
             "stadsdeel": stadsdeel,
             "status": sheet.cell(row_idx, 5).value,
-            "jaar_blackspotlijst": get_integer(sheet.cell(row_idx, 14).value, 'blackspotlijst'),
-            "jaar_ongeval_quickscan": get_integer(sheet.cell(row_idx, 15).value, 'quickscan'),
+            "jaar_blackspotlijst": jaar_blackspotlijst,
+            "jaar_ongeval_quickscan": jaar_quickscan,
             "jaar_oplevering": get_integer(sheet.cell(row_idx, 16).value, 'oplevering'),
         }
 
