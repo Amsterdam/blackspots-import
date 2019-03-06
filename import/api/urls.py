@@ -19,6 +19,7 @@ class BlackspotsRouter(routers.DefaultRouter):
 router = BlackspotsRouter()
 
 router.register(r'spots', views.SpotViewSet)
+router.register(r'documents', views.DocumentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

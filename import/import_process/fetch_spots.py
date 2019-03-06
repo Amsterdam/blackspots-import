@@ -1,22 +1,11 @@
 import logging
 import os
 
-import objectstore
+XLS_OBJECT_NAME = 'VVP_Blackspot_Voortgangslijst_Kaart_actueel.xls'
+DOWNLOAD_DIR = '/tmp/blackspots/'
+CONTAINER_NAME = 'wbalijst'
 
 log = logging.getLogger(__name__)
-
-STORE_SETTINGS = dict(
-    VERSION='2.0',
-    AUTHURL='https://identity.stack.cloudvps.com/v2.0',
-    TENANT_NAME='BGE000081_WBAkaart',
-    TENANT_ID='658fcae781084cc4afa96877caab4804',
-    USER=os.getenv('OBJECTSTORE_USER', 'WBAKaart'),
-    PASSWORD=os.getenv('BLACKSPOTS_OBJECTSTORE_PASSWORD'),
-    REGION_NAME='NL',
-)
-
-
-DOWNLOAD_DIR = '/tmp/blackspots/'
 
 
 def get_file(connection, container_name, object_name):
@@ -33,9 +22,7 @@ def get_file(connection, container_name, object_name):
     return output_path
 
 
-def fetch_spots():
-    connection = objectstore.get_connection(STORE_SETTINGS)
-
-    return get_file(connection, 'wbalijst', 'VVP_Blackspot_Voortgangslijst_Kaart_actueel.xls')
+def fetch_spots(connection):
+    return get_file(connection, CONTAINER_NAME , XLS_OBJECT_NAME)
 
 
