@@ -1,7 +1,7 @@
 import logging
 
 from datasets.blackspots.models import Spot, Document
-from import_process.list_documents import DocumentList
+from objectstore_interaction.list_documents import DocumentList
 from import_process.name_parser import extract_locatie_id
 
 log = logging.getLogger(__name__)

@@ -91,9 +91,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'datapunt_api',
+
     'rest_framework',
 
-    'datapunt_api',
     'datasets.blackspots',
     'health',
     'api',
@@ -201,7 +202,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
-
 
 
 SENTRY_DSN = os.getenv('SENTRY_DSN')
