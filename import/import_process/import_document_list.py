@@ -15,11 +15,11 @@ document_type_mapping = {
 
 def create_document(type_str: str, filename: str, spot: Spot) -> Document:
     try:
-        type = document_type_mapping.get(type_str)
+        document_type = document_type_mapping.get(type_str)
     except ValueError as e:
         log.error(f'Did not recognize document type: {type_str}, skipping, {e}')
         return
-    return Document.objects.create(type=type, filename=filename, spot=spot)
+    return Document.objects.create(type=document_type, filename=filename, spot=spot)
 
 
 def import_document_list(document_list: DocumentList):
@@ -27,7 +27,7 @@ def import_document_list(document_list: DocumentList):
     Create document models and link them to the related Spots
     """
 
-    for (type, filename) in document_list:
+    for (type_str, filename) in document_list:
         locatie_id = extract_locatie_id(filename)
 
         try:
@@ -36,6 +36,6 @@ def import_document_list(document_list: DocumentList):
             log.error(f'could find spot for locatie_id: {locatie_id}, document filename: {filename}, skipping')
             continue
 
-        create_document(type, filename, spot)
+        create_document(type_str, filename, spot)
 
     log.info(f'Document count: {Document.objects.all().count()}')

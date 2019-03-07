@@ -12,6 +12,7 @@ from objectstore_interaction.get_actual_document import get_actual_document
 
 logger = logging.getLogger(__name__)
 
+
 def get_container_name(document_type: str) -> str:
     if document_type == models.Document.DOCUMENT_TYPE[0][0]:
         return 'doc/ontwerp'
