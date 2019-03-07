@@ -56,7 +56,7 @@ def process_xls(xls_path):
         jaar_quickscan = get_integer(sheet.cell(row_idx, 15).value, 'quickscan')
         spot_type = get_spot_type(jaar_blackspotlijst, jaar_quickscan)
         spot_data = {
-            "spot_id": sheet.cell(row_idx, 0).value,
+            "locatie_id": sheet.cell(row_idx, 0).value,
             "spot_type": spot_type,
             "description": sheet.cell(row_idx, 1).value,
             "point": point,
@@ -67,5 +67,6 @@ def process_xls(xls_path):
             "jaar_oplevering": get_integer(sheet.cell(row_idx, 16).value, 'oplevering'),
         }
 
-        print(spot_data)
         Spot.objects.get_or_create(**spot_data)
+
+    log.info(f'Spot count: {Spot.objects.all().count()}')
