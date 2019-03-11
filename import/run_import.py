@@ -40,7 +40,3 @@ def perform_import():
 if __name__ == "__main__":
     assert os.getenv('BLACKSPOTS_OBJECTSTORE_PASSWORD')
     perform_import()
-
-
-
-

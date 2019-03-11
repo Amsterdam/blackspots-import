@@ -16,7 +16,6 @@ import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
 
-
 def get_docker_host():
     """
     Looks for the DOCKER_HOST environment variable to find the VM
@@ -68,6 +67,7 @@ def get_database_key():
         return Location_key.docker
 
     return Location_key.local
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/

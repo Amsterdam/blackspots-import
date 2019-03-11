@@ -1,0 +1,20 @@
+version: "3.0"
+services:
+  database:
+    image: amsterdam/postgres
+    environment:
+      POSTGRES_PASSWORD: insecure
+      POSTGRES_USER: blackspots
+
+  tests:
+    build: ../../
+    links:
+    - database
+    environment:
+      DATABASE_NAME: blackspots
+      DATABASE_USER: blackspots
+      DATABASE_PASSWORD: insecure
+      ENVIRONMENT: test
+    volumes:
+    - ./test-run.sh:/app/test-run.sh
+    command: /app/test-run.sh

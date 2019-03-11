@@ -14,11 +14,13 @@ RUN apt-get update \
 		libgeos-dev \
 		netcat \
 	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-	&& adduser --system datapunt \
-	&& mkdir -p /static \
-	&& chown datapunt /static \
-	&& pip install uwsgi
+	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN adduser --system datapunt
+
+RUN mkdir -p /static && chown datapunt /static
+RUN mkdir -p /app && chown datapunt /app
+RUN mkdir -p /deploy && chown datapunt /deploy
 
 WORKDIR /app
 COPY requirements.txt /app/

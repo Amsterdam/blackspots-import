@@ -5,7 +5,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "blackspots_import.settings")
 django.setup()
 
-from datasets.blackspots import models
+from datasets.blackspots import models  # noqa: 402
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
