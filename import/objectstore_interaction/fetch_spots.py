@@ -23,6 +23,4 @@ def get_file(connection, container_name, object_name):
 
 
 def fetch_spots(connection):
-    return get_file(connection, CONTAINER_NAME , XLS_OBJECT_NAME)
-
-
+    return get_file(connection, CONTAINER_NAME, XLS_OBJECT_NAME)

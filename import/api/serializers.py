@@ -30,9 +30,7 @@ class SpotSerializer(HALSerializer):
         fields = '__all__'
 
         # Detail url is constructed using location_id instead of pk,
-        # see: https://www.django-rest-framework.org/api-guide/serializers/#how-hyperlinked-views-are-determined
+        # see: https://www.django-rest-framework.org/api-guide/serializers/#how-hyperlinked-views-are-determined # noqa: 501
         extra_kwargs = {
             '_links': {'lookup_field': 'locatie_id'}
         }
-
-

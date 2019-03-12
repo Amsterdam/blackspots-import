@@ -24,7 +24,7 @@ node {
 
     stage('Test') {
         tryStep "Test", {
-            sh "import/deploy/test/test.sh"
+            sh "import/deploy/test/jenkins-script.sh import/deploy/test/"
         }
     }
 

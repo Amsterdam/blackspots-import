@@ -22,8 +22,8 @@ def health(request):
         with connection.cursor() as cursor:
             cursor.execute("select 1")
             assert cursor.fetchone()
-    except:
-        log.exception("Database connectivity failed")
+    except Exception as e:
+        log.exception(f"Database connectivity failed: {str(e)}")
         return HttpResponse(
             "Database connectivity failed",
             content_type="text/plain", status=500)

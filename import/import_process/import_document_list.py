@@ -33,7 +33,7 @@ def import_document_list(document_list: DocumentList):
         try:
             spot = Spot.objects.get(locatie_id=locatie_id)
         except Spot.DoesNotExist:
-            log.error(f'could find spot for locatie_id: {locatie_id}, document filename: {filename}, skipping')
+            log.error(f'could find spot for locatie_id: {locatie_id}, document filename: {filename}, skipping')  # noqa: E501
             continue
 
         create_document(type_str, filename, spot)
