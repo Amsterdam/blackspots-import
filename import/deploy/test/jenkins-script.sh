@@ -19,6 +19,8 @@ dc down
 dc pull
 dc build
 
+dc up -d database
+
 dc run --rm tests
 
 dc stop
