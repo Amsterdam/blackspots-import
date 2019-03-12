@@ -5,6 +5,7 @@ services:
     environment:
       POSTGRES_PASSWORD: insecure
       POSTGRES_USER: blackspots
+      POSTGRES_DB: blackspots
 
   tests:
     build: ../../
