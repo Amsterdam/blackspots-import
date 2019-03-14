@@ -22,6 +22,9 @@ RUN mkdir -p /static && chown datapunt /static
 RUN mkdir -p /app && chown datapunt /app
 RUN mkdir -p /deploy && chown datapunt /deploy
 
+ADD "https://nexus.data.amsterdam.nl/repository/keycloak/bin/keycloak-gatekeeper.latest" /app/keycloak-gatekeeper
+RUN chmod 755 /app/keycloak-gatekeeper
+
 WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
