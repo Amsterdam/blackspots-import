@@ -1,5 +1,6 @@
 from datapunt_api.rest import HALSerializer
 from rest_framework import serializers
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from datasets.blackspots import models
 
@@ -20,6 +21,19 @@ class SpotDocumentSerializer(HALSerializer):
     class Meta(object):
         model = models.Document
         exclude = ['spot']
+
+
+class SpotGeojsonSerializer(GeoFeatureModelSerializer):
+    class Meta(object):
+        model = models.Spot
+        fields = '__all__'
+        geo_field = 'point'
+
+        # Detail url is constructed using location_id instead of pk,
+        # see: https://www.django-rest-framework.org/api-guide/serializers/#how-hyperlinked-views-are-determined # noqa: 501
+        extra_kwargs = {
+            '_links': {'lookup_field': 'locatie_id'}
+        }
 
 
 class SpotSerializer(HALSerializer):

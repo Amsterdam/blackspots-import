@@ -1,11 +1,14 @@
 from django.http import HttpResponse, Http404, HttpResponseServerError
 import logging
 from rest_framework.decorators import action
+from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from swiftclient.exceptions import ClientException
 
 
 from api import serializers
 from datapunt_api.rest import DatapuntViewSet
+
+from api.serializers import SpotGeojsonSerializer
 from datasets.blackspots import models
 from objectstore_interaction.connection import get_blackspots_connection
 from objectstore_interaction.get_actual_document import get_actual_document
@@ -20,11 +23,25 @@ def get_container_name(document_type: str) -> str:
         return 'doc/rapportage'
 
 
+class GeojsonRenderer(JSONRenderer):
+    """
+    Simpy allows for ?format=geojson to be used to get a Json response
+    """
+    format = 'geojson'
+
+
 class SpotViewSet(DatapuntViewSet):
     queryset = models.Spot.objects.all().order_by('pk')
     serializer_class = serializers.SpotSerializer
     serializer_detail_class = serializers.SpotSerializer
     lookup_field = 'locatie_id'
+    renderer_classes = (JSONRenderer, BrowsableAPIRenderer, GeojsonRenderer)
+
+    def get_serializer_class(self, *args, **kwargs):
+        if self.request.accepted_renderer.format == 'geojson':
+            return SpotGeojsonSerializer
+        else:
+            return DatapuntViewSet.get_serializer_class(self, *args, **kwargs)
 
 
 def handle_swift_exception(filename: str, e: ClientException) -> HttpResponse:
