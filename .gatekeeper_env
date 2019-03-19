@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+  
+# Assert this file is SOURCED, not EXECUTED.
+if [ "$0" = "${BASH_SOURCE[0]}" ]; then
+    echo "Error: bash script $0 needs to be sourced, not executed." >&2
+    exit 1
+fi
+
+export GATEKEEPER_CLIENT_ID=<CLIENT ID>
+export GATEKEEPER_CLIENT_SECRET=<CLIENT SECRET>
+export GATEKEEPER_ENCRYPTION_KEY=<ENCRYPTION_KEY>
+export GATEKEEPER_LISTEN=<LISTEN>
+export GATEKEEPER_UPSTREAM_URL=<UPSTREAM_URL>
+export GATEKEEPER_DISCOVERY_URL=<DISCOVERY_URL>
+export GATEKEEPER_REDIRECTION_URL=<REDIRECTION_URL>
