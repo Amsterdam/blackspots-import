@@ -1,6 +1,3 @@
-"""Tests
-"""
-
 import logging
 
 from django.test import TestCase
@@ -51,9 +48,9 @@ class TestAPIEndpoints(TestCase):
         self.valid_response(url, response)
         data = response.data
         self.assertEqual(len(data), 4)
-        spot_document_data = list(
-            filter(lambda spot: spot.get('locatie_id') == self.spot_with_docs.locatie_id, data)
-        )[0]
+        spot_document_data = [
+            spot for spot in data if spot.get('locatie_id') == self.spot_with_docs.locatie_id
+        ][0]
         self.assertEqual(len(spot_document_data.get('documents')), 3)
 
     def test_spot_list_geojson(self):
