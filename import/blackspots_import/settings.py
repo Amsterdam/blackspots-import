@@ -76,7 +76,7 @@ def get_database_key():
 insecure_key = 'insecure'
 SECRET_KEY = os.getenv('SECRET_KEY', insecure_key)
 
-DEBUG = SECRET_KEY == insecure_key
+DEBUG = os.getenv('DEBUG', False) == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -212,3 +212,13 @@ if SENTRY_DSN:
         integrations=[DjangoIntegration()],
         ignore_errors=['ExpiredSignatureError']
     )
+
+if DEBUG:
+    INSTALLED_APPS += (
+        'corsheaders',
+    )
+
+    insert_idx = MIDDLEWARE.index('django.middleware.security.SecurityMiddleware')
+    MIDDLEWARE.insert(insert_idx, 'corsheaders.middleware.CorsMiddleware')
+
+    CORS_ORIGIN_ALLOW_ALL = True

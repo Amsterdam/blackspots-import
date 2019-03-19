@@ -14,3 +14,6 @@ sentry-sdk
 # Test Libraries
 flake8
 tox
+
+# Development Libraries
+django-cors-headers
