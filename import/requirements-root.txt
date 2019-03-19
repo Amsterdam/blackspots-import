@@ -14,6 +14,7 @@ sentry-sdk
 # Test Libraries
 flake8
 tox
+model_mommy
 
 # Development Libraries
 django-cors-headers
