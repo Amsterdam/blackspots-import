@@ -7,6 +7,7 @@ datapunt-objectstore==2018.12.10
 debtcollector==1.21.0
 defusedxml==0.5.0
 Django==2.1.7
+django-cors-headers==2.5.2
 django-filter==2.1.0
 djangorestframework==3.9.2
 djangorestframework-csv==2.1.0
@@ -41,7 +42,7 @@ pyrsistent==0.14.11
 python-keystoneclient==3.19.0
 python-swiftclient==3.7.0
 pytz==2018.9
-PyYAML==5.1b5
+PyYAML==5.1
 requests==2.21.0
 rfc3986==1.2.0
 sentry-sdk==0.7.6
@@ -51,6 +52,7 @@ toml==0.10.0
 tox==3.7.0
 unicodecsv==0.14.1
 urllib3==1.24.1
+uWSGI==2.0.18
 virtualenv==16.4.3
 wrapt==1.11.1
 xlrd==1.2.0
