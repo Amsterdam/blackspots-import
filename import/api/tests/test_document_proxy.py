@@ -32,7 +32,7 @@ class TestDocumentProxy(TestCase):
     def test_get_document(self, get_mock, connection_mock):
         connection_mock.return_value = 'connection_object'
         get_mock.return_value = [
-            { 'content-type': 'application/pdf' },
+            {'content-type': 'application/pdf'},
             'blob'
         ]
 
