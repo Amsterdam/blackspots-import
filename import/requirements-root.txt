@@ -4,6 +4,7 @@ python-keystoneclient
 git+https://github.com/Amsterdam/objectstore.git
 xlrd
 djangorestframework
+djangorestframework-gis
 django-filter
 drf-amsterdam
 pyyaml>=4.2b1
@@ -13,3 +14,6 @@ sentry-sdk
 # Test Libraries
 flake8
 tox
+
+# Development Libraries
+django-cors-headers
