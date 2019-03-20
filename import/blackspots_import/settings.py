@@ -96,6 +96,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_gis',
+    'drf_yasg',  # Used to generate schemas
 
     'datasets.blackspots',
     'health',
