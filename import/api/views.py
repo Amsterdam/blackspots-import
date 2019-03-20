@@ -69,23 +69,24 @@ class DocumentViewSet(DatapuntViewSet):
     serializer_class = serializers.DocumentSerializer
     serializer_detail_class = serializers.DocumentSerializer
 
-    @action(detail=True, url_path='file', methods=['get'])
-    def get_file(self, request, pk=None):
-        document_model = self.get_object()
-        container_name = get_container_name(document_model.type)
-        filename = document_model.filename
-
-        connection = custom_connection.get_blackspots_connection()
-        try:
-            store_object = documents.get_actual_document(connection, container_name, filename)
-        except ClientException as e:
-            return handle_swift_exception(filename, e)
-
-        content_type = store_object[0].get('content-type')
-        obj_data = store_object[1]
-
-        response = HttpResponse(content_type=content_type)
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        response.write(obj_data)
-
-        return response
+    # TODO reactivate
+    # @action(detail=True, url_path='file', methods=['get'])
+    # def get_file(self, request, pk=None):
+    #     document_model = self.get_object()
+    #     container_name = get_container_name(document_model.type)
+    #     filename = document_model.filename
+    #
+    #     connection = custom_connection.get_blackspots_connection()
+    #     try:
+    #         store_object = documents.get_actual_document(connection, container_name, filename)
+    #     except ClientException as e:
+    #         return handle_swift_exception(filename, e)
+    #
+    #     content_type = store_object[0].get('content-type')
+    #     obj_data = store_object[1]
+    #
+    #     response = HttpResponse(content_type=content_type)
+    #     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    #     response.write(obj_data)
+    #
+    #     return response
