@@ -10,8 +10,8 @@ from datapunt_api.rest import DatapuntViewSet
 
 from api.serializers import SpotGeojsonSerializer
 from datasets.blackspots import models
-from objectstore_interaction.connection import get_blackspots_connection
-from objectstore_interaction.get_actual_document import get_actual_document
+from objectstore_interaction import connection as custom_connection
+from objectstore_interaction import documents
 
 logger = logging.getLogger(__name__)
 
@@ -75,9 +75,9 @@ class DocumentViewSet(DatapuntViewSet):
         container_name = get_container_name(document_model.type)
         filename = document_model.filename
 
-        connection = get_blackspots_connection()
+        connection = custom_connection.get_blackspots_connection()
         try:
-            store_object = get_actual_document(connection, container_name, filename)
+            store_object = documents.get_actual_document(connection, container_name, filename)
         except ClientException as e:
             return handle_swift_exception(filename, e)
 
