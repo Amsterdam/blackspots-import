@@ -1,6 +1,6 @@
 from django.http import HttpResponse, Http404, HttpResponseServerError
 import logging
-from rest_framework.decorators import action
+# from rest_framework.decorators import action
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from swiftclient.exceptions import ClientException
 
@@ -10,8 +10,8 @@ from datapunt_api.rest import DatapuntViewSet
 
 from api.serializers import SpotGeojsonSerializer
 from datasets.blackspots import models
-from objectstore_interaction import connection as custom_connection
-from objectstore_interaction import documents
+# from objectstore_interaction import connection as custom_connection
+# from objectstore_interaction import documents
 
 logger = logging.getLogger(__name__)
 
