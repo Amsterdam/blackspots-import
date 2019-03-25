@@ -1,28 +1,30 @@
 from django.contrib.gis.db import models
+from djchoices import ChoiceItem, DjangoChoices
 
 
 class Spot(models.Model):
-    STATUS_CHOICES = (
-        ('Voorbereiding', 'Voorbereiding'),
-        ('Onderzoek_ontwerp', 'Onderzoek/ ontwerp'),
-        ('Gereed', 'Gereed'),
-        ('Geen_maatregel', 'Geen maatregel'),
-        ('Uitvoering', 'Uitvoering'),
-        ('Onbekend', 'Onbekend'),
-    )
-    SPOT_TYPES = (
-        ('Blackspot', 'Blackspot'),
-        ('Wegvak', 'Wegvak'),
-        ('Protocol_ernstig', 'Protocol ernstig'),
-        ('Protocol_dodelijk', 'Protocol dodelijk'),
-        ('Risico', 'Risico'),
-    )
+
+    class StatusChoice(DjangoChoices):
+        voorbereiding = ChoiceItem()
+        onderzoek_ontwerp = ChoiceItem()
+        gereed = ChoiceItem()
+        geen_maatregel = ChoiceItem()
+        uitvoering = ChoiceItem()
+        onbekend = ChoiceItem()
+
+    class SpotType(DjangoChoices):
+        blackspot = ChoiceItem()
+        wegvak = ChoiceItem()
+        protocol_ernstig = ChoiceItem()
+        protocol_dodelijk = ChoiceItem()
+        risico = ChoiceItem()
+
     locatie_id = models.CharField(unique=True, max_length=16)
-    spot_type = models.CharField(max_length=24, choices=SPOT_TYPES)
+    spot_type = models.CharField(max_length=24, choices=SpotType.choices)
     description = models.CharField(max_length=120)
     point = models.PointField(srid=4326)
     stadsdeel = models.CharField(max_length=3)
-    status = models.CharField(max_length=32, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=32, choices=StatusChoice.choices, default=StatusChoice.onbekend)
     jaar_blackspotlijst = models.IntegerField(null=True)
     jaar_ongeval_quickscan = models.IntegerField(null=True)
     jaar_oplevering = models.IntegerField(null=True)
