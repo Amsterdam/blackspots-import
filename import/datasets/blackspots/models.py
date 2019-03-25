@@ -24,7 +24,11 @@ class Spot(models.Model):
     description = models.CharField(max_length=120)
     point = models.PointField(srid=4326)
     stadsdeel = models.CharField(max_length=3)
-    status = models.CharField(max_length=32, choices=StatusChoice.choices, default=StatusChoice.onbekend)
+    status = models.CharField(
+        max_length=32,
+        choices=StatusChoice.choices,
+        default=StatusChoice.onbekend
+    )
     jaar_blackspotlijst = models.IntegerField(null=True)
     jaar_ongeval_quickscan = models.IntegerField(null=True)
     jaar_oplevering = models.IntegerField(null=True)
