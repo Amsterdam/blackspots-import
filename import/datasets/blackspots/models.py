@@ -54,12 +54,12 @@ class Spot(models.Model):
 
 
 class Document(models.Model):
-    DOCUMENT_TYPE = (
-        ('Ontwerp', 'Ontwerp'),
-        ('Rapportage', 'Rapportage'),
-    )
-    type = models.CharField(max_length=16, choices=DOCUMENT_TYPE)
-    filename = models.CharField(max_length=128)
+    class DocumentType(DjangoChoices):
+        Ontwerp = ChoiceItem()
+        Rapportage = ChoiceItem()
+
+    type = models.CharField(max_length=16, choices=DocumentType.choices)
+    filename = models.CharField(max_length=256)
     spot = models.ForeignKey(Spot, related_name='documents', on_delete=models.CASCADE)
 
     def __str__(self):

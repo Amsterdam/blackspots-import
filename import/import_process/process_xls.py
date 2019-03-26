@@ -1,11 +1,10 @@
 import logging
-import random
 
 from django.contrib.gis.geos import Point
 from xlrd import open_workbook
 
-from datasets.blackspots.models import Spot
-
+from datasets.blackspots.models import Spot, Document
+from objectstore_interaction.list_documents import DocumentList
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +25,7 @@ EXCEL_STRUCTURE = {
     'jaar_oplevering':      {'column_idx': 13, 'header': 'Jaar oplevering'},
     'opmerkingen':          {'column_idx': 14, 'header': ''},  # TODO, check header
     'rapportage':           {'column_idx': 15, 'header': 'Rapportage'},
-    'verkeersontwerp':      {'column_idx': 16, 'header': 'Verkeersontwerp'},
+    'ontwerp':              {'column_idx': 16, 'header': 'Verkeersontwerp'},
 }
 
 
@@ -115,7 +114,24 @@ def get_stadsdeel(name: str):
     return value
 
 
-def process_xls(xls_path):
+def create_document(
+        document_list: DocumentList,
+        doc_type: Document.DocumentType,
+        filename: str,
+        spot: Spot
+    ):
+    if not filename or len(filename) == 0:
+        return
+
+    available_filenames = [filename for [_, filename] in document_list]
+    if filename not in available_filenames:
+        log_error(f'Missing file on object store: {filename} of type {doc_type}')
+        return
+
+    Document.objects.create(type=doc_type, filename=filename, spot=spot)
+
+
+def process_xls(xls_path, document_list: DocumentList):
     book = open_workbook(xls_path)
 
     sheet = book.sheet_by_index(0)
@@ -150,6 +166,7 @@ def process_xls(xls_path):
             "jaar_oplevering": get_integer(get_sheet_cell(sheet, 'jaar_oplevering', row_idx), 'oplevering'),
         }
 
-        Spot.objects.get_or_create(**spot_data)
+        [spot, _] = Spot.objects.get_or_create(**spot_data)
 
-    log.info(f'Spot count: {Spot.objects.all().count()}')
+        create_document(document_list, Document.DocumentType.Rapportage, get_sheet_cell(sheet, 'rapportage', row_idx), spot)
+        create_document(document_list, Document.DocumentType.Ontwerp, get_sheet_cell(sheet, 'ontwerp', row_idx), spot)
