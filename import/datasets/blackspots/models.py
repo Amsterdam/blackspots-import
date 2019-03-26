@@ -23,15 +23,26 @@ class Spot(models.Model):
     spot_type = models.CharField(max_length=24, choices=SpotType.choices)
     description = models.CharField(max_length=120)
     point = models.PointField(srid=4326)
-    stadsdeel = models.CharField(max_length=3)
+
+    stadsdeel = models.CharField(max_length=3, null=True, blank=True)
+    # stadsdeel values:
+    # T Zuidoost
+    # A Centrum
+    # N Noord
+    # B Westpoort
+    # E West
+    # F Nieuw-West
+    # K Zuid
+    # M Oost
+
     status = models.CharField(
         max_length=32,
         choices=StatusChoice.choices,
         default=StatusChoice.onbekend
     )
-    jaar_blackspotlijst = models.IntegerField(null=True)
-    jaar_ongeval_quickscan = models.IntegerField(null=True)
-    jaar_oplevering = models.IntegerField(null=True)
+    jaar_blackspotlijst = models.IntegerField(null=True, blank=True)
+    jaar_ongeval_quickscan = models.IntegerField(null=True, blank=True)
+    jaar_oplevering = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.locatie_id}: {self.spot_type}'
