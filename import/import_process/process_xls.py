@@ -97,11 +97,21 @@ def get_status(name: str):
         return value
 
 
-def get_stadsdeel(value):
-    if value == 'Geen':
-        return None
-    if len(value) != 1:
-        raise InputError(f"Unkown stadsdeel: {value}, skipping")
+def get_stadsdeel(name: str):
+    excel_to_enum = {
+        'T': Spot.Stadsdelen.Zuidoost,
+        'A': Spot.Stadsdelen.Centrum,
+        'N': Spot.Stadsdelen.Noord,
+        'B': Spot.Stadsdelen.Westpoort,
+        'E': Spot.Stadsdelen.West,
+        'F': Spot.Stadsdelen.Nieuw_West,
+        'K': Spot.Stadsdelen.Zuid,
+        'M': Spot.Stadsdelen.Oost,
+        'Geen': Spot.Stadsdelen.Geen,
+    }
+    value = excel_to_enum.get(name.strip())
+    if not value:
+        raise InputError(f"Unkown stadsdeel: {name}, skipping")
     return value
 
 
@@ -129,6 +139,7 @@ def process_xls(xls_path):
         spot_type = get_spot_type(get_sheet_cell(sheet, 'type', row_idx))
         spot_data = {
             "locatie_id": get_sheet_cell(sheet, 'number', row_idx),
+            "actiehouders": get_sheet_cell(sheet, 'actiehouders', row_idx),
             "spot_type": spot_type,
             "description": get_sheet_cell(sheet, 'description', row_idx),
             "point": point,
