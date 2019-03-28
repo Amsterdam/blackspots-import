@@ -10,10 +10,13 @@ drf-amsterdam
 pyyaml>=4.2b1
 psycopg2-binary
 sentry-sdk
+drf_yasg
+django-choices
 
 # Test Libraries
 flake8
 tox
+model_mommy
 
 # Development Libraries
 django-cors-headers

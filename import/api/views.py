@@ -1,6 +1,6 @@
 from django.http import HttpResponse, Http404, HttpResponseServerError
 import logging
-from rest_framework.decorators import action
+# from rest_framework.decorators import action
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from swiftclient.exceptions import ClientException
 
@@ -10,8 +10,8 @@ from datapunt_api.rest import DatapuntViewSet
 
 from api.serializers import SpotGeojsonSerializer
 from datasets.blackspots import models
-from objectstore_interaction.connection import get_blackspots_connection
-from objectstore_interaction.get_actual_document import get_actual_document
+# from objectstore_interaction import connection as custom_connection
+# from objectstore_interaction import documents
 
 logger = logging.getLogger(__name__)
 
@@ -69,23 +69,24 @@ class DocumentViewSet(DatapuntViewSet):
     serializer_class = serializers.DocumentSerializer
     serializer_detail_class = serializers.DocumentSerializer
 
-    @action(detail=True, url_path='file', methods=['get'])
-    def get_file(self, request, pk=None):
-        document_model = self.get_object()
-        container_name = get_container_name(document_model.type)
-        filename = document_model.filename
-
-        connection = get_blackspots_connection()
-        try:
-            store_object = get_actual_document(connection, container_name, filename)
-        except ClientException as e:
-            return handle_swift_exception(filename, e)
-
-        content_type = store_object[0].get('content-type')
-        obj_data = store_object[1]
-
-        response = HttpResponse(content_type=content_type)
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        response.write(obj_data)
-
-        return response
+    # TODO reactivate
+    # @action(detail=True, url_path='file', methods=['get'])
+    # def get_file(self, request, pk=None):
+    #     document_model = self.get_object()
+    #     container_name = get_container_name(document_model.type)
+    #     filename = document_model.filename
+    #
+    #     connection = custom_connection.get_blackspots_connection()
+    #     try:
+    #         store_object = documents.get_actual_document(connection, container_name, filename)
+    #     except ClientException as e:
+    #         return handle_swift_exception(filename, e)
+    #
+    #     content_type = store_object[0].get('content-type')
+    #     obj_data = store_object[1]
+    #
+    #     response = HttpResponse(content_type=content_type)
+    #     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    #     response.write(obj_data)
+    #
+    #     return response

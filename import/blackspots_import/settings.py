@@ -90,11 +90,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
 
     'datapunt_api',
 
     'rest_framework',
     'rest_framework_gis',
+    'drf_yasg',  # Used to generate schemas
 
     'datasets.blackspots',
     'health',

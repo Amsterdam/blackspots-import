@@ -10,6 +10,10 @@ from datasets.blackspots.models import Spot
 log = logging.getLogger(__name__)
 
 
+class InputError(Exception):
+    pass
+
+
 def log_error(message):
     log.error(message)
 
@@ -24,13 +28,31 @@ def get_integer(field, field_name):
 
 def get_spot_type(jaar_blackspotslijst, jaar_quickscan):
     if jaar_blackspotslijst:
-        return 'Blackspot'
+        return Spot.SpotType.blackspot
     if jaar_quickscan:
         if random.choice([True, False]):
-            return 'Protocol_ernstig'
+            return Spot.SpotType.protocol_ernstig
         else:
-            return 'Protocol_dodelijk'
-    return random.choice(['Risico', 'Wegvak'])
+            return Spot.SpotType.protocol_dodelijk
+    return random.choice([Spot.SpotType.risico, Spot.SpotType.wegvak])
+
+
+def get_status(name: str):
+    excel_to_enum = {
+        'Onbekend': Spot.StatusChoice.onbekend,
+        'Gereed': Spot.StatusChoice.gereed,
+        'Voorbereiding': Spot.StatusChoice.voorbereiding,
+        'Onderzoek/ ontwerp': Spot.StatusChoice.onderzoek_ontwerp,
+        'Uitvoering': Spot.StatusChoice.uitvoering,
+        'Geen maatregel': Spot.StatusChoice.geen_maatregel,
+    }
+    value = excel_to_enum.get(name)
+    if not value:
+        raise InputError(f'Unkown status value: {name}')
+        return Spot.StatusChoice.onbekend
+    else:
+        return value
+    return Spot.StatusChoice.geen_maatregel
 
 
 def process_xls(xls_path):
@@ -61,7 +83,7 @@ def process_xls(xls_path):
             "description": sheet.cell(row_idx, 1).value,
             "point": point,
             "stadsdeel": stadsdeel,
-            "status": sheet.cell(row_idx, 5).value,
+            "status": get_status(sheet.cell(row_idx, 5).value),
             "jaar_blackspotlijst": jaar_blackspotlijst,
             "jaar_ongeval_quickscan": jaar_quickscan,
             "jaar_oplevering": get_integer(sheet.cell(row_idx, 16).value, 'oplevering'),
