@@ -9,10 +9,7 @@ ARG BLACKSPOTS_OBJECTSTORE_PASSWORD
 ENV BLACKSPOTS_OBJECTSTORE_PASSWORD=$BLACKSPOTS_OBJECTSTORE_PASSWORD
 
 RUN apt-get update \
-  && apt-get install -y \
-		gdal-bin \
-		libgeos-dev \
-		netcat \
+	&& apt-get install -y gdal-bin libgeos-dev netcat \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -22,7 +19,8 @@ RUN mkdir -p /static && chown datapunt /static
 RUN mkdir -p /app && chown datapunt /app
 RUN mkdir -p /deploy && chown datapunt /deploy
 
-ADD "https://nexus.data.amsterdam.nl/repository/keycloak/bin/keycloak-gatekeeper.latest" /app/keycloak-gatekeeper
+# ADD "https://nexus.data.amsterdam.nl/repository/keycloak/bin/keycloak-gatekeeper.latest" /app/keycloak-gatekeeper
+COPY ./keycloak-gatekeeper.linux /app/keycloak-gatekeeper
 RUN chmod 755 /app/keycloak-gatekeeper
 
 WORKDIR /app
