@@ -20,7 +20,7 @@ RUN mkdir -p /app && chown datapunt /app
 RUN mkdir -p /deploy && chown datapunt /deploy
 
 # ADD "https://nexus.data.amsterdam.nl/repository/keycloak/bin/keycloak-gatekeeper.latest" /app/keycloak-gatekeeper
-COPY ./keycloak-gatekeeper.linux /app/keycloak-gatekeeper
+COPY ./keycloak-gatekeeper.latest /app/keycloak-gatekeeper
 RUN chmod 755 /app/keycloak-gatekeeper
 
 WORKDIR /app
