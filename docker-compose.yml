@@ -12,7 +12,7 @@ services:
       - "~/.ssh/datapunt.key:/root/.ssh/datapunt.key"
 
   web:
-    build: ./import
+    build: ./api
     ports:
     - "8150:8000"
     links:
@@ -27,7 +27,7 @@ services:
     - CONSUL_HOST=${CONSUL_HOST:-notset}
     - CONSUL_PORT=${CONSUL_PORT:-8500}
     - UWSGI_HTTP=:8001
-    - UWSGI_MODULE=blackspots_import.wsgi:application
+    - UWSGI_MODULE=settings.wsgi:application
     - UWSGI_MASTER=1
     - UWSGI_STATIC_MAP=/static=/static
     - PROXY_CLIENT_ID=${GATEKEEPER_CLIENT_ID}

@@ -69,7 +69,7 @@ class TestAPIEndpoints(TestCase):
         response = self.client.get(url)
 
         self.valid_response(url, response)
-        self.assertEqual(len(response.data.get('documents')), 3)
+        self.assertEqual(len(response.data.get('results')), 3)
 
     def test_spot_detail_geojson(self):
         url = reverse('spot-detail', kwargs={
