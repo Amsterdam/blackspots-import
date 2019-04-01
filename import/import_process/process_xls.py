@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 EXCEL_STRUCTURE = {
     'number':               {'column_idx': 0, 'header': 'Nummer'},
     'description':          {'column_idx': 1, 'header': 'Locatie omschrijving'},
-    'type':                 {'column_idx': 2, 'header': ''},  # TODO, check header
+    'type':                 {'column_idx': 2, 'header': 'Type'},
     'lat':                  {'column_idx': 3, 'header': 'Lat'},
     'lng':                  {'column_idx': 4, 'header': 'Long'},
     'stadsdeel':            {'column_idx': 5, 'header': 'Stadsdeel'},
@@ -23,7 +23,7 @@ EXCEL_STRUCTURE = {
     'jaar_blackspot':       {'column_idx': 11, 'header': 'Jaar Blackspotlijst'},
     'jaar_quickscan':       {'column_idx': 12, 'header': 'Jaar ongeval quickscan rapportage'},
     'jaar_oplevering':      {'column_idx': 13, 'header': 'Jaar oplevering'},
-    'opmerkingen':          {'column_idx': 14, 'header': ''},  # TODO, check header
+    'opmerkingen':          {'column_idx': 14, 'header': 'Opmerkingen'},
     'rapportage':           {'column_idx': 15, 'header': 'Rapportage'},
     'ontwerp':              {'column_idx': 16, 'header': 'Verkeersontwerp'},
 }
@@ -71,6 +71,8 @@ def get_spot_type(abbreviation):
         'BW': Spot.SpotType.wegvak,
         'QD': Spot.SpotType.protocol_dodelijk,
         'QE': Spot.SpotType.protocol_ernstig,
+        # Note, intentionally mapping protocol to Risk type. No risk type is available a.t.m.
+        'QSNP': Spot.SpotType.risico,
         'R': Spot.SpotType.risico,
     }
     value = excel_to_enum.get(abbreviation.strip())
