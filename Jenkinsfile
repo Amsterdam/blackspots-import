@@ -24,14 +24,14 @@ node {
 
     stage('Test') {
         tryStep "Test", {
-            sh "import/deploy/test/jenkins-script.sh import/deploy/test/"
+            sh "api/deploy/test/jenkins-script.sh api/deploy/test/"
         }
     }
 
 
     stage("Build develop image") {
         tryStep "build", {
-            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/blackspots:${env.BUILD_NUMBER}", "./import")
+            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/blackspots:${env.BUILD_NUMBER}", "./api")
             image.push()
         }
     }
