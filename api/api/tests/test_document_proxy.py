@@ -12,7 +12,6 @@ from datasets.blackspots.models import Document
 log = logging.getLogger(__name__)
 
 
-@skip  # TODO reactivate
 class TestDocumentProxy(TestCase):
     """
     Verifies objectstore proxy working correctly
