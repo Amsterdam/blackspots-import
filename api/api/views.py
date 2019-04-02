@@ -1,23 +1,22 @@
 from django.http import HttpResponse, Http404, HttpResponseServerError
 import logging
-# from rest_framework.decorators import action
+from rest_framework.decorators import action
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from swiftclient.exceptions import ClientException
-
 
 from api import serializers
 from datapunt_api.rest import DatapuntViewSet
 
 from api.serializers import SpotGeojsonSerializer
 from datasets.blackspots import models
-# from objectstore_interaction import connection as custom_connection
-# from objectstore_interaction import documents
+from objectstore_interaction import connection as custom_connection
+from objectstore_interaction import documents
 
 logger = logging.getLogger(__name__)
 
 
 def get_container_name(document_type: str) -> str:
-    if document_type == models.Document.DOCUMENT_TYPE[0][0]:
+    if document_type == models.Document.DocumentType.Ontwerp:
         return 'doc/ontwerp'
     else:
         return 'doc/rapportage'
@@ -56,7 +55,7 @@ class SpotViewSet(DatapuntViewSet):
             return DatapuntViewSet.paginate_queryset(self, *args, **kwargs)
 
 
-def handle_swift_exception(filename: str, e: ClientException) -> HttpResponse:
+def handle_swift_exception(container_name: str, filename: str, e: ClientException) -> HttpResponse:
     """
     Convert swift exception to proper HTTP Response
     Almost all swift client errors are the generic "ClientException".
@@ -64,15 +63,17 @@ def handle_swift_exception(filename: str, e: ClientException) -> HttpResponse:
     Also note that most connection errors happen on usage of the connection(here),
     instead of the connection setup.
     """
+    path = f"{container_name}/{filename}"
+
     if 'Unauthorized' in e.msg or 'Authorization Failure' in e.msg:
         logger.error(f'Error with object store connection, error: {e}')
         return HttpResponseServerError()
 
     if 'Object GET failed' in e.msg:
-        logger.error(f'Requested file not found on object store: {filename}, error: {e.msg}')
+        logger.error(f'Requested file not found on object store: {path}, error: {e.msg}')
         raise Http404("File does not exist")
 
-    logger.error(f'Unkown swift client error: {filename}, error: {e.msg}')
+    logger.error(f'Unkown swift client error: {path}, error: {e.msg}')
     return HttpResponseServerError()
 
 
@@ -81,24 +82,23 @@ class DocumentViewSet(DatapuntViewSet):
     serializer_class = serializers.DocumentSerializer
     serializer_detail_class = serializers.DocumentSerializer
 
-    # TODO reactivate
-    # @action(detail=True, url_path='file', methods=['get'])
-    # def get_file(self, request, pk=None):
-    #     document_model = self.get_object()
-    #     container_name = get_container_name(document_model.type)
-    #     filename = document_model.filename
-    #
-    #     connection = custom_connection.get_blackspots_connection()
-    #     try:
-    #         store_object = documents.get_actual_document(connection, container_name, filename)
-    #     except ClientException as e:
-    #         return handle_swift_exception(filename, e)
-    #
-    #     content_type = store_object[0].get('content-type')
-    #     obj_data = store_object[1]
-    #
-    #     response = HttpResponse(content_type=content_type)
-    #     response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    #     response.write(obj_data)
-    #
-    #     return response
+    @action(detail=True, url_path='file', methods=['get'])
+    def get_file(self, request, pk=None):
+        document_model = self.get_object()
+        container_name = get_container_name(document_model.type)
+        filename = document_model.filename
+
+        connection = custom_connection.get_blackspots_connection()
+        try:
+            store_object = documents.get_actual_document(connection, container_name, filename)
+        except ClientException as e:
+            return handle_swift_exception(container_name, filename, e)
+
+        content_type = store_object[0].get('content-type')
+        obj_data = store_object[1]
+
+        response = HttpResponse(content_type=content_type)
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        response.write(obj_data)
+
+        return response
