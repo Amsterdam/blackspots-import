@@ -7,6 +7,7 @@ djangorestframework
 djangorestframework-gis
 django-filter
 drf-amsterdam
+drf_extensions
 pyyaml>=4.2b1
 psycopg2-binary
 sentry-sdk
@@ -20,3 +21,5 @@ model_mommy
 
 # Development Libraries
 django-cors-headers
+django_debug_toolbar
+
