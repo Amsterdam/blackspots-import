@@ -16,7 +16,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from settings.settings_common import *  # noqa F403
 from settings.settings_common import INSTALLED_APPS
-from settings.settings_common import REST_FRAMEWORK  # noqa
+import settings.settings_common # noqa
 
 from settings.settings_database import (
     LocationKey,
