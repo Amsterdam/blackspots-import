@@ -20,3 +20,4 @@ model_mommy
 
 # Development Libraries
 django-cors-headers
+django_extensions
