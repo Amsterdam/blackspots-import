@@ -47,9 +47,9 @@ class TestAPIEndpoints(TestCase):
 
         self.valid_response(url, response)
         data = response.data
-        self.assertEqual(len(data), 4)
+        self.assertEqual(data.get('count'), 4)
         spot_document_data = [
-            spot for spot in data if spot.get('locatie_id') == self.spot_with_docs.locatie_id
+            spot for spot in data.get('results') if spot.get('locatie_id') == self.spot_with_docs.locatie_id
         ][0]
         self.assertEqual(len(spot_document_data.get('documents')), 3)
 
@@ -69,7 +69,7 @@ class TestAPIEndpoints(TestCase):
         response = self.client.get(url)
 
         self.valid_response(url, response)
-        self.assertEqual(len(response.data.get('results')), 3)
+        self.assertEqual(len(response.data.get('documents')), 3)
 
     def test_spot_detail_geojson(self):
         url = reverse('spot-detail', kwargs={
