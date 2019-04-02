@@ -38,10 +38,22 @@ class SpotViewSet(DatapuntViewSet):
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, GeojsonRenderer)
 
     def get_serializer_class(self, *args, **kwargs):
+        """
+        Overwrites super method to use custom Geosjon serializer based on "format" query param
+        """
         if self.request.accepted_renderer.format == 'geojson':
             return SpotGeojsonSerializer
         else:
             return DatapuntViewSet.get_serializer_class(self, *args, **kwargs)
+
+    def paginate_queryset(self, *args, **kwargs):
+        """
+        Overwrites super method to not use pagination on "format" query param
+        """
+        if self.request.accepted_renderer.format == 'geojson':
+            return None
+        else:
+            return DatapuntViewSet.paginate_queryset(self, *args, **kwargs)
 
 
 def handle_swift_exception(filename: str, e: ClientException) -> HttpResponse:

@@ -6,7 +6,7 @@ from objectstore_interaction.connection import get_blackspots_connection
 from objectstore_interaction.fetch_spots import fetch_spots
 from objectstore_interaction.list_documents import get_documents_list
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "blackspots_import.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.settings")
 django.setup()
 
 from datasets.blackspots.models import Spot, Document  # noqa

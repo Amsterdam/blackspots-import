@@ -8,9 +8,11 @@ datapunt-config-loader==1.1.0
 datapunt-objectstore==2018.12.10
 debtcollector==1.21.0
 defusedxml==0.5.0
-Django==2.1.7
+Django==2.1.8
 django-choices==1.6.2
 django-cors-headers==2.5.2
+django-debug-toolbar==1.11
+django-extensions==2.1.6
 django-filter==2.1.0
 djangorestframework==3.9.2
 djangorestframework-csv==2.1.0
@@ -18,7 +20,7 @@ djangorestframework-gis==0.14
 djangorestframework-xml==1.4.0
 drf-amsterdam==0.3.1
 drf-extensions==0.4.0
-drf-yasg==1.14.0
+drf-yasg==1.15.0
 entrypoints==0.3
 filelock==3.0.10
 flake8==3.7.7
@@ -55,11 +57,12 @@ PyYAML==5.1
 requests==2.21.0
 rfc3986==1.2.0
 ruamel.yaml==0.15.89
-sentry-sdk==0.7.7
+sentry-sdk==0.7.9
 six==1.12.0
+sqlparse==0.3.0
 stevedore==1.30.1
 toml==0.10.0
-tox==3.7.0
+tox==3.8.3
 unicodecsv==0.14.1
 uritemplate==3.0.0
 urllib3==1.24.1
