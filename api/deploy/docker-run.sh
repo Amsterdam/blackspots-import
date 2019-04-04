@@ -11,8 +11,8 @@ ls -al /static/
 chmod -R 777 /static
 
 # run gatekeeper
-./keycloak-gatekeeper --config gatekeeper.conf 2>&1 | tee /tmp/gatekeeper.log &
+./keycloak-gatekeeper --config gatekeeper.conf 2>&1 | tee /var/log/gatekeeper/gatekeeper.log &
 
 # run uwsgi
-exec uwsgi
+exec uwsgi -i --show-config
 

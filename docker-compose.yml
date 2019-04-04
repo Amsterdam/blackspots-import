@@ -26,6 +26,7 @@ services:
     - BLACKSPOTS_OBJECTSTORE_PASSWORD=insecure
     - CONSUL_HOST=${CONSUL_HOST:-notset}
     - CONSUL_PORT=${CONSUL_PORT:-8500}
+    # Gatekeeper listens on port 8000 and serves as a proxy for UWSGI
     - UWSGI_HTTP=:8001
     - UWSGI_MODULE=settings.wsgi:application
     - UWSGI_MASTER=1
