@@ -5,6 +5,7 @@ git+https://github.com/Amsterdam/objectstore.git
 xlrd
 djangorestframework
 djangorestframework-gis
+django-extensions
 django-filter
 drf-amsterdam
 drf_extensions
