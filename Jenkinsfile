@@ -39,7 +39,7 @@ node {
 
 String BRANCH = "${env.BRANCH_NAME}"
 
-if (BRANCH == "dev" || BRANCH == "authentication") {
+if (BRANCH == "master" || BRANCH == "authentication") {
     node {
         stage('Push acceptance image') {
             tryStep "image tagging", {
