@@ -31,7 +31,7 @@ node {
 
     stage("Build develop image") {
         tryStep "build", {
-            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/blackspots:${env.BUILD_NUMBER}", "./api")
+            def image = docker.build("repo.data.amsterdam.nl/datapunt/blackspots:${env.BUILD_NUMBER}", "./api")
             image.push()
         }
     }
@@ -43,7 +43,7 @@ if (BRANCH == "master" || BRANCH == "authentication") {
     node {
         stage('Push acceptance image') {
             tryStep "image tagging", {
-                def image = docker.image("build.datapunt.amsterdam.nl:5000/datapunt/blackspots:${env.BUILD_NUMBER}")
+                def image = docker.image("repo.data.amsterdam.nl/datapunt/blackspots:${env.BUILD_NUMBER}")
                 image.pull()
                 image.push("acceptance")
             }
@@ -70,7 +70,7 @@ if (BRANCH == "master" || BRANCH == "authentication") {
     node {
         stage('Push production image') {
             tryStep "image tagging", {
-                def image = docker.image("build.datapunt.amsterdam.nl:5000/datapunt/blackspots:${env.BUILD_NUMBER}")
+                def image = docker.image("repo.data.amsterdam.nl/datapunt/blackspots:${env.BUILD_NUMBER}")
                 image.pull()
                 image.push("production")
                 image.push("latest")
