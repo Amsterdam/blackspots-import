@@ -11,7 +11,13 @@ ls -al /static/
 chmod -R 777 /static
 
 # run gatekeeper
-./keycloak-gatekeeper --config gatekeeper.conf 2>&1 | tee /var/log/gatekeeper/gatekeeper.log &
+
+if [ -n $HTTP_PROXY ]; then
+  ./keycloak-gatekeeper --config gatekeeper.conf --openid-provider-proxy $HTTP_PROXY 2>&1 | tee /var/log/gatekeeper/gatekeeper.log
+else
+  ./keycloak-gatekeeper --config gatekeeper.conf 2>&1 | tee /var/log/gatekeeper/gatekeeper.log &
+fi
+
 
 # run uwsgi
 exec uwsgi -i --show-config
