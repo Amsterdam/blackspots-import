@@ -57,7 +57,6 @@ if (BRANCH == "dev" || BRANCH == "authentication") {
                         parameters: [
                                 [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
                                 [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-blackspots.yml'],
-                                [$class: 'StringParameterValue', name: 'BRANCH', value: 'dev'],
                         ]
             }
         }
