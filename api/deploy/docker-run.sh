@@ -20,5 +20,5 @@ fi
 
 
 # run uwsgi
-exec uwsgi -i --show-config
+exec uwsgi -i --show-config >> /var/log/uwsgi/uwsgi.log 2>&1
 
