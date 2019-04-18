@@ -19,6 +19,7 @@ RUN mkdir -p /static && chown datapunt /static
 RUN mkdir -p /app && chown datapunt /app
 RUN mkdir -p /deploy && chown datapunt /deploy
 RUN mkdir -p /var/log/gatekeeper && chown datapunt /var/log/gatekeeper
+RUN mkdir -p /var/log/uwsgi && chown datapunt /var/log/uwsgi
 
 # ADD "https://nexus.data.amsterdam.nl/repository/keycloak/bin/keycloak-gatekeeper.latest" /app/keycloak-gatekeeper
 COPY ./keycloak-gatekeeper.latest /app/keycloak-gatekeeper
