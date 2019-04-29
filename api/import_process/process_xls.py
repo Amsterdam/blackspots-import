@@ -1,6 +1,7 @@
+import json
 import logging
 
-from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import Point, LineString
 from xlrd import open_workbook
 
 from datasets.blackspots.models import Spot, Document
@@ -127,6 +128,13 @@ def get_stadsdeel(name: str):
     return value
 
 
+def get_wegvak(input: str):
+    if input:
+        data = json.loads(input)
+        return LineString(data)
+    return None
+
+
 def create_document(
         document_list: DocumentList,
         doc_type: Document.DocumentType,
@@ -161,6 +169,8 @@ def process_xls(xls_path, document_list: DocumentList):
             log_error(f"Unknown point: {latitude}, {longitude}: \"{e}\", skipping")
             continue
 
+        wegvak = get_wegvak(get_sheet_cell(sheet, 'wegvak', row_idx))
+
         stadsdeel = get_stadsdeel(get_sheet_cell(sheet, 'stadsdeel', row_idx))
 
         jaar_blackspotlijst = get_integer(get_sheet_cell(sheet, 'jaar_blackspot', row_idx), 'blackspotlijst')
@@ -177,6 +187,7 @@ def process_xls(xls_path, document_list: DocumentList):
             "spot_type": spot_type,
             "description": get_sheet_cell(sheet, 'description', row_idx),
             "point": point,
+            "wegvak": wegvak,
             "stadsdeel": stadsdeel,
             "status": status,
             "jaar_blackspotlijst": jaar_blackspotlijst,

@@ -34,6 +34,7 @@ class Spot(models.Model):
     spot_type = models.CharField(max_length=24, choices=SpotType.choices)
     description = models.CharField(max_length=120)
     point = models.PointField(srid=4326)
+    wegvak = models.LineStringField(srid=4326, null=True, blank=True)
 
     stadsdeel = models.CharField(max_length=3, choices=Stadsdelen.choices)
 
