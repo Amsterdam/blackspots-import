@@ -11,21 +11,22 @@ log = logging.getLogger(__name__)
 EXCEL_STRUCTURE = {
     'number':               {'column_idx': 0, 'header': 'Nummer'},
     'description':          {'column_idx': 1, 'header': 'Locatie omschrijving'},
-    'type':                 {'column_idx': 2, 'header': 'Type'},
+    'type':                 {'column_idx': 2, 'header': ''},  # Type
     'lat':                  {'column_idx': 3, 'header': 'Lat'},
     'lng':                  {'column_idx': 4, 'header': 'Long'},
-    'stadsdeel':            {'column_idx': 5, 'header': 'Stadsdeel'},
-    'status':               {'column_idx': 6, 'header': 'Status'},
-    'actiehouders':         {'column_idx': 7, 'header': 'Actiehouders'},
-    'tasks':                {'column_idx': 8, 'header': 'Taken'},
-    'start_uitvoering':     {'column_idx': 9, 'header': 'Start uitvoering'},
-    'eind_uitvoering':      {'column_idx': 10, 'header': 'Eind uitvoering'},
-    'jaar_blackspot':       {'column_idx': 11, 'header': 'Jaar Blackspotlijst'},
-    'jaar_quickscan':       {'column_idx': 12, 'header': 'Jaar ongeval quickscan rapportage'},
-    'jaar_oplevering':      {'column_idx': 13, 'header': 'Jaar oplevering'},
-    'opmerkingen':          {'column_idx': 14, 'header': 'Opmerkingen'},
-    'rapportage':           {'column_idx': 15, 'header': 'Rapportage'},
-    'ontwerp':              {'column_idx': 16, 'header': 'Verkeersontwerp'},
+    'wegvak':               {'column_idx': 5, 'header': 'Wegvak'},
+    'stadsdeel':            {'column_idx': 6, 'header': 'Stadsdeel'},
+    'status':               {'column_idx': 7, 'header': 'Status'},
+    'actiehouders':         {'column_idx': 8, 'header': 'Actiehouders'},
+    'tasks':                {'column_idx': 9, 'header': 'Taken'},
+    'start_uitvoering':     {'column_idx': 10, 'header': 'Start uitvoering'},
+    'eind_uitvoering':      {'column_idx': 11, 'header': 'Eind uitvoering'},
+    'jaar_blackspot':       {'column_idx': 12, 'header': 'Jaar Blackspotlijst'},
+    'jaar_quickscan':       {'column_idx': 13, 'header': 'Jaar ongeval quickscan rapportage'},
+    'jaar_oplevering':      {'column_idx': 14, 'header': 'Jaar oplevering'},
+    'opmerkingen':          {'column_idx': 15, 'header': 'Opmerkingen'},
+    'rapportage':           {'column_idx': 16, 'header': 'Rapportage'},
+    'ontwerp':              {'column_idx': 17, 'header': 'Verkeersontwerp'},
 }
 
 
@@ -51,12 +52,19 @@ class InputError(Exception):
     pass
 
 
+class SkipError(InputError):
+    pass
+
+
 def log_error(message):
     log.error(message)
 
 
 def get_integer(value, field_name):
-    if value is None or value == '':
+    if value is None or value == ''\
+            or str(value).lower() == 'onbekend'\
+            or str(value).lower() == 'geen'\
+            or str(value).lower() == 'n.v.t.':
         return None
     try:
         return int(value)
@@ -71,11 +79,13 @@ def get_spot_type(abbreviation):
         'BW': Spot.SpotType.wegvak,
         'QD': Spot.SpotType.protocol_dodelijk,
         'QE': Spot.SpotType.protocol_ernstig,
-        # Note, intentionally mapping protocol to Risk type. No risk type is available a.t.m.
-        'QSNP': Spot.SpotType.risico,
         'R': Spot.SpotType.risico,
     }
-    value = excel_to_enum.get(abbreviation.strip())
+    key = abbreviation.strip()
+    if key == 'Q' or key == 'QSNP':
+        raise SkipError(f'Q and QSNP not supported, type: {key}')
+
+    value = excel_to_enum.get(key)
     if not value:
         raise InputError(f'Unkown type value: {abbreviation}')
     else:
@@ -87,13 +97,13 @@ def get_status(name: str):
         'Onbekend': Spot.StatusChoice.onbekend,
         'Gereed': Spot.StatusChoice.gereed,
         'Voorbereiding': Spot.StatusChoice.voorbereiding,
-        'Onderzoek/ontwerp': Spot.StatusChoice.onderzoek_ontwerp,
+        'Onderzoek/ ontwerp': Spot.StatusChoice.onderzoek_ontwerp,
         'Uitvoering': Spot.StatusChoice.uitvoering,
         'Geen maatregel': Spot.StatusChoice.geen_maatregel,
     }
     value = excel_to_enum.get(name.strip())
     if not value:
-        raise InputError(f'Unkown status value: {name}')
+        raise SkipError(f'Unknown status value: {name}')
     else:
         return value
 
@@ -109,10 +119,11 @@ def get_stadsdeel(name: str):
         'K': Spot.Stadsdelen.Zuid,
         'M': Spot.Stadsdelen.Oost,
         'Geen': Spot.Stadsdelen.Geen,
+        '': Spot.Stadsdelen.Geen,
     }
     value = excel_to_enum.get(name.strip())
     if not value:
-        raise InputError(f"Unkown stadsdeel: {name}, skipping")
+        raise InputError(f"Unknown stadsdeel: {name}")
     return value
 
 
@@ -154,7 +165,12 @@ def process_xls(xls_path, document_list: DocumentList):
 
         jaar_blackspotlijst = get_integer(get_sheet_cell(sheet, 'jaar_blackspot', row_idx), 'blackspotlijst')
         jaar_quickscan = get_integer(get_sheet_cell(sheet, 'jaar_quickscan', row_idx), 'quickscan')
-        spot_type = get_spot_type(get_sheet_cell(sheet, 'type', row_idx))
+        try:
+            spot_type = get_spot_type(get_sheet_cell(sheet, 'type', row_idx))
+            status = get_status(get_sheet_cell(sheet, 'status', row_idx))
+        except SkipError as e:
+            log_error(f"\"{e}\", skipping")
+            continue
         spot_data = {
             "locatie_id": get_sheet_cell(sheet, 'number', row_idx),
             "actiehouders": get_sheet_cell(sheet, 'actiehouders', row_idx),
@@ -162,7 +178,7 @@ def process_xls(xls_path, document_list: DocumentList):
             "description": get_sheet_cell(sheet, 'description', row_idx),
             "point": point,
             "stadsdeel": stadsdeel,
-            "status": get_status(get_sheet_cell(sheet, 'status', row_idx)),
+            "status": status,
             "jaar_blackspotlijst": jaar_blackspotlijst,
             "jaar_ongeval_quickscan": jaar_quickscan,
             "jaar_oplevering": get_integer(get_sheet_cell(sheet, 'jaar_oplevering', row_idx), 'oplevering'),
