@@ -2,6 +2,7 @@ import json
 import logging
 
 from django.contrib.gis.geos import Point, LineString
+import xlrd
 from xlrd import open_workbook
 
 from datasets.blackspots.models import Spot, Document
@@ -34,11 +35,22 @@ EXCEL_STRUCTURE = {
 def get_sheet_cell(sheet, column_name, row_idx):
     value = EXCEL_STRUCTURE.get(column_name)
     assert value is not None, f'column name not recognised: {column_name}'
-    return sheet.cell(row_idx, value.get('column_idx')).value
+    return sheet.cell_value(row_idx, value.get('column_idx'))
+
+
+def get_sheet_date_cell(sheet, column_name, row_idx, date_mode):
+    value = EXCEL_STRUCTURE.get(column_name)
+    assert value is not None, f'column name not recognised: {column_name}'
+    cell_value = sheet.cell_value(row_idx, value.get('column_idx'))
+    if isinstance(cell_value, str):
+        return cell_value
+    datetime = xlrd.xldate.xldate_as_datetime(cell_value, date_mode)
+    date_str = datetime.strftime("%d/%m/%y")
+    return date_str
 
 
 def assert_column_name(sheet, column_idx, expected):
-    value = sheet.cell(0, column_idx).value.strip()
+    value = sheet.cell_value(0, column_idx).strip()
     assert value == expected, f'header {column_idx} is not expected value {expected} but {value}'
 
 
@@ -191,8 +203,8 @@ def process_xls(xls_path, document_list: DocumentList):
             "stadsdeel": stadsdeel,
             "status": status,
 
-            "start_uitvoering": get_sheet_cell(sheet, 'start_uitvoering', row_idx),
-            "eind_uitvoering": get_sheet_cell(sheet, 'eind_uitvoering', row_idx),
+            "start_uitvoering": get_sheet_date_cell(sheet, 'start_uitvoering', row_idx, book.datemode),
+            "eind_uitvoering": get_sheet_date_cell(sheet, 'eind_uitvoering', row_idx, book.datemode),
             "tasks": get_sheet_cell(sheet, 'tasks', row_idx),
             "notes": get_sheet_cell(sheet, 'notes', row_idx),
 
