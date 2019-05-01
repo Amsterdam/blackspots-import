@@ -25,7 +25,7 @@ EXCEL_STRUCTURE = {
     'jaar_blackspot':       {'column_idx': 12, 'header': 'Jaar Blackspotlijst'},
     'jaar_quickscan':       {'column_idx': 13, 'header': 'Jaar ongeval quickscan rapportage'},
     'jaar_oplevering':      {'column_idx': 14, 'header': 'Jaar oplevering'},
-    'opmerkingen':          {'column_idx': 15, 'header': 'Opmerkingen'},
+    'notes':                {'column_idx': 15, 'header': 'Opmerkingen'},
     'rapportage':           {'column_idx': 16, 'header': 'Rapportage'},
     'ontwerp':              {'column_idx': 17, 'header': 'Verkeersontwerp'},
 }
@@ -190,6 +190,12 @@ def process_xls(xls_path, document_list: DocumentList):
             "wegvak": wegvak,
             "stadsdeel": stadsdeel,
             "status": status,
+
+            "start_uitvoering": get_sheet_cell(sheet, 'start_uitvoering', row_idx),
+            "eind_uitvoering": get_sheet_cell(sheet, 'eind_uitvoering', row_idx),
+            "tasks": get_sheet_cell(sheet, 'tasks', row_idx),
+            "notes": get_sheet_cell(sheet, 'notes', row_idx),
+
             "jaar_blackspotlijst": jaar_blackspotlijst,
             "jaar_ongeval_quickscan": jaar_quickscan,
             "jaar_oplevering": get_integer(get_sheet_cell(sheet, 'jaar_oplevering', row_idx), 'oplevering'),

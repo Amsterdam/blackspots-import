@@ -46,6 +46,11 @@ class Spot(models.Model):
 
     actiehouders = models.CharField(max_length=128)
 
+    start_uitvoering = models.CharField(null=True, blank=True, max_length=64)
+    eind_uitvoering = models.CharField(null=True, blank=True, max_length=64)
+    tasks = models.TextField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+
     jaar_blackspotlijst = models.IntegerField(null=True, blank=True)
     jaar_ongeval_quickscan = models.IntegerField(null=True, blank=True)
     jaar_oplevering = models.IntegerField(null=True, blank=True)
