@@ -18,13 +18,17 @@ class DocumentSerializer(HALSerializer):
 
 
 class SpotDocumentSerializer(HALSerializer):
+    id = serializers.ReadOnlyField()
+
     class Meta(object):
         model = models.Document
         exclude = ['spot']
 
 
 class SpotGeojsonSerializer(GeoFeatureModelSerializer):
+    id = serializers.ReadOnlyField()
     stadsdeel = serializers.CharField(source='get_stadsdeel_display')
+    documents = SpotDocumentSerializer(many=True, read_only=True)
 
     class Meta(object):
         model = models.Spot
@@ -39,6 +43,7 @@ class SpotGeojsonSerializer(GeoFeatureModelSerializer):
 
 
 class SpotSerializer(HALSerializer):
+    id = serializers.ReadOnlyField()
     stadsdeel = serializers.CharField(source='get_stadsdeel_display')
     documents = SpotDocumentSerializer(many=True, read_only=True)
 
