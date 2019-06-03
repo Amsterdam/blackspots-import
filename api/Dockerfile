@@ -22,7 +22,7 @@ RUN mkdir -p /var/log/gatekeeper && chown datapunt /var/log/gatekeeper
 RUN mkdir -p /var/log/uwsgi && chown datapunt /var/log/uwsgi
 
 # ADD "https://nexus.data.amsterdam.nl/repository/keycloak/bin/keycloak-gatekeeper.latest" /app/keycloak-gatekeeper
-COPY ./keycloak-gatekeeper.latest /app/keycloak-gatekeeper
+COPY ./lib/keycloak-gatekeeper.latest /app/keycloak-gatekeeper
 RUN chmod 755 /app/keycloak-gatekeeper
 
 WORKDIR /app

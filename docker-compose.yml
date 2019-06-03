@@ -14,7 +14,8 @@ services:
   web:
     build: ./api
     ports:
-    - "8150:8000"
+    - "8000:8000"
+    - "8001:8001"
     links:
     - database
     environment:
