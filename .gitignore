@@ -8,3 +8,4 @@ __pycache__
 *.pytest*
 .pytest_cache
 *.pytest_cache*
+.gatekeeper_env

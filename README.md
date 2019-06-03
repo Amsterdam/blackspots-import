@@ -19,7 +19,10 @@ source .gatekeeper_env
 docker-compose up --build
 ```
 
-Note that you'll need access to the credentials used by Gatekeeper.
+Note that in order to access the API through Gatekeeper you will need access to the Keycloack credentials.
+
+* The API is available on: `<docker-host>:8001`.
+* Gatekeeper is available on `<docker-host>:8000`.
 
 
 ## Testing

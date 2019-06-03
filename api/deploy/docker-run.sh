@@ -24,5 +24,4 @@ fi
 
 # run uwsgi
 echo "Starting uwsgi"
-exec uwsgi -i --show-config >> /var/log/uwsgi/uwsgi.log 2>&1 | tee /var/log/uwsgi/uwsgi.log
-
+exec uwsgi -i --show-config  2>&1 | tee /var/log/uwsgi/uwsgi.log
