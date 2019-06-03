@@ -5,7 +5,7 @@ chardet==3.0.4
 coreapi==2.3.3
 coreschema==0.0.4
 datapunt-config-loader==1.1.0
-datapunt-objectstore==2018.12.10
+datapunt-objectstore==2019.4.8
 debtcollector==1.21.0
 defusedxml==0.5.0
 Django==2.1.8
