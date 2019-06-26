@@ -16,7 +16,7 @@ EXCEL_STRUCTURE = {
     'type':                 {'column_idx': 2, 'header': ''},  # Type
     'lat':                  {'column_idx': 3, 'header': 'Lat'},
     'lng':                  {'column_idx': 4, 'header': 'Long'},
-    'wegvak':               {'column_idx': 5, 'header': 'Wegvak'},
+    'wegvak':               {'column_idx': 5, 'header': 'Red Route'},
     'stadsdeel':            {'column_idx': 6, 'header': 'Stadsdeel'},
     'status':               {'column_idx': 7, 'header': 'Status'},
     'actiehouders':         {'column_idx': 8, 'header': 'Actiehouders'},
