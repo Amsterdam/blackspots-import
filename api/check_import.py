@@ -23,7 +23,7 @@ def check_import():
     log.info('Checking database count')
 
     assert_count(224, models.Spot.objects.count(), 'Spots count')
-    assert_count(171, models.Document.objects.count(), 'Documents count')
+    assert_count(164, models.Document.objects.count(), 'Documents count')
 
     log.info('Check done')
 
