@@ -132,6 +132,10 @@ def get_stadsdeel(name: str):
         'K': Spot.Stadsdelen.Zuid,
         'M': Spot.Stadsdelen.Oost,
         'Geen': Spot.Stadsdelen.Geen,
+        'N.v.t.': Spot.Stadsdelen.Geen,
+        'n.v.t.': Spot.Stadsdelen.Geen,
+        'Nvt': Spot.Stadsdelen.Geen,
+        'nvt': Spot.Stadsdelen.Geen,
         '': Spot.Stadsdelen.Geen,
     }
     value = excel_to_enum.get(name.strip())
