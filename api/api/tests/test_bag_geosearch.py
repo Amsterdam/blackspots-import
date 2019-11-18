@@ -110,3 +110,21 @@ class TestBagGeoSearchAPI(TestCase):
         expected_stadsdeel = Spot.Stadsdelen.Centrum
         stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=1, lon=2)
         self.assertEqual(stadsdeel, expected_stadsdeel)
+
+    @patch('api.bag_geosearch.requests')
+    def test_get_stadsdeel_no_response(self, mocked_requests):
+        mocked_response = Mock()
+        mocked_response.json.return_value = {}
+        mocked_requests.get.return_value = mocked_response
+        expected_stadsdeel = Spot.Stadsdelen.Geen
+        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=1, lon=2)
+        self.assertEqual(stadsdeel, expected_stadsdeel)
+
+    @patch('api.bag_geosearch.requests')
+    def test_get_stadsdeel_exception(self, mocked_requests):
+        mocked_response = Mock()
+        mocked_response.json.side_effect = Exception()
+        mocked_requests.get.return_value = mocked_response
+        expected_stadsdeel = Spot.Stadsdelen.Geen
+        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=1, lon=2)
+        self.assertEqual(stadsdeel, expected_stadsdeel)
