@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import url
 from django.urls import include
+from rest_framework_swagger.views import get_swagger_view
 
 urlpatterns = [
     url(r'^status/', include('health.urls')),
@@ -25,7 +26,9 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
+    schema_view = get_swagger_view(title='WBA Kaart API')
 
     urlpatterns.extend([
         url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^docs/$', schema_view)
     ])

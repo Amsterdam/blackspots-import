@@ -45,6 +45,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS += [
     'drf_yasg',  # Used to generate schemas
+    'rest_framework_swagger',
     'datasets.blackspots',
     'health',
     'api',
