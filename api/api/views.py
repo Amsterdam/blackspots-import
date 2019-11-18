@@ -2,6 +2,7 @@ from django.http import HttpResponse, Http404, HttpResponseServerError
 import logging
 from rest_framework.decorators import action
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
+from rest_framework.viewsets import ModelViewSet
 from swiftclient.exceptions import ClientException
 
 from api import serializers
@@ -29,7 +30,7 @@ class GeojsonRenderer(JSONRenderer):
     format = 'geojson'
 
 
-class SpotViewSet(DatapuntViewSet):
+class SpotViewSet(DatapuntViewSet, ModelViewSet):
     queryset = models.Spot.objects.all().order_by('pk')
     serializer_class = serializers.SpotSerializer
     serializer_detail_class = serializers.SpotSerializer
