@@ -16,6 +16,7 @@ def tryStep(String message, Closure block, Closure tearDown = null) {
     }
 }
 
+
 node {
     stage("Checkout") {
         checkout scm
