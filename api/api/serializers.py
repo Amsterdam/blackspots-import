@@ -27,7 +27,7 @@ class SpotDocumentSerializer(HALSerializer):
 
 class SpotGeojsonSerializer(GeoFeatureModelSerializer):
     id = serializers.ReadOnlyField()
-    stadsdeel = serializers.CharField(source='get_stadsdeel_display')
+    stadsdeel = serializers.CharField(source='get_stadsdeel_display', read_only=True)
     documents = SpotDocumentSerializer(many=True, read_only=True)
 
     class Meta(object):
@@ -44,7 +44,7 @@ class SpotGeojsonSerializer(GeoFeatureModelSerializer):
 
 class SpotSerializer(HALSerializer):
     id = serializers.ReadOnlyField()
-    stadsdeel = serializers.CharField(source='get_stadsdeel_display')
+    stadsdeel = serializers.CharField(source='get_stadsdeel_display', read_only=True)
     documents = SpotDocumentSerializer(many=True, read_only=True)
 
     class Meta(object):
