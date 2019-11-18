@@ -2,6 +2,7 @@ from datapunt_api.rest import HALSerializer
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
+from api.bag_geosearch import BagGeoSearchAPI
 from datasets.blackspots import models
 
 
@@ -46,6 +47,17 @@ class SpotSerializer(HALSerializer):
     id = serializers.ReadOnlyField()
     stadsdeel = serializers.CharField(source='get_stadsdeel_display', read_only=True)
     documents = SpotDocumentSerializer(many=True, read_only=True)
+
+    def create(self, validated_data):
+        # before creating the spot, we'll need to obtain the 'stadsdeel' based on the
+        # Point value.
+
+        point = validated_data.get('point')
+        lat = point.y
+        lon = point.x
+        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat, lon)
+        validated_data['stadsdeel'] = stadsdeel
+        return super().create(validated_data)
 
     class Meta(object):
         model = models.Spot
