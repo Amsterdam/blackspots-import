@@ -18,6 +18,7 @@ class BagGeoSearchAPI:
         stadsdeel_code = ''
         try:
             response = requests.get(url, params={'lon': lon, 'lat': lat})
+            response.raise_for_status()
             content = response.json()
             features = content.get('features', [])
             for feature in features:
