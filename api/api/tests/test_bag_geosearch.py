@@ -2,6 +2,7 @@ from unittest import TestCase
 from unittest.mock import patch, Mock
 
 from django.test import override_settings
+from requests import HTTPError, Timeout, TooManyRedirects
 
 from api.bag_geosearch import BagGeoSearchAPI
 from datasets.blackspots.models import Spot
@@ -108,7 +109,7 @@ class TestBagGeoSearchAPI(TestCase):
         }
         mocked_requests.get.return_value = mocked_response
         expected_stadsdeel = Spot.Stadsdelen.Centrum
-        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=1, lon=2)
+        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=52.370216, lon=4.895168)
         self.assertEqual(stadsdeel, expected_stadsdeel)
 
     @patch('api.bag_geosearch.requests')
@@ -117,14 +118,24 @@ class TestBagGeoSearchAPI(TestCase):
         mocked_response.json.return_value = {}
         mocked_requests.get.return_value = mocked_response
         expected_stadsdeel = Spot.Stadsdelen.Geen
-        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=1, lon=2)
+        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=52.370216, lon=4.895168)
         self.assertEqual(stadsdeel, expected_stadsdeel)
 
     @patch('api.bag_geosearch.requests')
-    def test_get_stadsdeel_exception(self, mocked_requests):
+    def test_get_stadsdeel_json_exception(self, mocked_requests):
         mocked_response = Mock()
         mocked_response.json.side_effect = Exception()
         mocked_requests.get.return_value = mocked_response
         expected_stadsdeel = Spot.Stadsdelen.Geen
-        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=1, lon=2)
+        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=52.370216, lon=4.895168)
         self.assertEqual(stadsdeel, expected_stadsdeel)
+
+    @patch('api.bag_geosearch.requests')
+    def test_get_stadsdeel_http_exception(self, mocked_requests):
+        for ExceptionClass in [ConnectionError, HTTPError, Timeout, TooManyRedirects]:
+            mocked_requests.get.side_effect = ExceptionClass()
+            expected_stadsdeel = Spot.Stadsdelen.Geen
+            stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=52.370216, lon=4.895168)
+            self.assertEqual(stadsdeel, expected_stadsdeel)
+
+

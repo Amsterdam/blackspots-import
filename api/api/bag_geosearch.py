@@ -20,10 +20,10 @@ class BagGeoSearchAPI:
 
     def get_stadsdeel(self, lat, lon):
         url = self.get_api_search_url(lat, lon)
-        response = requests.get(url)
 
         stadsdeel_code = ''
         try:
+            response = requests.get(url)
             content = response.json()
             features = content.get('features', [])
             for feature in features:
