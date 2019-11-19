@@ -6,6 +6,7 @@ import xlrd
 from xlrd import open_workbook
 
 from datasets.blackspots.models import Spot, Document
+from import_process import util
 from objectstore_interaction.list_documents import DocumentList
 
 log = logging.getLogger(__name__)
@@ -122,23 +123,7 @@ def get_status(name: str):
 
 
 def get_stadsdeel(name: str):
-    excel_to_enum = {
-        'T': Spot.Stadsdelen.Zuidoost,
-        'A': Spot.Stadsdelen.Centrum,
-        'N': Spot.Stadsdelen.Noord,
-        'B': Spot.Stadsdelen.Westpoort,
-        'E': Spot.Stadsdelen.West,
-        'F': Spot.Stadsdelen.Nieuw_West,
-        'K': Spot.Stadsdelen.Zuid,
-        'M': Spot.Stadsdelen.Oost,
-        'Geen': Spot.Stadsdelen.Geen,
-        'N.v.t.': Spot.Stadsdelen.Geen,
-        'n.v.t.': Spot.Stadsdelen.Geen,
-        'Nvt': Spot.Stadsdelen.Geen,
-        'nvt': Spot.Stadsdelen.Geen,
-        '': Spot.Stadsdelen.Geen,
-    }
-    value = excel_to_enum.get(name.strip())
+    value = util.get_stadsdeel(name)
     if not value:
         raise InputError(f"Unknown stadsdeel: {name}")
     return value

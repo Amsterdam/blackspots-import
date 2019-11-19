@@ -3,8 +3,7 @@ import logging
 import requests
 from django.conf import settings
 
-from import_process.process_xls import get_stadsdeel
-
+from import_process.util import get_stadsdeel
 
 logger = logging.getLogger(__name__)
 
