@@ -2,10 +2,10 @@
 API urls
 """
 from django.conf.urls import include, url
+from django.urls import path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from rest_framework import routers, permissions
-from django.urls import path
+from rest_framework import permissions, routers
 
 from api import views
 

@@ -1,7 +1,11 @@
 import logging
 import os
+
 import django
 
+from datasets.blackspots.models import Document, Spot  # noqa
+from import_process.clean import clear_models  # noqa
+from import_process.process_xls import process_xls  # noqa
 from objectstore_interaction.connection import get_blackspots_connection
 from objectstore_interaction.fetch_spots import fetch_spots
 from objectstore_interaction.list_documents import get_documents_list
@@ -9,9 +13,6 @@ from objectstore_interaction.list_documents import get_documents_list
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.settings")
 django.setup()
 
-from datasets.blackspots.models import Spot, Document  # noqa
-from import_process.clean import clear_models  # noqa
-from import_process.process_xls import process_xls  # noqa
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)

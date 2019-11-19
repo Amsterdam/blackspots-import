@@ -1,11 +1,11 @@
 import json
 import logging
 
-from django.contrib.gis.geos import Point, LineString
 import xlrd
+from django.contrib.gis.geos import LineString, Point
 from xlrd import open_workbook
 
-from datasets.blackspots.models import Spot, Document
+from datasets.blackspots.models import Document, Spot
 from import_process import util
 from objectstore_interaction.list_documents import DocumentList
 

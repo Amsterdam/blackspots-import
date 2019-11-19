@@ -1,4 +1,4 @@
-from datasets.blackspots.models import Spot, Document
+from datasets.blackspots.models import Document, Spot
 
 
 def clear_models():

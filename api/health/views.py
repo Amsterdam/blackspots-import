@@ -2,9 +2,7 @@ import logging
 
 from django.conf import settings
 from django.db import connection
-
 from django.http import HttpResponse
-
 
 log = logging.getLogger(__name__)
 

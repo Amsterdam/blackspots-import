@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 from requests import HTTPError, Timeout, TooManyRedirects
 
@@ -125,5 +125,3 @@ class TestBagGeoSearchAPI(TestCase):
             expected_stadsdeel = Spot.Stadsdelen.Geen
             stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=52.370216, lon=4.895168)
             self.assertEqual(stadsdeel, expected_stadsdeel)
-
-

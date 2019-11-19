@@ -3,8 +3,8 @@ from unittest import skip
 from django.test import TestCase
 from model_mommy import mommy
 
-from datasets.blackspots.models import Spot, Document
-from import_process.process_xls import create_document, InputError
+from datasets.blackspots.models import Document, Spot
+from import_process.process_xls import InputError, create_document
 
 
 class TestDocumentImporter(TestCase):
@@ -43,4 +43,3 @@ class TestDocumentImporter(TestCase):
         )
 
         self.assertEqual(Document.objects.count(), 0)
-
