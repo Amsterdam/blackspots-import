@@ -8,4 +8,4 @@ set -x   # print what we are doing
 
 cd /app
 
-./docker-test.sh
+tox
