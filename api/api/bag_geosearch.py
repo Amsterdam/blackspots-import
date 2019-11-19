@@ -12,17 +12,12 @@ class BagGeoSearchAPI:
 
     FEATURE_STADSDEEL = "gebieden/stadsdeel"
 
-    def get_api_search_url(self, lat, lon):
-        return settings.BAG_GEO_SEARCH_API_URL.format(
-            lat=lat, lon=lon
-        )
-
     def get_stadsdeel(self, lat, lon):
-        url = self.get_api_search_url(lat, lon)
+        url = settings.BAG_GEO_SEARCH_API_URL
 
         stadsdeel_code = ''
         try:
-            response = requests.get(url)
+            response = requests.get(url, params={'lon': lon, 'lat': lat})
             content = response.json()
             features = content.get('features', [])
             for feature in features:

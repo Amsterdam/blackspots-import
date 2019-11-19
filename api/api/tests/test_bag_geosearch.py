@@ -1,7 +1,6 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock
 
-from django.test import override_settings
 from requests import HTTPError, Timeout, TooManyRedirects
 
 from api.bag_geosearch import BagGeoSearchAPI
@@ -9,17 +8,6 @@ from datasets.blackspots.models import Spot
 
 
 class TestBagGeoSearchAPI(TestCase):
-
-    @override_settings(BAG_GEO_SEARCH_API_URL="testurl?lat={lat}&lon={lon}")
-    def test_get_api_search_url(self):
-        lat = "123"
-        lon = "789"
-        expected_url = "testurl?lat=123&lon=789"
-
-        url = BagGeoSearchAPI().get_api_search_url(lat=lat, lon=lon)
-        self.assertEqual(url, expected_url)
-        url = BagGeoSearchAPI().get_api_search_url(lat, lon)
-        self.assertEqual(url, expected_url)
 
     @patch('api.bag_geosearch.requests')
     def test_get_stadsdeel(self, mocked_requests):

@@ -121,4 +121,4 @@ if SENTRY_DSN:
         ignore_errors=['ExpiredSignatureError']
     )
 
-BAG_GEO_SEARCH_API_URL = "https://api.data.amsterdam.nl/geosearch/bag/?lat={lat}&lon={lon}"
+BAG_GEO_SEARCH_API_URL = "https://api.data.amsterdam.nl/geosearch/bag/"
