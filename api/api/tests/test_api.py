@@ -5,7 +5,7 @@ from model_mommy import mommy
 from rest_framework.reverse import reverse
 
 from datasets.blackspots import models
-from datasets.blackspots.models import Spot, Document
+from datasets.blackspots.models import Document, Spot
 
 log = logging.getLogger(__name__)
 

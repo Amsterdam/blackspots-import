@@ -2,7 +2,6 @@ import os
 
 from objectstore import objectstore
 
-
 STORE_SETTINGS = dict(
     VERSION='2.0',
     AUTHURL='https://identity.stack.cloudvps.com/v2.0',

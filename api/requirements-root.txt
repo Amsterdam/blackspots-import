@@ -19,6 +19,11 @@ django-choices
 flake8
 tox
 model_mommy
+isort
+pytest
+pytest-cov
+pytest-django
+coverage
 
 # Development Libraries
 django-cors-headers

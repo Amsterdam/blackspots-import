@@ -1,11 +1,11 @@
 import json
 import logging
 
-from django.contrib.gis.geos import Point, LineString
 import xlrd
+from django.contrib.gis.geos import LineString, Point
 from xlrd import open_workbook
 
-from datasets.blackspots.models import Spot, Document
+from datasets.blackspots.models import Document, Spot
 from import_process import util
 from objectstore_interaction.list_documents import DocumentList
 
@@ -141,7 +141,7 @@ def create_document(
         doc_type: Document.DocumentType,
         filename: str,
         spot: Spot
-    ):
+):
     if not filename or len(filename) == 0:
         return
 
@@ -204,5 +204,12 @@ def process_xls(xls_path, document_list: DocumentList):
 
         [spot, _] = Spot.objects.get_or_create(**spot_data)
 
-        create_document(document_list, Document.DocumentType.Rapportage, get_sheet_cell(sheet, 'rapportage', row_idx), spot)
-        create_document(document_list, Document.DocumentType.Ontwerp, get_sheet_cell(sheet, 'ontwerp', row_idx), spot)
+        create_document(document_list,
+                        Document.DocumentType.Rapportage,
+                        get_sheet_cell(sheet, 'rapportage', row_idx),
+                        spot)
+
+        create_document(document_list,
+                        Document.DocumentType.Ontwerp,
+                        get_sheet_cell(sheet, 'ontwerp', row_idx),
+                        spot)

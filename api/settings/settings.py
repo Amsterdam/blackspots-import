@@ -11,21 +11,20 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+import settings.settings_common  # noqa
 from settings.settings_common import *  # noqa F403
 from settings.settings_common import INSTALLED_APPS
-import settings.settings_common # noqa
-
 from settings.settings_database import (
-    LocationKey,
-    get_docker_host,
-    get_database_key,
     OVERRIDE_HOST_ENV_VAR,
     OVERRIDE_PORT_ENV_VAR,
+    LocationKey,
+    get_database_key,
+    get_docker_host
 )
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

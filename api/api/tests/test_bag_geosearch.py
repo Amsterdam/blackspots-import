@@ -1,7 +1,7 @@
 from unittest import TestCase
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
-from requests import HTTPError, Timeout, TooManyRedirects
+from requests import ConnectionError, HTTPError, Timeout, TooManyRedirects
 
 from api.bag_geosearch import BagGeoSearchAPI
 from datasets.blackspots.models import Spot
@@ -112,7 +112,7 @@ class TestBagGeoSearchAPI(TestCase):
     @patch('api.bag_geosearch.requests')
     def test_get_stadsdeel_json_exception(self, mocked_requests):
         mocked_response = Mock()
-        mocked_response.json.side_effect = Exception()
+        mocked_response.json.side_effect = ValueError()
         mocked_requests.get.return_value = mocked_response
         expected_stadsdeel = Spot.Stadsdelen.Geen
         stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=52.370216, lon=4.895168)
@@ -125,5 +125,3 @@ class TestBagGeoSearchAPI(TestCase):
             expected_stadsdeel = Spot.Stadsdelen.Geen
             stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=52.370216, lon=4.895168)
             self.assertEqual(stadsdeel, expected_stadsdeel)
-
-

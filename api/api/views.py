@@ -1,13 +1,13 @@
-from django.http import HttpResponse, Http404, HttpResponseServerError
 import logging
+
+from datapunt_api.rest import DatapuntViewSet
+from django.http import Http404, HttpResponse, HttpResponseServerError
 from rest_framework.decorators import action
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.viewsets import ModelViewSet
 from swiftclient.exceptions import ClientException
 
 from api import serializers
-from datapunt_api.rest import DatapuntViewSet
-
 from api.serializers import SpotGeojsonSerializer
 from datasets.blackspots import models
 from objectstore_interaction import connection as custom_connection

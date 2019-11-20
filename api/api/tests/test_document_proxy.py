@@ -1,6 +1,6 @@
 import logging
-from unittest import skip
 from unittest.mock import patch
+
 from django.test import TestCase
 from model_mommy import mommy
 from rest_framework.reverse import reverse
