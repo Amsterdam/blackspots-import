@@ -2,6 +2,7 @@ import logging
 
 import requests
 from django.conf import settings
+from requests import RequestException
 
 from import_process.util import get_stadsdeel
 
@@ -26,7 +27,7 @@ class BagGeoSearchAPI:
                 if properties.get('type') == BagGeoSearchAPI.FEATURE_STADSDEEL:
                     stadsdeel_code = properties.get('code')
                     break
-        except:
+        except (RequestException, ValueError):
             logger.exception("Failed to get stadsdeel from lat/lon")
 
         return get_stadsdeel(stadsdeel_code)
