@@ -29,6 +29,7 @@ class Spot(models.Model):
         Zuid = ChoiceItem('K')
         Oost = ChoiceItem('M')
         Geen = ChoiceItem('X')
+        BagFout = ChoiceItem('ERR')
 
     locatie_id = models.CharField(unique=True, max_length=16)
     spot_type = models.CharField(max_length=24, choices=SpotType.choices)
