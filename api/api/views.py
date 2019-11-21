@@ -3,7 +3,6 @@ import logging
 from datapunt_api.rest import DatapuntViewSet
 from django.http import Http404, HttpResponse, HttpResponseServerError
 from rest_framework.decorators import action
-from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.viewsets import ModelViewSet
 from swiftclient.exceptions import ClientException
@@ -37,7 +36,6 @@ class SpotViewSet(DatapuntViewSet, ModelViewSet):
     serializer_detail_class = serializers.SpotSerializer
     lookup_field = 'locatie_id'
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, GeojsonRenderer)
-    parser_classes = [FormParser, MultiPartParser]
 
     def get_serializer_class(self, *args, **kwargs):
         """

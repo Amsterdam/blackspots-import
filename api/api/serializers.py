@@ -4,7 +4,6 @@ from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from api.bag_geosearch import BagGeoSearchAPI
 from datasets.blackspots import models
-from datasets.blackspots.models import Document
 
 
 class DocumentSerializer(HALSerializer):
@@ -48,8 +47,6 @@ class SpotSerializer(HALSerializer):
     id = serializers.ReadOnlyField()
     stadsdeel = serializers.CharField(source='get_stadsdeel_display', read_only=True)
     documents = SpotDocumentSerializer(many=True, read_only=True)
-    rapport_document = serializers.FileField(use_url=True, required=False)
-    design_document = serializers.FileField(use_url=True, required=False)
 
     def create(self, validated_data):
         # before creating the spot, we'll need to obtain the 'stadsdeel' based on the
@@ -60,22 +57,7 @@ class SpotSerializer(HALSerializer):
         lon = point.x
         stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat, lon)
         validated_data['stadsdeel'] = stadsdeel
-
-        rapport_document = validated_data.pop('rapport_document', None)
-        design_document = validated_data.pop('design_document', None)
-
-        # TODO implement file upload to objectstore
-
-        spot = super().create(validated_data)
-
-        if rapport_document:
-            Document.objects.create(type=Document.DocumentType.Rapportage,
-                                    spot=spot, filename='TODO')
-        if design_document:
-            Document.objects.create(type=Document.DocumentType.Ontwerp,
-                                    spot=spot, filename='TODO')
-
-        return spot
+        return super().create(validated_data)
 
     class Meta(object):
         model = models.Spot

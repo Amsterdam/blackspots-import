@@ -46,7 +46,6 @@ INSTALLED_APPS += [
     'drf_yasg',  # Used to generate schemas
     'rest_framework_swagger',
     'datasets.blackspots',
-    'import_process',
     'health',
     'api',
 ]

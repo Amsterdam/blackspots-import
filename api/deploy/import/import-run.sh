@@ -9,5 +9,5 @@ set -x   # print what we are doing
 cd /app
 
 python manage.py migrate
-python manage.py import_spots
-python manage.py check_imported_spots
+python run_import.py
+python check_import.py
