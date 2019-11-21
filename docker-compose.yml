@@ -39,3 +39,14 @@ services:
     - PROXY_UPSTREAM_URL=${GATEKEEPER_UPSTREAM_URL}
     - PROXY_DISCOVERY_URL=${GATEKEEPER_DISCOVERY_URL}
     - PROXY_REDIRECTION_URL=${GATEKEEPER_REDIRECTION_URL}
+
+  update_stadsdeel_errors:
+    build: ./api
+    links:
+      - database
+    environment:
+      - SECRET_KEY=insecure
+      - DATABASE_NAME=blackspots
+      - DATABASE_USER=blackspots
+      - DATABASE_PASSWORD=insecure
+    command: deploy/docker-update-stadsdelen.sh
