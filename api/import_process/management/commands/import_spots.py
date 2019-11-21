@@ -1,21 +1,25 @@
 import logging
 import os
 
-import django
+from django.core.management.base import BaseCommand
 
-from datasets.blackspots.models import Document, Spot  # noqa
-from import_process.clean import clear_models  # noqa
-from import_process.process_xls import process_xls  # noqa
+from datasets.blackspots.models import Document, Spot
+from import_process.clean import clear_models
+from import_process.process_xls import process_xls
 from objectstore_interaction.connection import get_blackspots_connection
 from objectstore_interaction.fetch_spots import fetch_spots
 from objectstore_interaction.list_documents import get_documents_list
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.settings")
-django.setup()
-
-
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
+
+
+class Command(BaseCommand):
+    help = 'Import blackspots from objectstore'
+
+    def handle(self, *args, **options):
+        assert os.getenv('BLACKSPOTS_OBJECTSTORE_PASSWORD')
+        perform_import()
 
 
 def perform_import():
@@ -36,8 +40,3 @@ def perform_import():
 
     log.info(f'Spot count: {Spot.objects.all().count()}')
     log.info(f'Document count: {Document.objects.all().count()}')
-
-
-if __name__ == "__main__":
-    assert os.getenv('BLACKSPOTS_OBJECTSTORE_PASSWORD')
-    perform_import()
