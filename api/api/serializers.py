@@ -47,6 +47,8 @@ class SpotSerializer(HALSerializer):
     id = serializers.ReadOnlyField()
     stadsdeel = serializers.CharField(source='get_stadsdeel_display', read_only=True)
     documents = SpotDocumentSerializer(many=True, read_only=True)
+    rapport_document = serializers.FileField(use_url=True, required=False)
+    design_document = serializers.FileField(use_url=True, required=False)
 
     def create(self, validated_data):
         # before creating the spot, we'll need to obtain the 'stadsdeel' based on the
@@ -57,7 +59,18 @@ class SpotSerializer(HALSerializer):
         lon = point.x
         stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat, lon)
         validated_data['stadsdeel'] = stadsdeel
-        return super().create(validated_data)
+
+        if 'rapport_document' in validated_data:
+            # TODO: do something with the document
+            del validated_data['rapport_document']
+
+        if 'design_document' in validated_data:
+            # TODO: do something with the document
+            del validated_data['design_document']
+
+        spot = super().create(validated_data)
+
+        return spot
 
     class Meta(object):
         model = models.Spot
