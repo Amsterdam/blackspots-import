@@ -14,6 +14,7 @@ psycopg2-binary
 sentry-sdk
 drf_yasg
 django-choices
+datapunt-objectstore
 
 # Test Libraries
 flake8
