@@ -63,13 +63,27 @@ class TestAPIEndpoints(TestCase):
         self.assertEqual(data.get('type'), 'FeatureCollection')
         self.assertEqual(len(data.get('features')), 4)
 
-    def test_spot_detail(self):
+    def test_spot_detail_get(self):
         url = reverse('spot-detail', [self.spot_with_docs.locatie_id])
-
         response = self.client.get(url)
 
         self.assertStatusCode(url, response)
         self.assertEqual(len(response.data.get('documents')), 3)
+
+    def test_spot_detail_post(self):
+        url = reverse('spot-list')
+        data = {
+            'locatie_id': '123',
+            'spot_type': Spot.SpotType.blackspot,
+            'description': 'Test spot',
+            'point': '{"type": "Point","coordinates": [4.9239022,52.3875654]}',
+            'actiehouders': 'Actiehouders test'
+        }
+        response = self.client.post(url, data=data)
+        self.assertStatusCode(url, response, expected_status=201)
+
+        del data['point']
+        self.assertTrue(Spot.objects.filter(**data).exists())
 
     def test_spot_detail_geojson(self):
         url = reverse('spot-detail', kwargs={
