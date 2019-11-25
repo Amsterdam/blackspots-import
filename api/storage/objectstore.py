@@ -2,10 +2,11 @@ import logging
 import os
 from typing import List, Tuple
 
-from django.conf import settings
 from objectstore import get_full_container_list, objectstore
 
 CONTAINER_NAME = 'doc'
+from datasets.blackspots.models import Document
+
 DIR_CONTENT_TYPE = 'application/directory'
 
 XLS_OBJECT_NAME = 'VVP_Blackspot_Voortgangslijst_Kaart_actueel.xls'
@@ -27,14 +28,10 @@ class ObjectStore:
         connection = objectstore.get_connection(self.config)
         return connection
 
-    def upload(self, file, target_filename):
-        self.logger.info(f"Uploading {file} to objectstore: {target_filename}")
+    def upload(self, file, document: Document):
+        self.logger.info(f"Uploading {file} to objectstore: {document.filename}")
         connection = self.get_connection()
-
-        container_name = settings.OBJECTSTORE_CONTAINER_NAME
-        object_name = settings.OBJECTSTORE_OBJECT_NAME
-
-        connection.put_object(container_name, object_name, file)
+        connection.put_object(CONTAINER_NAME, document.filename, file)
         self.logger.info("Done uploading to objectstore")
 
     def get_document(self, connection, container_name: str, object_name: str):

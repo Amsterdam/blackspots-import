@@ -1,4 +1,5 @@
 from datapunt_api.rest import HALSerializer
+from django.conf import settings
 from django.db import models
 from django.db.models import query
 from rest_framework import serializers
@@ -6,7 +7,10 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from api.bag_geosearch import BagGeoSearchAPI
-from datasets.blackspots.models import Document, Spot
+from datasets.blackspots import models
+from datasets.blackspots.models import Document
+from datasets.blackspots.models import Spot
+from storage.objectstore import ObjectStore
 
 
 class DocumentSerializer(HALSerializer):
@@ -97,21 +101,28 @@ class SpotSerializer(HALSerializer):
         return BagGeoSearchAPI().get_stadsdeel(lat=lat, lon=lon)
 
     def create(self, validated_data):
-        rapport_document = validated_data.pop('rapport_document', None)
-        design_document = validated_data.pop('design_document', None)
-
-        # TODO implement file upload to objectstore
+        rapport_file = validated_data.pop('rapport_document', None)
+        design_file = validated_data.pop('design_document', None)
 
         spot = super().create(validated_data)
-
-        if rapport_document:
-            Document.objects.create(type=Document.DocumentType.Rapportage,
-                                    spot=spot, filename='TODO')
-        if design_document:
-            Document.objects.create(type=Document.DocumentType.Ontwerp,
-                                    spot=spot, filename='TODO')
-
+        self.handle_documents(spot, rapport_file, design_file)
         return spot
+
+    def handle_documents(self, spot, rapport_file=None, design_file=None):
+        objstore = ObjectStore(settings.OBJECTSTORE_CONNECTION_CONFIG)
+        if rapport_file:
+            try:
+                rapport_document = Document.objects.create(type=Document.DocumentType.Rapportage, spot=spot)
+                objstore.upload(rapport_file, rapport_document)
+            except:
+                raise
+
+        if design_file:
+            try:
+                design_document = Document.objects.create(type=Document.DocumentType.Ontwerp, spot=spot)
+                objstore.upload(design_file, design_document)
+            except:
+                raise
 
     class Meta(object):
         model = Spot
