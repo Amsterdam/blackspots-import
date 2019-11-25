@@ -23,14 +23,14 @@ class TestAPIEndpoints(TestCase):
         for _ in range(3):
             mommy.make(Document, spot=self.spot_with_docs)
 
-    def valid_response(self, url, response):
+    def assertStatusCode(self, url, response, expected_status=200):
         """
         Helper method to check common status/json
         """
-
-        self.assertEqual(
-            200, response.status_code,
-            'Wrong response code for {}'.format(url))
+        content = response.content if not response.streaming else "*http stream*"
+        self.assertEqual(expected_status, response.status_code,
+                         f'Wrong response code for {url}. \n\nContent: {content}. \n\n'
+                         f'Headers: {response.serialize_headers()}')
 
         self.assertEqual(
             'application/json', response['Content-Type'],
@@ -45,7 +45,7 @@ class TestAPIEndpoints(TestCase):
 
         response = self.client.get(url)
 
-        self.valid_response(url, response)
+        self.assertStatusCode(url, response)
         data = response.data
         self.assertEqual(data.get('count'), 4)
         spot_document_data = [
@@ -58,7 +58,7 @@ class TestAPIEndpoints(TestCase):
 
         response = self.client.get(url)
 
-        self.valid_response(url, response)
+        self.assertStatusCode(url, response)
         data = response.data
         self.assertEqual(data.get('type'), 'FeatureCollection')
         self.assertEqual(len(data.get('features')), 4)
@@ -68,7 +68,7 @@ class TestAPIEndpoints(TestCase):
 
         response = self.client.get(url)
 
-        self.valid_response(url, response)
+        self.assertStatusCode(url, response)
         self.assertEqual(len(response.data.get('documents')), 3)
 
     def test_spot_detail_geojson(self):
@@ -79,7 +79,7 @@ class TestAPIEndpoints(TestCase):
 
         response = self.client.get(url)
 
-        self.valid_response(url, response)
+        self.assertStatusCode(url, response)
         self.assertEqual(response.data.get('type'), 'Feature')
 
     def test_documents_list(self):
@@ -87,7 +87,7 @@ class TestAPIEndpoints(TestCase):
 
         response = self.client.get(url)
 
-        self.valid_response(url, response)
+        self.assertStatusCode(url, response)
         self.assertEqual(len(response.data), 3)
 
     def test_documents_detail(self):
@@ -95,4 +95,4 @@ class TestAPIEndpoints(TestCase):
 
         response = self.client.get(url)
 
-        self.valid_response(url, response)
+        self.assertStatusCode(url, response)
