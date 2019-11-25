@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 
 from django.core.management.base import BaseCommand
 
@@ -16,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         spots = Spot.objects.filter(stadsdeel=Spot.Stadsdelen.BagFout)
         bag_geosearch_api = BagGeoSearchAPI()
-        update_dict = {}
+        update_dict = defaultdict(int)
         for spot in spots:
             lat = spot.point.y
             lon = spot.point.x
@@ -25,10 +26,7 @@ class Command(BaseCommand):
                 spot.stadsdeel = stadsdeel
                 spot.save()
 
-            if stadsdeel not in update_dict:
-                update_dict[stadsdeel] = 1
-            else:
-                update_dict[stadsdeel] += 1
+            update_dict[stadsdeel] += 1
 
         for stadsdeel in update_dict:
             logger.info(f"Updated {update_dict[stadsdeel]} Spots to {stadsdeel}")
