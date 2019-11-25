@@ -114,7 +114,7 @@ class TestBagGeoSearchAPI(TestCase):
         mocked_response = Mock()
         mocked_response.json.side_effect = ValueError()
         mocked_requests.get.return_value = mocked_response
-        expected_stadsdeel = Spot.Stadsdelen.Geen
+        expected_stadsdeel = Spot.Stadsdelen.BagFout
         stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=52.370216, lon=4.895168)
         self.assertEqual(stadsdeel, expected_stadsdeel)
 
@@ -122,6 +122,6 @@ class TestBagGeoSearchAPI(TestCase):
     def test_get_stadsdeel_http_exception(self, mocked_requests):
         for ExceptionClass in [ConnectionError, HTTPError, Timeout, TooManyRedirects]:
             mocked_requests.get.side_effect = ExceptionClass()
-            expected_stadsdeel = Spot.Stadsdelen.Geen
+            expected_stadsdeel = Spot.Stadsdelen.BagFout
             stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat=52.370216, lon=4.895168)
             self.assertEqual(stadsdeel, expected_stadsdeel)
