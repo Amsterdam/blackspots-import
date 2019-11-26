@@ -20,7 +20,7 @@ class TestAPIEndpoints(TestCase):
         # use the DRF api client. See why:
         # https://www.django-rest-framework.org/api-guide/testing/#put-and-patch-with-form-data
         self.rest_client = APIClient()
-        
+
         for i in range(3):
             mommy.make(Spot, locatie_id=f"test_{i}", actiehouders="Unknown")
 
@@ -98,6 +98,33 @@ class TestAPIEndpoints(TestCase):
         response = self.rest_client.patch(url, data=data)
         self.assertStatusCode(url, response)
         self.assertTrue(Spot.objects.filter(actiehouders='Someone', locatie_id='test_1').exists())
+
+    def test_spot_detail_put(self):
+        locatie_id = 'abcdef'
+        initial_data = {
+            'locatie_id': locatie_id,
+            'spot_type': Spot.SpotType.blackspot,
+            'description': 'TEST PUT',
+            'point': '{"type": "Point","coordinates": [123, 456]}',
+            'actiehouders': 'PUT actiehouders'
+        }
+        Spot.objects.create(**initial_data)
+
+        url = reverse('spot-detail', [locatie_id])
+        new_data = {
+            'locatie_id': locatie_id,
+            'spot_type': Spot.SpotType.risico,
+            'description': 'TEST PUT 2',
+            'point': '{"type": "Point","coordinates": [567, 789]}',
+            'actiehouders': 'PUT actiehouders 2'
+        }
+        response = self.rest_client.put(url, data=new_data)
+        self.assertStatusCode(url, response)
+
+        del initial_data['point']
+        del new_data['point']
+        self.assertFalse(Spot.objects.filter(**initial_data).exists())
+        self.assertTrue(Spot.objects.filter(**new_data).exists())
 
     def test_spot_detail_delete(self):
         self.assertTrue(Spot.objects.filter(locatie_id='test_0').exists())
