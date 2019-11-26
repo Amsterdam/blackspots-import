@@ -20,9 +20,9 @@ class TestAPIEndpoints(TestCase):
         # use the DRF api client. See why:
         # https://www.django-rest-framework.org/api-guide/testing/#put-and-patch-with-form-data
         self.rest_client = APIClient()
-
-        for _ in range(3):
-            mommy.make(Spot)
+        
+        for i in range(3):
+            mommy.make(Spot, locatie_id=f"test_{i}", actiehouders="Unknown")
 
         self.spot_with_docs = mommy.make(Spot)
         for _ in range(3):
@@ -89,6 +89,15 @@ class TestAPIEndpoints(TestCase):
 
         del data['point']
         self.assertTrue(Spot.objects.filter(**data).exists())
+
+    def test_spot_detail_patch(self):
+        url = reverse('spot-detail', ["test_1"])
+        data = {
+            'actiehouders': 'Someone',
+        }
+        response = self.rest_client.patch(url, data=data)
+        self.assertStatusCode(url, response)
+        self.assertTrue(Spot.objects.filter(actiehouders='Someone', locatie_id='test_1').exists())
 
     def test_spot_detail_geojson(self):
         url = reverse('spot-detail', kwargs={
