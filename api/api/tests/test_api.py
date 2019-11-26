@@ -2,6 +2,7 @@ import logging
 
 from django.test import TestCase
 from model_mommy import mommy
+from model_mommy.recipe import seq
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
@@ -22,12 +23,10 @@ class TestAPIEndpoints(TestCase):
         # https://www.django-rest-framework.org/api-guide/testing/#put-and-patch-with-form-data
         self.rest_client = APIClient()
 
-        for i in range(3):
-            mommy.make(Spot, locatie_id=f"test_{i}", actiehouders="Unknown")
-
+        # generate 3 spots with locatie_ids test_1, test_2 and test_3
+        mommy.make(Spot, locatie_id=seq('test_'), actiehouders="Unknown", _quantity=3)
         self.spot_with_docs = mommy.make(Spot)
-        for _ in range(3):
-            mommy.make(Document, spot=self.spot_with_docs)
+        mommy.make(Document, spot=self.spot_with_docs, _quantity=3)
 
     def assertStatusCode(self, url, response, expected_status=200):
         """
@@ -132,12 +131,12 @@ class TestAPIEndpoints(TestCase):
         self.assertTrue(Spot.objects.filter(**new_data).exists())
 
     def test_spot_detail_delete(self):
-        self.assertTrue(Spot.objects.filter(locatie_id='test_0').exists())
+        self.assertTrue(Spot.objects.filter(locatie_id='test_2').exists())
 
-        url = reverse('spot-detail', ["test_0"])
+        url = reverse('spot-detail', ["test_2"])
         response = self.rest_client.delete(url)
         self.assertStatusCode(url, response, expected_status=204)
-        self.assertFalse(Spot.objects.filter(locatie_id='test_0').exists())
+        self.assertFalse(Spot.objects.filter(locatie_id='test_2').exists())
 
     def test_spot_detail_geojson(self):
         url = reverse('spot-detail', kwargs={
