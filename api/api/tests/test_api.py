@@ -99,6 +99,14 @@ class TestAPIEndpoints(TestCase):
         self.assertStatusCode(url, response)
         self.assertTrue(Spot.objects.filter(actiehouders='Someone', locatie_id='test_1').exists())
 
+    def test_spot_detail_delete(self):
+        self.assertTrue(Spot.objects.filter(locatie_id='test_0').exists())
+
+        url = reverse('spot-detail', ["test_0"])
+        response = self.rest_client.delete(url)
+        self.assertStatusCode(url, response, expected_status=204)
+        self.assertFalse(Spot.objects.filter(locatie_id='test_0').exists())
+
     def test_spot_detail_geojson(self):
         url = reverse('spot-detail', kwargs={
             'locatie_id': self.spot_with_docs.locatie_id,
