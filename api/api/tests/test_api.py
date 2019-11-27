@@ -1,4 +1,5 @@
 import logging
+from unittest import mock
 
 from django.test import TestCase
 from model_mommy import mommy
@@ -79,14 +80,19 @@ class TestAPIEndpoints(TestCase):
         self.assertStatusCode(url, response)
         self.assertEqual(len(response.data.get('documents')), 3)
 
-    def test_spot_detail_post(self):
+    @mock.patch('api.serializers.SpotSerializer.determine_stadsdeel')
+    def test_spot_detail_post(self, determine_stadsdeel):
+        determine_stadsdeel.return_value = Spot.Stadsdelen.Centrum
+
         url = reverse('spot-list')
         data = {
             'locatie_id': '123',
             'spot_type': Spot.SpotType.blackspot,
             'description': 'Test spot',
             'point': '{"type": "Point","coordinates": [4.9239022,52.3875654]}',
-            'actiehouders': 'Actiehouders test'
+            'actiehouders': 'Actiehouders test',
+            'status': 'voorbereiding',
+            'jaar_blackspotlijst': 2019
         }
         response = self.rest_client.post(url, data=data)
         self.assertStatusCode(url, response, expected_status=201)
@@ -103,14 +109,19 @@ class TestAPIEndpoints(TestCase):
         self.assertStatusCode(url, response)
         self.assertTrue(Spot.objects.filter(actiehouders='Someone', locatie_id='test_1').exists())
 
-    def test_spot_detail_put(self):
+    @mock.patch('api.serializers.SpotSerializer.determine_stadsdeel')
+    def test_spot_detail_put(self, determine_stadsdeel):
+        determine_stadsdeel.return_value = Spot.Stadsdelen.Centrum
+
         locatie_id = 'abcdef'
         initial_data = {
             'locatie_id': locatie_id,
             'spot_type': Spot.SpotType.blackspot,
             'description': 'TEST PUT',
             'point': '{"type": "Point","coordinates": [123, 456]}',
-            'actiehouders': 'PUT actiehouders'
+            'actiehouders': 'PUT actiehouders',
+            'status': 'voorbereiding',
+            'jaar_blackspotlijst': 2019
         }
         Spot.objects.create(**initial_data)
 
@@ -120,7 +131,8 @@ class TestAPIEndpoints(TestCase):
             'spot_type': Spot.SpotType.risico,
             'description': 'TEST PUT 2',
             'point': '{"type": "Point","coordinates": [567, 789]}',
-            'actiehouders': 'PUT actiehouders 2'
+            'actiehouders': 'PUT actiehouders 2',
+            'status': 'gereed'
         }
         response = self.rest_client.put(url, data=new_data)
         self.assertStatusCode(url, response)

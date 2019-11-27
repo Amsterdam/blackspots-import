@@ -41,8 +41,7 @@ class Spot(models.Model):
 
     status = models.CharField(
         max_length=32,
-        choices=StatusChoice.choices,
-        default=StatusChoice.onbekend
+        choices=StatusChoice.choices
     )
 
     actiehouders = models.CharField(max_length=128)
