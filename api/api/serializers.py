@@ -1,6 +1,8 @@
 from datapunt_api.rest import HALSerializer
 from django.db import models
+from django.db.models import query
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from api.bag_geosearch import BagGeoSearchAPI
@@ -112,3 +114,40 @@ class SpotSerializer(HALSerializer):
         extra_kwargs = {
             '_links': {'lookup_field': 'locatie_id'}
         }
+
+
+class GeneratorListSerializer(serializers.ListSerializer):
+    """
+    Return data as a generator instead of a list
+    """
+
+    def to_representation(self, data):
+        """
+        List of object instances -> List of dicts of primitive datatypes.
+        """
+        # Dealing with nested relationships, data can be a Manager,
+        # so, get a queryset from the Manager if needed
+        # Use an iterator on the queryset to allow large querysets to be
+        # exported without excessive memory usage
+        if isinstance(data, models.Manager):
+            iterable = data.all().iterator()
+        elif isinstance(data, query.QuerySet):
+            iterable = data.iterator()
+        else:
+            iterable = data
+        # Return a generator rather than a list so that streaming responses
+        # can be used
+        return (self.child.to_representation(item) for item in iterable)
+
+    @property
+    def data(self):
+        # Note we deliberately return the super of ListSerializer to avoid
+        # instantiating a ReturnList, which would force evaluating the generator
+        return super(serializers.ListSerializer, self).data
+
+
+class SpotCSVSerializer(ModelSerializer):
+    class Meta:
+        model = Spot
+        fields = ['description']
+        list_serializer_class = GeneratorListSerializer
