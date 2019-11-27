@@ -4,7 +4,7 @@ from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from api.bag_geosearch import BagGeoSearchAPI
 from datasets.blackspots import models
-from datasets.blackspots.models import Document
+from datasets.blackspots.models import Document, Spot
 
 
 class DocumentSerializer(HALSerializer):
@@ -50,6 +50,27 @@ class SpotSerializer(HALSerializer):
     documents = SpotDocumentSerializer(many=True, read_only=True)
     rapport_document = serializers.FileField(use_url=True, required=False)
     design_document = serializers.FileField(use_url=True, required=False)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        spot_type = attrs.get('spot_type')
+        if spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
+            if not attrs.get('jaar_blackspotlijst'):
+                raise serializers.ValidationError({
+                    'jaar_blackspotlijst': [
+                        "jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'"
+                    ]
+                })
+
+        elif spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
+            if not attrs.get('jaar_ongeval_quickscan'):
+                raise serializers.ValidationError({
+                    'jaar_ongeval_quickscan': [
+                        "jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' and 'protocol_dodelijk'"
+                    ]
+                })
+
+        return attrs
 
     def create(self, validated_data):
         # before creating the spot, we'll need to obtain the 'stadsdeel' based on the
