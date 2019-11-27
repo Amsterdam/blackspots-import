@@ -51,6 +51,13 @@ class SpotSerializer(HALSerializer):
     rapport_document = serializers.FileField(use_url=True, required=False)
     design_document = serializers.FileField(use_url=True, required=False)
 
+    def validate_stadsdeel(self, value):
+        if value == Spot.Stadsdelen.Geen:
+            raise serializers.ValidationError('Coordinate could not be matched to stadsdeel')
+        elif value == Spot.Stadsdelen.BagFout:
+            raise serializers.ValidationError('Failed to get stadsdeel for coordinate')
+        return value
+
     def validate(self, attrs):
         attrs = super().validate(attrs)
         spot_type = attrs.get('spot_type')

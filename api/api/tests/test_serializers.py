@@ -68,3 +68,15 @@ class TestSerializers(TestCase):
             attrs = {'spot_type': spot_type, 'jaar_ongeval_quickscan': 2019}
             self.serializer.validate(attrs)
             # no errors expected
+
+    def test_coordinate_outside_amsterdam(self):
+        with self.assertRaises(ValidationError) as context:
+            self.serializer.validate_stadsdeel(value=Spot.Stadsdelen.Geen)
+
+        self.assertEqual(str(str(context.exception.detail[0])), 'Coordinate could not be matched to stadsdeel')
+
+    def test_coordinate_error(self):
+        with self.assertRaises(ValidationError) as context:
+            self.serializer.validate_stadsdeel(value=Spot.Stadsdelen.BagFout)
+
+        self.assertEqual(str(str(context.exception.detail[0])), 'Failed to get stadsdeel for coordinate')
