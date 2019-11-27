@@ -1,9 +1,9 @@
 from datapunt_api.rest import HALSerializer
+from django.db import models
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from api.bag_geosearch import BagGeoSearchAPI
-from datasets.blackspots import models
 from datasets.blackspots.models import Document, Spot
 
 
@@ -15,7 +15,7 @@ class DocumentSerializer(HALSerializer):
     )
 
     class Meta(object):
-        model = models.Document
+        model = Document
         fields = '__all__'
 
 
@@ -23,7 +23,7 @@ class SpotDocumentSerializer(HALSerializer):
     id = serializers.ReadOnlyField()
 
     class Meta(object):
-        model = models.Document
+        model = Document
         exclude = ['spot']
 
 
@@ -33,7 +33,7 @@ class SpotGeojsonSerializer(GeoFeatureModelSerializer):
     documents = SpotDocumentSerializer(many=True, read_only=True)
 
     class Meta(object):
-        model = models.Spot
+        model = Spot
         fields = '__all__'
         geo_field = 'point'
 
@@ -104,7 +104,7 @@ class SpotSerializer(HALSerializer):
         return spot
 
     class Meta(object):
-        model = models.Spot
+        model = Spot
         fields = '__all__'
 
         # Detail url is constructed using location_id instead of pk,
