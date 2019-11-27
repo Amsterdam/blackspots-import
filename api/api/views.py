@@ -9,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 from swiftclient.exceptions import ClientException
 
 from api import serializers
+from api.renderers import StreamingCSVRenderer, GeojsonRenderer
 from api.serializers import SpotGeojsonSerializer
 from datasets.blackspots import models
 from objectstore_interaction import connection as custom_connection
@@ -24,11 +25,6 @@ def get_container_name(document_type: str) -> str:
         return 'doc/rapportage'
 
 
-class GeojsonRenderer(JSONRenderer):
-    """
-    Simpy allows for ?format=geojson to be used to get a Json response
-    """
-    format = 'geojson'
 
 
 class SpotViewSet(DatapuntViewSet, ModelViewSet):
