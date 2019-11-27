@@ -1,4 +1,5 @@
 import logging
+from unittest import mock
 
 from django.test import TestCase
 from model_mommy import mommy
@@ -79,7 +80,10 @@ class TestAPIEndpoints(TestCase):
         self.assertStatusCode(url, response)
         self.assertEqual(len(response.data.get('documents')), 3)
 
-    def test_spot_detail_post(self):
+    @mock.patch('api.serializers.SpotSerializer.determine_stadsdeel')
+    def test_spot_detail_post(self, determine_stadsdeel):
+        determine_stadsdeel.return_value = Spot.Stadsdelen.Centrum
+
         url = reverse('spot-list')
         data = {
             'locatie_id': '123',
@@ -105,7 +109,10 @@ class TestAPIEndpoints(TestCase):
         self.assertStatusCode(url, response)
         self.assertTrue(Spot.objects.filter(actiehouders='Someone', locatie_id='test_1').exists())
 
-    def test_spot_detail_put(self):
+    @mock.patch('api.serializers.SpotSerializer.determine_stadsdeel')
+    def test_spot_detail_put(self, determine_stadsdeel):
+        determine_stadsdeel.return_value = Spot.Stadsdelen.Centrum
+
         locatie_id = 'abcdef'
         initial_data = {
             'locatie_id': locatie_id,

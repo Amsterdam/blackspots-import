@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from rest_framework.exceptions import ValidationError
 
@@ -69,14 +69,24 @@ class TestSerializers(TestCase):
             self.serializer.validate(attrs)
             # no errors expected
 
-    def test_coordinate_outside_amsterdam(self):
+    @mock.patch('api.serializers.SpotSerializer.determine_stadsdeel')
+    def test_coordinate_outside_amsterdam(self, determine_stadsdeel):
+        determine_stadsdeel.return_value = Spot.Stadsdelen.Geen
+
+        attrs = {'spot_type': Spot.SpotType.blackspot, 'jaar_blackspotlijst': 2019, 'point': 'test'}
         with self.assertRaises(ValidationError) as context:
-            self.serializer.validate_stadsdeel(value=Spot.Stadsdelen.Geen)
+            self.serializer.validate(attrs)
 
-        self.assertEqual(str(str(context.exception.detail[0])), 'Coordinate could not be matched to stadsdeel')
+        exception_details = context.exception.detail
+        self.assertEqual(str(exception_details['point'][0]), 'Point could not be matched to stadsdeel')
 
-    def test_coordinate_error(self):
+    @mock.patch('api.serializers.SpotSerializer.determine_stadsdeel')
+    def test_coordinate_error(self, determine_stadsdeel):
+        determine_stadsdeel.return_value = Spot.Stadsdelen.BagFout
+
+        attrs = {'spot_type': Spot.SpotType.blackspot, 'jaar_blackspotlijst': 2019, 'point': 'test'}
         with self.assertRaises(ValidationError) as context:
-            self.serializer.validate_stadsdeel(value=Spot.Stadsdelen.BagFout)
+            self.serializer.validate(attrs)
 
-        self.assertEqual(str(str(context.exception.detail[0])), 'Failed to get stadsdeel for coordinate')
+        exception_details = context.exception.detail
+        self.assertEqual(str(exception_details['point'][0]), 'Failed to get stadsdeel for point')

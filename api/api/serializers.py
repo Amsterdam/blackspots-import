@@ -51,13 +51,6 @@ class SpotSerializer(HALSerializer):
     rapport_document = serializers.FileField(use_url=True, required=False)
     design_document = serializers.FileField(use_url=True, required=False)
 
-    def validate_stadsdeel(self, value):
-        if value == Spot.Stadsdelen.Geen:
-            raise serializers.ValidationError('Coordinate could not be matched to stadsdeel')
-        elif value == Spot.Stadsdelen.BagFout:
-            raise serializers.ValidationError('Failed to get stadsdeel for coordinate')
-        return value
-
     def validate(self, attrs):
         attrs = super().validate(attrs)
         spot_type = attrs.get('spot_type')
@@ -77,18 +70,23 @@ class SpotSerializer(HALSerializer):
                     ]
                 })
 
+        point = attrs.get('point')
+        if point:
+            stadsdeel = self.determine_stadsdeel(point)
+            if stadsdeel == Spot.Stadsdelen.Geen:
+                raise serializers.ValidationError({'point': ['Point could not be matched to stadsdeel']})
+            elif stadsdeel == Spot.Stadsdelen.BagFout:
+                raise serializers.ValidationError({'point': ['Failed to get stadsdeel for point']})
+            attrs['stadsdeel'] = stadsdeel
+
         return attrs
 
-    def create(self, validated_data):
-        # before creating the spot, we'll need to obtain the 'stadsdeel' based on the
-        # Point value.
-
-        point = validated_data.get('point')
+    def determine_stadsdeel(self, point):
         lat = point.y
         lon = point.x
-        stadsdeel = BagGeoSearchAPI().get_stadsdeel(lat, lon)
-        validated_data['stadsdeel'] = stadsdeel
+        return BagGeoSearchAPI().get_stadsdeel(lat=lat, lon=lon)
 
+    def create(self, validated_data):
         rapport_document = validated_data.pop('rapport_document', None)
         design_document = validated_data.pop('design_document', None)
 
