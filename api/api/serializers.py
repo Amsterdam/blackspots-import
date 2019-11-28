@@ -147,7 +147,35 @@ class GeneratorListSerializer(serializers.ListSerializer):
 
 
 class SpotCSVSerializer(ModelSerializer):
+    stadsdeel = serializers.CharField(source='get_stadsdeel_display')
+    type = serializers.CharField(source='spot_type')
+    nummer = serializers.CharField(source='locatie_id')
+    naam = serializers.CharField(source='description')
+    jaar = serializers.SerializerMethodField()
+    taken = serializers.CharField(source='tasks')
+    aantekeningen = serializers.CharField(source='notes')
+
+    def get_jaar(self, obj):
+        if obj.spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
+            return obj.jaar_blackspotlijst
+        if obj.spot_type in [Spot.SpotType.protocol_dodelijk, Spot.SpotType.protocol_ernstig]:
+            return obj.jaar_ongeval_quickscan
+        return ''
+
     class Meta:
         model = Spot
-        fields = ['description']
+        fields = [
+            'stadsdeel',
+            'type',
+            'nummer',
+            'naam',
+            'status',
+            'start_uitvoering',
+            'eind_uitvoering',
+            'jaar',
+            'taken',
+            'aantekeningen'
+
+        ]
+
         list_serializer_class = GeneratorListSerializer

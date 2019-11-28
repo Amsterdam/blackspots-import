@@ -75,7 +75,7 @@ class CSVDownloadViewSet:
 
 
 class SpotExportViewSet(mixins.ListModelMixin, GenericViewSet, CSVDownloadViewSet):
-    queryset = models.Spot.objects.all().order_by('pk')
+    queryset = models.Spot.objects.all().order_by('stadsdeel', 'spot_type', 'pk')
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['stadsdeel', 'spot_type', 'status']
     serializer_class = SpotCSVSerializer
