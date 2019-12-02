@@ -50,3 +50,14 @@ services:
       - DATABASE_USER=blackspots
       - DATABASE_PASSWORD=insecure
     command: deploy/docker-update-stadsdelen.sh
+
+  migrate:
+    build: ./api
+    links:
+      - database
+    environment:
+      - SECRET_KEY=insecure
+      - DATABASE_NAME=blackspots
+      - DATABASE_USER=blackspots
+      - DATABASE_PASSWORD=insecure
+    command: deploy/docker-migrate.sh
