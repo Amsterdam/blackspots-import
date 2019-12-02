@@ -70,3 +70,6 @@ class Document(models.Model):
 
     def __str__(self):
         return self.filename
+
+    class Meta:
+        unique_together = ['spot', 'type']

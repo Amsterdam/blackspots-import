@@ -18,16 +18,26 @@ class TestAPIEndpoints(TestCase):
     """
     Verifies that browsing the API works correctly.
     """
+    rest_client = None
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
         # use the DRF api client. See why:
         # https://www.django-rest-framework.org/api-guide/testing/#put-and-patch-with-form-data
-        self.rest_client = APIClient()
+        TestAPIEndpoints.rest_client = APIClient()
 
+    def setUp(self):
         # generate 3 spots with locatie_ids test_1, test_2 and test_3
         mommy.make(Spot, locatie_id=seq('test_'), actiehouders="Unknown", _quantity=3)
         self.spot_with_docs = mommy.make(Spot)
-        mommy.make(Document, spot=self.spot_with_docs, _quantity=3)
+        Document.objects.create(spot=self.spot_with_docs, type=Document.DocumentType.Ontwerp, filename='test')
+        Document.objects.create(spot=self.spot_with_docs, type=Document.DocumentType.Rapportage, filename='test2')
+
+    def tearDown(self):
+        Document.objects.all().delete()
+        Spot.objects.all().delete()
 
     def assertStatusCode(self, url, response, expected_status=200):
         """
@@ -44,7 +54,7 @@ class TestAPIEndpoints(TestCase):
 
     def test_setup(self):
         self.assertEqual(models.Spot.objects.count(), 4)
-        self.assertEqual(models.Document.objects.count(), 3)
+        self.assertEqual(models.Document.objects.count(), 2)
 
     def test_get_container_name(self):
         self.assertEqual(get_container_name(Document.DocumentType.Rapportage), 'doc/rapportage')
@@ -61,7 +71,7 @@ class TestAPIEndpoints(TestCase):
         spot_document_data = [
             spot for spot in data.get('results') if spot.get('locatie_id') == self.spot_with_docs.locatie_id
         ][0]
-        self.assertEqual(len(spot_document_data.get('documents')), 3)
+        self.assertEqual(len(spot_document_data.get('documents')), 2)
 
     def test_spot_list_geojson(self):
         url = reverse('spot-list', format='geojson')
@@ -78,7 +88,7 @@ class TestAPIEndpoints(TestCase):
         response = self.rest_client.get(url)
 
         self.assertStatusCode(url, response)
-        self.assertEqual(len(response.data.get('documents')), 3)
+        self.assertEqual(len(response.data.get('documents')), 2)
 
     @mock.patch('api.serializers.SpotSerializer.determine_stadsdeel')
     def test_spot_detail_post(self, determine_stadsdeel):
@@ -167,8 +177,8 @@ class TestAPIEndpoints(TestCase):
         response = self.rest_client.get(url)
 
         self.assertStatusCode(url, response)
-        self.assertEqual(len(response.data), 3)
-
+        self.assertEqual(response.data['count'], 2)
+        
     def test_documents_detail(self):
         url = reverse('document-detail', [1])
 
