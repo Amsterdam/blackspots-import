@@ -64,6 +64,10 @@ class SpotSerializer(HALSerializer):
                     ]
                 })
 
+            # type is blackspot or wegvak (redroute), so we need to make sure jaar_ongeval_quickscan is empty
+            # note that by setting the attribute to None, it will be emptied in the db.
+            attrs['jaar_ongeval_quickscan'] = None
+
         elif spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
             if not attrs.get('jaar_ongeval_quickscan'):
                 raise serializers.ValidationError({
@@ -71,6 +75,10 @@ class SpotSerializer(HALSerializer):
                         "jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' and 'protocol_dodelijk'"
                     ]
                 })
+
+            # type is protocol_*, so we need to make sure jaar_blackspotlijst is empty
+            # note that by setting the attribute to None, it will be emptied in the db. 
+            attrs['jaar_blackspotlijst'] = None
 
         point = attrs.get('point')
         if point:
