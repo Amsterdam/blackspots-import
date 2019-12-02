@@ -20,6 +20,8 @@ class BlackspotsRouter(routers.DefaultRouter):
 
 router = BlackspotsRouter()
 
+# register spots/export before spots to prevent collision with spots/{id}
+router.register(r'spots/export', views.SpotExportViewSet)
 router.register(r'spots', views.SpotViewSet)
 router.register(r'documents', views.DocumentViewSet)
 

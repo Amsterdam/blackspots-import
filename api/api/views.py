@@ -1,15 +1,19 @@
 import logging
+from datetime import date
 
 from datapunt_api.rest import DatapuntViewSet
-from django.http import Http404, HttpResponse, HttpResponseServerError
+from django.http import Http404, HttpResponse, HttpResponseServerError, StreamingHttpResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from swiftclient.exceptions import ClientException
 
 from api import serializers
-from api.serializers import SpotGeojsonSerializer
+from api.renderers import GeojsonRenderer, StreamingCSVRenderer
+from api.serializers import SpotCSVSerializer, SpotGeojsonSerializer
 from datasets.blackspots import models
 from objectstore_interaction import connection as custom_connection
 from objectstore_interaction import documents
@@ -22,13 +26,6 @@ def get_container_name(document_type: str) -> str:
         return 'doc/ontwerp'
     else:
         return 'doc/rapportage'
-
-
-class GeojsonRenderer(JSONRenderer):
-    """
-    Simpy allows for ?format=geojson to be used to get a Json response
-    """
-    format = 'geojson'
 
 
 class SpotViewSet(DatapuntViewSet, ModelViewSet):
@@ -56,6 +53,39 @@ class SpotViewSet(DatapuntViewSet, ModelViewSet):
             return None
         else:
             return DatapuntViewSet.paginate_queryset(self, *args, **kwargs)
+
+
+class CSVDownloadViewSet:
+
+    def stream_csv_download(self, stream_response, serializer, filename_prefix):
+        renderer = StreamingCSVRenderer()
+
+        # the actual serializer might be wrapped by using list_serializer_class
+        actual_serializer = getattr(serializer, 'child') if hasattr(serializer, 'child') else serializer
+        fieldnames = actual_serializer.get_fields().keys()
+
+        response_class = StreamingHttpResponse if stream_response else HttpResponse
+        response = response_class(renderer.render(data=serializer.data, fieldnames=fieldnames), content_type="text/csv")
+
+        today = date.today()
+        filename = f"{filename_prefix}_{today}.csv"
+        response['Content-Disposition'] = b'attachment; filename=' + filename.encode(encoding='utf-8') + b';'
+
+        return response
+
+
+class SpotExportViewSet(mixins.ListModelMixin, GenericViewSet, CSVDownloadViewSet):
+    queryset = models.Spot.objects.all().order_by('stadsdeel', 'spot_type', 'pk')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['stadsdeel', 'spot_type', 'status']
+    serializer_class = SpotCSVSerializer
+    pagination_class = None
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return self.stream_csv_download(
+            stream_response=True, serializer=serializer, filename_prefix="wba_export")
 
 
 def handle_swift_exception(container_name: str, filename: str, e: ClientException) -> HttpResponse:

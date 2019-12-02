@@ -1,9 +1,11 @@
 from datapunt_api.rest import HALSerializer
+from django.db import models
+from django.db.models import query
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from api.bag_geosearch import BagGeoSearchAPI
-from datasets.blackspots import models
 from datasets.blackspots.models import Document, Spot
 
 
@@ -15,7 +17,7 @@ class DocumentSerializer(HALSerializer):
     )
 
     class Meta(object):
-        model = models.Document
+        model = Document
         fields = '__all__'
 
 
@@ -23,7 +25,7 @@ class SpotDocumentSerializer(HALSerializer):
     id = serializers.ReadOnlyField()
 
     class Meta(object):
-        model = models.Document
+        model = Document
         exclude = ['spot']
 
 
@@ -33,7 +35,7 @@ class SpotGeojsonSerializer(GeoFeatureModelSerializer):
     documents = SpotDocumentSerializer(many=True, read_only=True)
 
     class Meta(object):
-        model = models.Spot
+        model = Spot
         fields = '__all__'
         geo_field = 'point'
 
@@ -104,7 +106,7 @@ class SpotSerializer(HALSerializer):
         return spot
 
     class Meta(object):
-        model = models.Spot
+        model = Spot
         fields = '__all__'
 
         # Detail url is constructed using location_id instead of pk,
@@ -112,3 +114,68 @@ class SpotSerializer(HALSerializer):
         extra_kwargs = {
             '_links': {'lookup_field': 'locatie_id'}
         }
+
+
+class GeneratorListSerializer(serializers.ListSerializer):
+    """
+    Return data as a generator instead of a list
+    """
+
+    def to_representation(self, data):
+        """
+        List of object instances -> List of dicts of primitive datatypes.
+        """
+        # Dealing with nested relationships, data can be a Manager,
+        # so, get a queryset from the Manager if needed
+        # Use an iterator on the queryset to allow large querysets to be
+        # exported without excessive memory usage
+        if isinstance(data, models.Manager):
+            iterable = data.all().iterator()
+        elif isinstance(data, query.QuerySet):
+            iterable = data.iterator()
+        else:
+            iterable = data
+        # Return a generator rather than a list so that streaming responses
+        # can be used
+        return (self.child.to_representation(item) for item in iterable)
+
+    @property
+    def data(self):
+        # Note we deliberately return the super of ListSerializer to avoid
+        # instantiating a ReturnList, which would force evaluating the generator
+        return super(serializers.ListSerializer, self).data
+
+
+class SpotCSVSerializer(ModelSerializer):
+    stadsdeel = serializers.CharField(source='get_stadsdeel_display')
+    type = serializers.CharField(source='spot_type')
+    nummer = serializers.CharField(source='locatie_id')
+    naam = serializers.CharField(source='description')
+    jaar = serializers.SerializerMethodField()
+    taken = serializers.CharField(source='tasks')
+    aantekeningen = serializers.CharField(source='notes')
+
+    def get_jaar(self, obj):
+        if obj.spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
+            return obj.jaar_blackspotlijst
+        if obj.spot_type in [Spot.SpotType.protocol_dodelijk, Spot.SpotType.protocol_ernstig]:
+            return obj.jaar_ongeval_quickscan
+        return ''
+
+    class Meta:
+        model = Spot
+        fields = [
+            'stadsdeel',
+            'type',
+            'nummer',
+            'naam',
+            'status',
+            'start_uitvoering',
+            'eind_uitvoering',
+            'jaar',
+            'taken',
+            'aantekeningen'
+
+        ]
+
+        list_serializer_class = GeneratorListSerializer
