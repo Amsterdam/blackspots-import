@@ -90,3 +90,35 @@ class TestSerializers(TestCase):
 
         exception_details = context.exception.detail
         self.assertEqual(str(exception_details['point'][0]), 'Failed to get stadsdeel for point')
+
+    def test_jaar_blackspotlijst_none(self):
+        # Assert that the jaar_blackspotlijst property is changed to None
+        for spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
+            attrs = {'spot_type': spot_type, 'jaar_ongeval_quickscan': 2019, 'jaar_blackspotlijst': 2020}
+            self.serializer.validate(attrs)
+            self.assertIn('jaar_blackspotlijst', attrs)
+            self.assertEqual(attrs['jaar_blackspotlijst'], None)
+
+    def test_jaar_ongeval_quickscan_none(self):
+        # Assert that the jaar_ongeval_quickscan property is changed to None
+        for spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
+            attrs = {'spot_type': spot_type, 'jaar_blackspotlijst': 2019, 'jaar_ongeval_quickscan': 2020}
+            self.serializer.validate(attrs)
+            self.assertIn('jaar_ongeval_quickscan', attrs)
+            self.assertEqual(attrs['jaar_ongeval_quickscan'], None)
+
+    def test_jaar_blackspotlijst_missing_none(self):
+        # Assert that the jaar_blackspotlijst property is added and set to None
+        for spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
+            attrs = {'spot_type': spot_type, 'jaar_ongeval_quickscan': 2019}
+            self.serializer.validate(attrs)
+            self.assertIn('jaar_blackspotlijst', attrs)
+            self.assertEqual(attrs['jaar_blackspotlijst'], None)
+
+    def test_jaar_ongeval_quickscan_missing_none(self):
+        # Assert that the jaar_ongeval_quickscan property is added and set to None
+        for spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
+            attrs = {'spot_type': spot_type, 'jaar_blackspotlijst': 2019}
+            self.serializer.validate(attrs)
+            self.assertIn('jaar_ongeval_quickscan', attrs)
+            self.assertEqual(attrs['jaar_ongeval_quickscan'], None)
