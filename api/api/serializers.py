@@ -7,9 +7,7 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from api.bag_geosearch import BagGeoSearchAPI
-from datasets.blackspots import models
-from datasets.blackspots.models import Document
-from datasets.blackspots.models import Spot
+from datasets.blackspots.models import Document, Spot
 from storage.objectstore import ObjectStore
 
 
@@ -129,7 +127,7 @@ class SpotSerializer(HALSerializer):
                 rapport_document, created = Document.objects.get_or_create(
                     type=Document.DocumentType.Rapportage, spot=spot)
                 objstore.upload(rapport_file, rapport_document)
-            except:
+            except:  # noqa E722 - ignore flake8 check, using bare except
                 raise
 
         if design_file:
@@ -137,7 +135,7 @@ class SpotSerializer(HALSerializer):
                 design_document, created = Document.objects.get_or_create(
                     type=Document.DocumentType.Ontwerp, spot=spot)
                 objstore.upload(design_file, design_document)
-            except:
+            except:  # noqa E722 - ignore flake8 check, using bare except
                 raise
 
     class Meta(object):

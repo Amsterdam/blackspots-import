@@ -3,8 +3,7 @@ from datetime import date
 
 from datapunt_api.rest import DatapuntViewSet
 from django.conf import settings
-from django.http import Http404, HttpResponse, HttpResponseServerError
-from django.http import StreamingHttpResponse
+from django.http import Http404, HttpResponse, HttpResponseServerError, StreamingHttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework.decorators import action
