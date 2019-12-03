@@ -21,13 +21,6 @@ from storage.objectstore import ObjectStore
 logger = logging.getLogger(__name__)
 
 
-def get_container_name(document_type: str) -> str:
-    if document_type == models.Document.DocumentType.Ontwerp:
-        return 'doc/ontwerp'
-    else:
-        return 'doc/rapportage'
-
-
 class SpotViewSet(DatapuntViewSet, ModelViewSet):
     queryset = models.Spot.objects.all().order_by('pk')
     serializer_class = serializers.SpotSerializer
@@ -118,15 +111,15 @@ class DocumentViewSet(DatapuntViewSet):
     @action(detail=True, url_path='file', methods=['get'])
     def get_file(self, request, pk=None):
         document_model = self.get_object()
-        container_name = get_container_name(document_model.type)
+        container_path = ObjectStore.get_container_path(document_model.type)
         filename = document_model.filename
 
         objstore = ObjectStore(settings.OBJECTSTORE_CONNECTION_CONFIG)
         connection = objstore.get_connection()
         try:
-            store_object = objstore.get_document(connection, container_name, filename)
+            store_object = objstore.get_document(connection, container_path, filename)
         except ClientException as e:
-            return handle_swift_exception(container_name, filename, e)
+            return handle_swift_exception(container_path, filename, e)
 
         content_type = store_object[0].get('content-type')
         obj_data = store_object[1]

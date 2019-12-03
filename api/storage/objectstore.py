@@ -31,7 +31,9 @@ class ObjectStore:
     def upload(self, file, document: Document):
         logger.info(f"Uploading {file} to objectstore: {document.filename}")
         connection = self.get_connection()
-        connection.put_object(settings.OBJECTSTORE_UPLOAD_CONTAINER_NAME, document.filename, file)
+
+        container_path = ObjectStore.get_container_path(document.type)
+        connection.put_object(container_path, document.filename, file)
         logger.info("Done uploading to objectstore")
 
     def get_document(self, connection, container_name: str, object_name: str):
@@ -67,3 +69,10 @@ class ObjectStore:
 
     def fetch_spots(self, connection):
         return self.get_file(connection, settings.OBJECTSTORE_UPLOAD_CONTAINER_NAME, XLS_OBJECT_NAME)
+
+    @staticmethod
+    def get_container_path(document_type):
+        if document_type == Document.DocumentType.Ontwerp:
+            return f'{settings.OBJECTSTORE_UPLOAD_CONTAINER_NAME}/doc/ontwerp'
+        else:
+            return f'{settings.OBJECTSTORE_UPLOAD_CONTAINER_NAME}/doc/rapportage'
