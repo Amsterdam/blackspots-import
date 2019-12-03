@@ -52,8 +52,8 @@ class SpotSerializer(HALSerializer):
     id = serializers.ReadOnlyField()
     stadsdeel = serializers.CharField(source='get_stadsdeel_display', read_only=True)
     documents = SpotDocumentSerializer(many=True, read_only=True)
-    rapport_document = serializers.FileField(use_url=True, required=False)
-    design_document = serializers.FileField(use_url=True, required=False)
+    rapport_document = serializers.FileField(required=False, allow_null=True)
+    design_document = serializers.FileField(required=False, allow_null=True)
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
@@ -113,12 +113,27 @@ class SpotSerializer(HALSerializer):
         return spot
 
     def update(self, instance, validated_data):
+        if 'rapport_document' in validated_data and validated_data['rapport_document'] is None:
+            # delete rapport_document
+            self.delete_document(spot=instance, document_type=Document.DocumentType.Rapportage)
+
+        if 'design_document' in validated_data and validated_data['design_document'] is None:
+            # delete design document
+            self.delete_document(spot=instance, document_type=Document.DocumentType.Ontwerp)
+
         rapport_file = validated_data.pop('rapport_document', None)
         design_file = validated_data.pop('design_document', None)
 
         spot = super().update(instance, validated_data)
         self.handle_documents(spot, rapport_file, design_file)
         return spot
+
+    def delete_document(self, spot, document_type):
+        document = Document.objects.filter(spot=spot, type=document_type).first()
+        if document:
+            objstore = ObjectStore(settings.OBJECTSTORE_CONNECTION_CONFIG)
+            objstore.delete(document)
+            document.delete()
 
     def handle_documents(self, spot, rapport_file=None, design_file=None):
         objstore = ObjectStore(settings.OBJECTSTORE_CONNECTION_CONFIG)

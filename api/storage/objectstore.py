@@ -36,6 +36,14 @@ class ObjectStore:
         connection.put_object(container_path, document.filename, file)
         logger.info("Done uploading to objectstore")
 
+    def delete(self, document: Document):
+        logger.info(f"Deleting file {document.filename}")
+        connection = self.get_connection()
+
+        container_path = ObjectStore.get_container_path(document.type)
+        connection.delete_object(container_path, document.filename)
+        logger.info("Done deleting file from objectstore")
+
     def get_document(self, connection, container_name: str, object_name: str):
         logger.debug(f'Fetching file from objectstore: {container_name}, {object_name}')
         return connection.get_object(container_name, object_name)
