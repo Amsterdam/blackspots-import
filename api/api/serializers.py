@@ -59,6 +59,13 @@ class SpotSerializer(HALSerializer):
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
+
+        self.validate_spot_types(attrs)
+        self.validate_point_set_stadsdeel(attrs)
+
+        return attrs
+
+    def validate_spot_types(self, attrs):
         spot_type = attrs.get('spot_type')
         if spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
             if not attrs.get('jaar_blackspotlijst'):
@@ -81,10 +88,11 @@ class SpotSerializer(HALSerializer):
                 })
 
             # type is protocol_*, so we need to make sure jaar_blackspotlijst is empty
-            # note that by setting the attribute to None, it will be emptied in the db. 
+            # note that by setting the attribute to None, it will be emptied in the db.
             attrs['jaar_blackspotlijst'] = None
 
-        point = attrs.get('point')
+    def validate_point_set_stadsdeel(self, attrs):
+        point = attrs.get('point', None)
         if point:
             stadsdeel = self.determine_stadsdeel(point)
             if stadsdeel == Spot.Stadsdelen.Geen:
@@ -92,8 +100,6 @@ class SpotSerializer(HALSerializer):
             elif stadsdeel == Spot.Stadsdelen.BagFout:
                 raise serializers.ValidationError({'point': ['Failed to get stadsdeel for point']})
             attrs['stadsdeel'] = stadsdeel
-
-        return attrs
 
     def determine_stadsdeel(self, point):
         lat = point.y
@@ -108,18 +114,28 @@ class SpotSerializer(HALSerializer):
         self.handle_documents(spot, rapport_file, design_file)
         return spot
 
+    def update(self, instance, validated_data):
+        rapport_file = validated_data.pop('rapport_document', None)
+        design_file = validated_data.pop('design_document', None)
+
+        spot = super().update(instance, validated_data)
+        self.handle_documents(spot, rapport_file, design_file)
+        return spot
+
     def handle_documents(self, spot, rapport_file=None, design_file=None):
         objstore = ObjectStore(settings.OBJECTSTORE_CONNECTION_CONFIG)
         if rapport_file:
             try:
-                rapport_document = Document.objects.create(type=Document.DocumentType.Rapportage, spot=spot)
+                rapport_document, created = Document.objects.get_or_create(
+                    type=Document.DocumentType.Rapportage, spot=spot)
                 objstore.upload(rapport_file, rapport_document)
             except:
                 raise
 
         if design_file:
             try:
-                design_document = Document.objects.create(type=Document.DocumentType.Ontwerp, spot=spot)
+                design_document, created = Document.objects.get_or_create(
+                    type=Document.DocumentType.Ontwerp, spot=spot)
                 objstore.upload(design_file, design_document)
             except:
                 raise

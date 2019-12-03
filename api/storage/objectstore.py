@@ -2,9 +2,9 @@ import logging
 import os
 from typing import List, Tuple
 
+from django.conf import settings
 from objectstore import get_full_container_list, objectstore
 
-CONTAINER_NAME = 'doc'
 from datasets.blackspots.models import Document
 
 DIR_CONTENT_TYPE = 'application/directory'
@@ -31,7 +31,7 @@ class ObjectStore:
     def upload(self, file, document: Document):
         self.logger.info(f"Uploading {file} to objectstore: {document.filename}")
         connection = self.get_connection()
-        connection.put_object(CONTAINER_NAME, document.filename, file)
+        connection.put_object(settings.OBJECTSTORE_UPLOAD_CONTAINER_NAME, document.filename, file)
         self.logger.info("Done uploading to objectstore")
 
     def get_document(self, connection, container_name: str, object_name: str):
@@ -66,4 +66,4 @@ class ObjectStore:
         return output_path
 
     def fetch_spots(self, connection):
-        return self.get_file(connection, CONTAINER_NAME, XLS_OBJECT_NAME)
+        return self.get_file(connection, settings.OBJECTSTORE_UPLOAD_CONTAINER_NAME, XLS_OBJECT_NAME)
