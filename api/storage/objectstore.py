@@ -15,10 +15,10 @@ WBA_CONTAINER_NAME = 'wbalijst'
 
 DocumentList = List[Tuple[str, str]]
 
+logger = logging.getLogger(__name__)
+
 
 class ObjectStore:
-
-    logger = logging.getLogger(__name__)
 
     def __init__(self, config):
         self.config = config
@@ -29,13 +29,13 @@ class ObjectStore:
         return connection
 
     def upload(self, file, document: Document):
-        self.logger.info(f"Uploading {file} to objectstore: {document.filename}")
+        logger.info(f"Uploading {file} to objectstore: {document.filename}")
         connection = self.get_connection()
         connection.put_object(settings.OBJECTSTORE_UPLOAD_CONTAINER_NAME, document.filename, file)
-        self.logger.info("Done uploading to objectstore")
+        logger.info("Done uploading to objectstore")
 
     def get_document(self, connection, container_name: str, object_name: str):
-        self.logger.debug(f'Fetching file from objectstore: {container_name}, {object_name}')
+        logger.debug(f'Fetching file from objectstore: {container_name}, {object_name}')
         return connection.get_object(container_name, object_name)
 
     def get_wba_documents_list(self, connection) -> DocumentList:
@@ -57,9 +57,9 @@ class ObjectStore:
         output_path = os.path.join(DOWNLOAD_DIR, object_name)
 
         if os.path.isfile(output_path):
-            self.logger.info(f"Using cached file: {object_name}")
+            logger.info(f"Using cached file: {object_name}")
         else:
-            self.logger.info(f"Fetching file: {object_name}")
+            logger.info(f"Fetching file: {object_name}")
             new_data = connection.get_object(container_name, object_name)[1]
             with open(output_path, 'wb') as file:
                 file.write(new_data)
