@@ -122,3 +122,15 @@ if SENTRY_DSN:
     )
 
 BAG_GEO_SEARCH_API_URL = "https://api.data.amsterdam.nl/geosearch/bag/"
+
+OBJECTSTORE_CONNECTION_CONFIG = dict(
+    VERSION='2.0',
+    AUTHURL='https://identity.stack.cloudvps.com/v2.0',
+    TENANT_NAME=os.getenv('OBJECTSTORE_TENANT_NAME'),
+    TENANT_ID=os.getenv('OBJECTSTORE_TENANT_ID'),
+    USER=os.getenv('OBJECTSTORE_USER'),
+    PASSWORD=os.getenv('OBJECTSTORE_PASSWORD'),
+    REGION_NAME='NL',
+)
+
+OBJECTSTORE_UPLOAD_CONTAINER_NAME = os.environ['OBJECTSTORE_UPLOAD_CONTAINER_NAME']

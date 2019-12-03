@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models
+from django.utils.text import slugify
 from djchoices import ChoiceItem, DjangoChoices
 
 
@@ -70,3 +71,16 @@ class Document(models.Model):
 
     def __str__(self):
         return self.filename
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.spot and self.type and not self.filename:
+            self.filename = self._generate_filename()
+        super().save(force_insert, force_update, using, update_fields)
+
+    def _generate_filename(self):
+        if not self.spot:
+            raise Exception("Spot must be set")
+
+        doc_type = "ontwerp" if self.type == Document.DocumentType.Ontwerp else "rapportage"
+        base_filename = f"{self.spot.locatie_id}_{doc_type}_{self.spot.description}"
+        return slugify(base_filename) + ".pdf"

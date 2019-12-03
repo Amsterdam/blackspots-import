@@ -2,6 +2,7 @@ import logging
 from datetime import date
 
 from datapunt_api.rest import DatapuntViewSet
+from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseServerError, StreamingHttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
@@ -15,8 +16,7 @@ from api import serializers
 from api.renderers import GeojsonRenderer, StreamingCSVRenderer
 from api.serializers import SpotCSVSerializer, SpotGeojsonSerializer
 from datasets.blackspots import models
-from objectstore_interaction import connection as custom_connection
-from objectstore_interaction import documents
+from storage.objectstore import ObjectStore
 
 logger = logging.getLogger(__name__)
 
@@ -121,9 +121,10 @@ class DocumentViewSet(DatapuntViewSet):
         container_name = get_container_name(document_model.type)
         filename = document_model.filename
 
-        connection = custom_connection.get_blackspots_connection()
+        objstore = ObjectStore(settings.OBJECTSTORE_CONNECTION_CONFIG)
+        connection = objstore.get_connection()
         try:
-            store_object = documents.get_actual_document(connection, container_name, filename)
+            store_object = objstore.get_document(connection, container_name, filename)
         except ClientException as e:
             return handle_swift_exception(container_name, filename, e)
 

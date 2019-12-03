@@ -1,4 +1,5 @@
 from datapunt_api.rest import HALSerializer
+from django.conf import settings
 from django.db import models
 from django.db.models import query
 from rest_framework import serializers
@@ -7,6 +8,7 @@ from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from api.bag_geosearch import BagGeoSearchAPI
 from datasets.blackspots.models import Document, Spot
+from storage.objectstore import ObjectStore
 
 
 class DocumentSerializer(HALSerializer):
@@ -55,6 +57,13 @@ class SpotSerializer(HALSerializer):
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
+
+        self.validate_spot_types(attrs)
+        self.validate_point_set_stadsdeel(attrs)
+
+        return attrs
+
+    def validate_spot_types(self, attrs):
         spot_type = attrs.get('spot_type')
         if spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
             if not attrs.get('jaar_blackspotlijst'):
@@ -77,10 +86,11 @@ class SpotSerializer(HALSerializer):
                 })
 
             # type is protocol_*, so we need to make sure jaar_blackspotlijst is empty
-            # note that by setting the attribute to None, it will be emptied in the db. 
+            # note that by setting the attribute to None, it will be emptied in the db.
             attrs['jaar_blackspotlijst'] = None
 
-        point = attrs.get('point')
+    def validate_point_set_stadsdeel(self, attrs):
+        point = attrs.get('point', None)
         if point:
             stadsdeel = self.determine_stadsdeel(point)
             if stadsdeel == Spot.Stadsdelen.Geen:
@@ -89,29 +99,44 @@ class SpotSerializer(HALSerializer):
                 raise serializers.ValidationError({'point': ['Failed to get stadsdeel for point']})
             attrs['stadsdeel'] = stadsdeel
 
-        return attrs
-
     def determine_stadsdeel(self, point):
         lat = point.y
         lon = point.x
         return BagGeoSearchAPI().get_stadsdeel(lat=lat, lon=lon)
 
     def create(self, validated_data):
-        rapport_document = validated_data.pop('rapport_document', None)
-        design_document = validated_data.pop('design_document', None)
-
-        # TODO implement file upload to objectstore
+        rapport_file = validated_data.pop('rapport_document', None)
+        design_file = validated_data.pop('design_document', None)
 
         spot = super().create(validated_data)
-
-        if rapport_document:
-            Document.objects.create(type=Document.DocumentType.Rapportage,
-                                    spot=spot, filename='TODO')
-        if design_document:
-            Document.objects.create(type=Document.DocumentType.Ontwerp,
-                                    spot=spot, filename='TODO')
-
+        self.handle_documents(spot, rapport_file, design_file)
         return spot
+
+    def update(self, instance, validated_data):
+        rapport_file = validated_data.pop('rapport_document', None)
+        design_file = validated_data.pop('design_document', None)
+
+        spot = super().update(instance, validated_data)
+        self.handle_documents(spot, rapport_file, design_file)
+        return spot
+
+    def handle_documents(self, spot, rapport_file=None, design_file=None):
+        objstore = ObjectStore(settings.OBJECTSTORE_CONNECTION_CONFIG)
+        if rapport_file:
+            try:
+                rapport_document, created = Document.objects.get_or_create(
+                    type=Document.DocumentType.Rapportage, spot=spot)
+                objstore.upload(rapport_file, rapport_document)
+            except:  # noqa E722 - ignore flake8 check, using bare except
+                raise
+
+        if design_file:
+            try:
+                design_document, created = Document.objects.get_or_create(
+                    type=Document.DocumentType.Ontwerp, spot=spot)
+                objstore.upload(design_file, design_document)
+            except:  # noqa E722 - ignore flake8 check, using bare except
+                raise
 
     class Meta(object):
         model = Spot
