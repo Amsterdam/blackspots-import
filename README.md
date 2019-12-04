@@ -45,7 +45,7 @@ python manage.py migrate
 Optionally import actual data from the objectstore:
 
 ```
-BLACKSPOTS_OBJECTSTORE_PASSWORD=foo python manage.py import_spots
+OBJECTSTORE_PASSWORD=foo python manage.py import_spots
 ``` 
 
 Then start the Django server
@@ -54,7 +54,7 @@ Then start the Django server
 python manage.py runserver
 ```
 
-If you want to proxy file downloads also set the `BLACKSPOTS_OBJECTSTORE_PASSWORD` variable for the server. 
+If you want to proxy file downloads also set the `OBJECTSTORE_PASSWORD` variable for the server. 
 
 ## Endpoints
 
