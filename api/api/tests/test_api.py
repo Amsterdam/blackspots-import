@@ -7,7 +7,6 @@ from model_mommy.recipe import seq
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from api.views import get_container_name
 from datasets.blackspots import models
 from datasets.blackspots.models import Document, Spot
 
@@ -45,10 +44,6 @@ class TestAPIEndpoints(TestCase):
     def test_setup(self):
         self.assertEqual(models.Spot.objects.count(), 4)
         self.assertEqual(models.Document.objects.count(), 3)
-
-    def test_get_container_name(self):
-        self.assertEqual(get_container_name(Document.DocumentType.Rapportage), 'doc/rapportage')
-        self.assertEqual(get_container_name(Document.DocumentType.Ontwerp), 'doc/ontwerp')
 
     def test_spot_list(self):
         url = reverse('spot-list')
