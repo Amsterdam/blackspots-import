@@ -24,7 +24,7 @@ services:
     - DATABASE_NAME=blackspots
     - DATABASE_USER=blackspots
     - DATABASE_PASSWORD=insecure
-    - BLACKSPOTS_OBJECTSTORE_PASSWORD=insecure
+    - OBJECTSTORE_PASSWORD=insecure
     - CONSUL_HOST=${CONSUL_HOST:-notset}
     - CONSUL_PORT=${CONSUL_PORT:-8500}
     # Gatekeeper listens on port 8000 and serves as a proxy for UWSGI

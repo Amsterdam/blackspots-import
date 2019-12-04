@@ -17,7 +17,7 @@ class Command(BaseCommand):
     help = 'Import blackspots from objectstore'
 
     def handle(self, *args, **options):
-        assert os.getenv('BLACKSPOTS_OBJECTSTORE_PASSWORD')
+        assert os.getenv('OBJECTSTORE_PASSWORD')
         perform_import()
 
 
