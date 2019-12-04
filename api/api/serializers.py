@@ -1,3 +1,5 @@
+import logging
+
 from datapunt_api.rest import HALSerializer
 from django.conf import settings
 from django.db import models
@@ -9,6 +11,8 @@ from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from api.bag_geosearch import BagGeoSearchAPI
 from datasets.blackspots.models import Document, Spot
 from storage.objectstore import ObjectStore
+
+logger = logging.getLogger(__name__)
 
 
 class DocumentSerializer(HALSerializer):
@@ -134,6 +138,9 @@ class SpotSerializer(HALSerializer):
             objstore = ObjectStore(settings.OBJECTSTORE_CONNECTION_CONFIG)
             objstore.delete(document)
             document.delete()
+        else:
+            logger.error(f"Delete document was called for spot {spot.locatie_id} and document_type {document_type}, "
+                         f"but it does not exist in our database")
 
     def handle_documents(self, spot, rapport_file=None, design_file=None):
         objstore = ObjectStore(settings.OBJECTSTORE_CONNECTION_CONFIG)
