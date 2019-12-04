@@ -45,7 +45,7 @@ python manage.py migrate
 Optionally import actual data from the objectstore:
 
 ```
-BLACKSPOTS_OBJECTSTORE_PASSWORD=foo python run_import.py
+BLACKSPOTS_OBJECTSTORE_PASSWORD=foo python manage.py import_spots
 ``` 
 
 Then start the Django server
