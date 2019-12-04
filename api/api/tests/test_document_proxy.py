@@ -39,7 +39,8 @@ class TestDocumentProxy(TestCase):
 
         response = self.client.get(reverse('document-get-file', [self.document.id]))
 
-        get_mock.assert_called_with('connection_object', 'doc/ontwerp', 'foo.pdf')
+        # note, container name test is defined in the environment OBJECTSTORE_UPLOAD_CONTAINER_NAME
+        get_mock.assert_called_with('connection_object', 'test/doc/ontwerp', 'foo.pdf')
         self.assertEqual(200, response.status_code)
         self.assertEqual('application/pdf', response['Content-Type'])
         self.assertEqual(response.content, b'blob')
