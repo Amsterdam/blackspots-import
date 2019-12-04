@@ -4,6 +4,7 @@ from datapunt_api.rest import HALSerializer
 from django.conf import settings
 from django.db import models
 from django.db.models import query
+from django.utils import six
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
@@ -52,9 +53,21 @@ class SpotGeojsonSerializer(GeoFeatureModelSerializer):
         }
 
 
+class DisplayChoiceField(serializers.ChoiceField):
+    """
+    We override the ChoiceField because its to_representation will not return the display value,
+    but rather its actual value (which often is a shorthand for the display). 
+    """
+
+    def to_representation(self, value):
+        if value in ('', None):
+            return value
+        return self.choices.get(six.text_type(value), value)
+
+
 class SpotSerializer(HALSerializer):
     id = serializers.ReadOnlyField()
-    stadsdeel = serializers.CharField(source='get_stadsdeel_display', read_only=True)
+    stadsdeel = DisplayChoiceField(choices=Spot.Stadsdelen.choices, required=False)
     documents = SpotDocumentSerializer(many=True, read_only=True)
     rapport_document = serializers.FileField(required=False, allow_null=True)
     design_document = serializers.FileField(required=False, allow_null=True)
@@ -63,7 +76,7 @@ class SpotSerializer(HALSerializer):
         attrs = super().validate(attrs)
 
         self.validate_spot_types(attrs)
-        self.validate_point_set_stadsdeel(attrs)
+        self.validate_point_stadsdeel(attrs)
 
         return attrs
 
@@ -93,9 +106,11 @@ class SpotSerializer(HALSerializer):
             # note that by setting the attribute to None, it will be emptied in the db.
             attrs['jaar_blackspotlijst'] = None
 
-    def validate_point_set_stadsdeel(self, attrs):
-        point = attrs.get('point', None)
-        if point:
+    def validate_point_stadsdeel(self, attrs):
+        stadsdeel = attrs.get('stadsdeel')
+        point = attrs.get('point')
+        if point and not stadsdeel:
+            # only do a stadsdeel lookup if we did not get it from the request
             stadsdeel = self.determine_stadsdeel(point)
             if stadsdeel == Spot.Stadsdelen.Geen:
                 raise serializers.ValidationError({'point': ['Point could not be matched to stadsdeel']})
