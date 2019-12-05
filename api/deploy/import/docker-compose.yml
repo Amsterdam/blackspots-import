@@ -13,7 +13,7 @@ services:
     links:
       - database
     environment:
-      BLACKSPOTS_OBJECTSTORE_PASSWORD:
+      OBJECTSTORE_PASSWORD:
       DATABASE_NAME: blackspots
       DATABASE_USER: blackspots
       DATABASE_PASSWORD: insecure
