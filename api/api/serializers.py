@@ -56,7 +56,7 @@ class SpotGeojsonSerializer(GeoFeatureModelSerializer):
 class DisplayChoiceField(serializers.ChoiceField):
     """
     We override the ChoiceField because its to_representation will not return the display value,
-    but rather its actual value (which often is a shorthand for the display). 
+    but rather its actual value (which often is a shorthand for the display).
     """
 
     def to_representation(self, value):
