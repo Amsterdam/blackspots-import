@@ -4,6 +4,7 @@ from typing import List, Tuple
 
 from django.conf import settings
 from objectstore import get_full_container_list, objectstore
+from swiftclient import ClientException
 
 from datasets.blackspots.models import Document
 
@@ -41,7 +42,11 @@ class ObjectStore:
         connection = self.get_connection()
 
         container_path = ObjectStore.get_container_path(document.type)
-        connection.delete_object(container_path, document.filename)
+        try:
+            connection.delete_object(container_path, document.filename)
+        except ClientException as e:
+            logger.info(f"Failed to delete object: {e}")
+
         logger.info("Done deleting file from objectstore")
 
     def get_document(self, connection, container_name: str, object_name: str):
