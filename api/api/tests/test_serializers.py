@@ -122,3 +122,34 @@ class TestSerializers(TestCase):
             self.serializer.validate(attrs)
             self.assertIn('jaar_ongeval_quickscan', attrs)
             self.assertEqual(attrs['jaar_ongeval_quickscan'], None)
+
+    def test_validate_spot_types_missing_jaarblackspotlijst(self):
+        for spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
+            attrs = {'spot_type': spot_type}
+            with self.assertRaises(ValidationError):
+                self.serializer.validate_spot_types(attrs)
+
+    def test_validate_spot_types_missing_jaarquickscan(self):
+        for spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
+            attrs = {'spot_type': spot_type}
+            with self.assertRaises(ValidationError):
+                self.serializer.validate_spot_types(attrs)
+
+    def test_validate_spot_types_unset_jaarquickscan(self):
+        for spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
+            attrs = {'spot_type': spot_type, 'jaar_blackspotlijst': 2019}
+            self.serializer.validate_spot_types(attrs)
+            self.assertEqual(attrs['jaar_ongeval_quickscan'], None)
+
+    def test_validate_spot_types_unset_jaarblackspotlijst(self):
+        for spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
+            attrs = {'spot_type': spot_type, 'jaar_ongeval_quickscan': 2019}
+            self.serializer.validate_spot_types(attrs)
+            self.assertEqual(attrs['jaar_blackspotlijst'], None)
+
+    def test_validate_spot_types_unset_both(self):
+        for spot_type in [Spot.SpotType.risico]:
+            attrs = {'spot_type': spot_type}
+            self.serializer.validate_spot_types(attrs)
+            self.assertEqual(attrs['jaar_blackspotlijst'], None)
+            self.assertEqual(attrs['jaar_ongeval_quickscan'], None)

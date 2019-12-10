@@ -89,22 +89,22 @@ class SpotSerializer(HALSerializer):
                         "jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'"
                     ]
                 })
-
-            # type is blackspot or wegvak (redroute), so we need to make sure jaar_ongeval_quickscan is empty
+        else:
+            # type is not blackspot or redroute, so we need to make sure jaar_blackspotlijst is empty
             # note that by setting the attribute to None, it will be emptied in the db.
-            attrs['jaar_ongeval_quickscan'] = None
+            attrs['jaar_blackspotlijst'] = None
 
-        elif spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
+        if spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
             if not attrs.get('jaar_ongeval_quickscan'):
                 raise serializers.ValidationError({
                     'jaar_ongeval_quickscan': [
                         "jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' and 'protocol_dodelijk'"
                     ]
                 })
-
-            # type is protocol_*, so we need to make sure jaar_blackspotlijst is empty
+        else:
+            # type is not protocol_*, so we need to make sure jaar_ongeval_quickscan is empty
             # note that by setting the attribute to None, it will be emptied in the db.
-            attrs['jaar_blackspotlijst'] = None
+            attrs['jaar_ongeval_quickscan'] = None
 
     def validate_point_stadsdeel(self, attrs):
         stadsdeel = attrs.get('stadsdeel')
