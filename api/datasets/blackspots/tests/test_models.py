@@ -2,7 +2,7 @@ from unittest import TestCase, mock
 
 from model_bakery import baker
 
-from datasets.blackspots.models import Spot, Document
+from datasets.blackspots.models import Document, Spot
 
 
 class TestSpot(TestCase):
@@ -62,4 +62,3 @@ class TestDocument(TestCase):
         document = baker.prepare(Document, type=Document.DocumentType.Ontwerp, spot=None)
         with self.assertRaises(Exception, msg='Spot must be set'):
             document._generate_filename()
-
