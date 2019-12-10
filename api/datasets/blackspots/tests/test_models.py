@@ -51,7 +51,7 @@ class TestDocument(TestCase):
         """
         spot = baker.prepare(Spot, locatie_id='EFGHIJ', description='test desc')
         document = baker.prepare(Document, type=Document.DocumentType.Ontwerp, spot=spot)
-        self.assertEqual(document._generate_filename(), 'efghij_ontwerp_test-desc.pdf')
+        self.assertEqual(document._generate_filename(), 'EFGHIJ_ontwerp_test_desc.pdf')
 
     def test_generate_filename_exception(self):
         """
