@@ -20,7 +20,7 @@ class DocumentSerializer(HALSerializer):
     spot = serializers.HyperlinkedRelatedField(
         read_only=True,
         view_name='spot-detail',
-        lookup_field='locatie_id',
+        lookup_field='id',
     )
 
     class Meta(object):
@@ -49,7 +49,7 @@ class SpotGeojsonSerializer(GeoFeatureModelSerializer):
         # Detail url is constructed using location_id instead of pk,
         # see: https://www.django-rest-framework.org/api-guide/serializers/#how-hyperlinked-views-are-determined # noqa: 501
         extra_kwargs = {
-            '_links': {'lookup_field': 'locatie_id'}
+            '_links': {'lookup_field': 'id'}
         }
 
 
@@ -154,7 +154,7 @@ class SpotSerializer(HALSerializer):
             objstore.delete(document)
             document.delete()
         else:
-            logger.error(f"Delete document was called for spot {spot.locatie_id} and document_type {document_type}, "
+            logger.error(f"Delete document was called for spot {spot.id} and document_type {document_type}, "
                          f"but it does not exist in our database")
 
     def handle_documents(self, spot, rapport_file=None, design_file=None):
@@ -182,7 +182,7 @@ class SpotSerializer(HALSerializer):
         # Detail url is constructed using location_id instead of pk,
         # see: https://www.django-rest-framework.org/api-guide/serializers/#how-hyperlinked-views-are-determined # noqa: 501
         extra_kwargs = {
-            '_links': {'lookup_field': 'locatie_id'}
+            '_links': {'lookup_field': 'id'}
         }
 
 
