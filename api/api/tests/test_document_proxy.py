@@ -2,7 +2,7 @@ import logging
 from unittest.mock import patch
 
 from django.test import TestCase
-from model_mommy import mommy
+from model_bakery import baker
 from rest_framework.reverse import reverse
 from swiftclient import ClientException
 
@@ -18,7 +18,7 @@ class TestDocumentProxy(TestCase):
     """
 
     def setUp(self):
-        self.document = mommy.make(
+        self.document = baker.make(
             Document,
             type='Ontwerp',
             filename='foo.pdf'

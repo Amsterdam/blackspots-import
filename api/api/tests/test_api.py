@@ -2,8 +2,7 @@ import logging
 from unittest import mock
 
 from django.test import TestCase
-from model_mommy import mommy
-from model_mommy.recipe import seq
+from model_bakery import baker, seq
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
@@ -24,9 +23,9 @@ class TestAPIEndpoints(TestCase):
         self.rest_client = APIClient()
 
         # generate 3 spots with locatie_ids test_1, test_2 and test_3
-        mommy.make(Spot, locatie_id=seq('test_'), actiehouders="Unknown", _quantity=3)
-        self.spot_with_docs = mommy.make(Spot)
-        mommy.make(Document, spot=self.spot_with_docs, _quantity=3)
+        baker.make(Spot, locatie_id=seq('test_'), actiehouders="Unknown", _quantity=3)
+        self.spot_with_docs = baker.make(Spot)
+        baker.make(Document, spot=self.spot_with_docs, _quantity=3)
 
     def assertStatusCode(self, url, response, expected_status=200):
         """
