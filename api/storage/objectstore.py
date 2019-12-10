@@ -4,6 +4,7 @@ from typing import List, Tuple
 
 from django.conf import settings
 from objectstore import get_full_container_list, objectstore
+from swiftclient import ClientException
 
 from datasets.blackspots.models import Document
 
@@ -12,6 +13,7 @@ DIR_CONTENT_TYPE = 'application/directory'
 XLS_OBJECT_NAME = 'VVP_Blackspot_Voortgangslijst_Kaart_actueel.xls'
 DOWNLOAD_DIR = '/tmp/blackspots/'
 WBA_CONTAINER_NAME = 'wbalijst'
+DOC_CONTAINER_NAME = 'doc'
 
 DocumentList = List[Tuple[str, str]]
 
@@ -41,7 +43,11 @@ class ObjectStore:
         connection = self.get_connection()
 
         container_path = ObjectStore.get_container_path(document.type)
-        connection.delete_object(container_path, document.filename)
+        try:
+            connection.delete_object(container_path, document.filename)
+        except ClientException as e:
+            logger.info(f"Failed to delete object: {e}")
+
         logger.info("Done deleting file from objectstore")
 
     def get_document(self, connection, container_name: str, object_name: str):
@@ -55,7 +61,7 @@ class ObjectStore:
         :return: Array of documents in the form:
         [('rapportage', 'QE1_rapportage_Some_where - some extra info.pdf'), ... ]
         """
-        documents_meta = get_full_container_list(connection, WBA_CONTAINER_NAME)
+        documents_meta = get_full_container_list(connection, DOC_CONTAINER_NAME)
         documents_paths = [
             meta.get('name') for meta in documents_meta if
             meta.get('content_type') != DIR_CONTENT_TYPE
@@ -76,7 +82,7 @@ class ObjectStore:
         return output_path
 
     def fetch_spots(self, connection):
-        return self.get_file(connection, settings.OBJECTSTORE_UPLOAD_CONTAINER_NAME, XLS_OBJECT_NAME)
+        return self.get_file(connection, WBA_CONTAINER_NAME, XLS_OBJECT_NAME)
 
     @staticmethod
     def get_container_path(document_type):
