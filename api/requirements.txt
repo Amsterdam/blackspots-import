@@ -10,7 +10,7 @@ datapunt-config-loader==1.1.0
 datapunt-objectstore==2019.4.8
 debtcollector==1.21.0
 defusedxml==0.5.0
-Django==2.1.11
+Django==2.1.15
 django-choices==1.6.2
 django-cors-headers==2.5.2
 django-debug-toolbar==1.11
