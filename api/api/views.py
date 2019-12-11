@@ -25,7 +25,7 @@ class SpotViewSet(DatapuntViewSet, ModelViewSet):
     queryset = models.Spot.objects.all().order_by('pk')
     serializer_class = serializers.SpotSerializer
     serializer_detail_class = serializers.SpotSerializer
-    lookup_field = 'locatie_id'
+    lookup_field = 'id'
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, GeojsonRenderer)
     parser_classes = [FormParser, MultiPartParser]
 
