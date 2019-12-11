@@ -124,16 +124,28 @@ class TestSerializers(TestCase):
             self.assertEqual(attrs['jaar_ongeval_quickscan'], None)
 
     def test_validate_spot_types_missing_jaarblackspotlijst(self):
+        # Assert that a ValidationError is raised when 'jaar_blackspotlijst' is missing
+        # when spot_type is either blackspot or wegvak (redroute)
         for spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
             attrs = {'spot_type': spot_type}
-            with self.assertRaises(ValidationError):
+            with self.assertRaises(ValidationError) as context:
                 self.serializer.validate_spot_types(attrs)
 
+        exception_details = context.exception.detail
+        self.assertEqual(str(exception_details['jaar_blackspotlijst'][0]),
+                         "jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'")
+
     def test_validate_spot_types_missing_jaarquickscan(self):
+        # Assert that a ValidationError is raised when 'jaar_ongeval_quickscan' is missing
+        # when spot_type is protocol_*
         for spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
             attrs = {'spot_type': spot_type}
-            with self.assertRaises(ValidationError):
+            with self.assertRaises(ValidationError) as context:
                 self.serializer.validate_spot_types(attrs)
+
+        exception_details = context.exception.detail
+        self.assertEqual(str(exception_details['jaar_ongeval_quickscan'][0]),
+                         "jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' and 'protocol_dodelijk'")
 
     def test_validate_spot_types_unset_jaarquickscan(self):
         for spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
