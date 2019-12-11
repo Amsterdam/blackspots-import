@@ -45,8 +45,8 @@ class ObjectStore:
         container_path = ObjectStore.get_container_path(document.type)
         try:
             connection.delete_object(container_path, document.filename)
-        except ClientException as e:
-            logger.info(f"Failed to delete object: {e}")
+        except ClientException:
+            logger.info(f"Failed to delete object for document id {document.id}")
 
         logger.info("Done deleting file from objectstore")
 
