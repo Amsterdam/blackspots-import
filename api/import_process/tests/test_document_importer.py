@@ -1,7 +1,7 @@
 from unittest import skip
 
 from django.test import TestCase
-from model_mommy import mommy
+from model_bakery import baker
 
 from datasets.blackspots.models import Document, Spot
 from import_process.process_xls import InputError, create_document
@@ -10,7 +10,7 @@ from import_process.process_xls import InputError, create_document
 class TestDocumentImporter(TestCase):
 
     def setUp(self):
-        self.spot = mommy.make(Spot)
+        self.spot = baker.make(Spot)
 
     def test_correct_reference(self):
         filename = 'foo_bar with spaces.pdf'

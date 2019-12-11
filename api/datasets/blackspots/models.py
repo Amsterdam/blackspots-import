@@ -1,5 +1,5 @@
 from django.contrib.gis.db import models
-from django.utils.text import slugify
+from django.utils.text import get_valid_filename
 from djchoices import ChoiceItem, DjangoChoices
 
 
@@ -82,5 +82,5 @@ class Document(models.Model):
             raise Exception("Spot must be set")
 
         doc_type = "ontwerp" if self.type == Document.DocumentType.Ontwerp else "rapportage"
-        base_filename = f"{self.spot.locatie_id}_{doc_type}_{self.spot.description}"
-        return slugify(base_filename) + ".pdf"
+        base_filename = f"{self.spot.locatie_id}_{doc_type}_{self.spot.description}.pdf"
+        return get_valid_filename(base_filename)

@@ -38,7 +38,7 @@ jsonschema==3.0.1
 keystoneauth1==3.13.1
 MarkupSafe==1.1.1
 mccabe==0.6.1
-model-mommy==1.6.0
+model-bakery==1.0.2
 more-itertools==7.2.0
 msgpack==0.6.1
 netaddr==0.7.19

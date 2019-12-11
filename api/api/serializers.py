@@ -20,7 +20,7 @@ class DocumentSerializer(HALSerializer):
     spot = serializers.HyperlinkedRelatedField(
         read_only=True,
         view_name='spot-detail',
-        lookup_field='locatie_id',
+        lookup_field='id',
     )
 
     class Meta(object):
@@ -49,7 +49,7 @@ class SpotGeojsonSerializer(GeoFeatureModelSerializer):
         # Detail url is constructed using location_id instead of pk,
         # see: https://www.django-rest-framework.org/api-guide/serializers/#how-hyperlinked-views-are-determined # noqa: 501
         extra_kwargs = {
-            '_links': {'lookup_field': 'locatie_id'}
+            '_links': {'lookup_field': 'id'}
         }
 
 
@@ -89,22 +89,22 @@ class SpotSerializer(HALSerializer):
                         "jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'"
                     ]
                 })
-
-            # type is blackspot or wegvak (redroute), so we need to make sure jaar_ongeval_quickscan is empty
+        else:
+            # type is not blackspot or redroute, so we need to make sure jaar_blackspotlijst is empty
             # note that by setting the attribute to None, it will be emptied in the db.
-            attrs['jaar_ongeval_quickscan'] = None
+            attrs['jaar_blackspotlijst'] = None
 
-        elif spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
+        if spot_type in [Spot.SpotType.protocol_ernstig, Spot.SpotType.protocol_dodelijk]:
             if not attrs.get('jaar_ongeval_quickscan'):
                 raise serializers.ValidationError({
                     'jaar_ongeval_quickscan': [
                         "jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' and 'protocol_dodelijk'"
                     ]
                 })
-
-            # type is protocol_*, so we need to make sure jaar_blackspotlijst is empty
+        else:
+            # type is not protocol_*, so we need to make sure jaar_ongeval_quickscan is empty
             # note that by setting the attribute to None, it will be emptied in the db.
-            attrs['jaar_blackspotlijst'] = None
+            attrs['jaar_ongeval_quickscan'] = None
 
     def validate_point_stadsdeel(self, attrs):
         stadsdeel = attrs.get('stadsdeel')
@@ -154,7 +154,7 @@ class SpotSerializer(HALSerializer):
             objstore.delete(document)
             document.delete()
         else:
-            logger.error(f"Delete document was called for spot {spot.locatie_id} and document_type {document_type}, "
+            logger.error(f"Delete document was called for spot {spot.id} and document_type {document_type}, "
                          f"but it does not exist in our database")
 
     def handle_documents(self, spot, rapport_file=None, design_file=None):
@@ -182,7 +182,7 @@ class SpotSerializer(HALSerializer):
         # Detail url is constructed using location_id instead of pk,
         # see: https://www.django-rest-framework.org/api-guide/serializers/#how-hyperlinked-views-are-determined # noqa: 501
         extra_kwargs = {
-            '_links': {'lookup_field': 'locatie_id'}
+            '_links': {'lookup_field': 'id'}
         }
 
 

@@ -2,8 +2,7 @@ import logging
 from unittest import mock
 
 from django.test import TestCase
-from model_mommy import mommy
-from model_mommy.recipe import seq
+from model_bakery import baker, seq
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
@@ -24,9 +23,9 @@ class TestAPIEndpoints(TestCase):
         self.rest_client = APIClient()
 
         # generate 3 spots with locatie_ids test_1, test_2 and test_3
-        mommy.make(Spot, locatie_id=seq('test_'), actiehouders="Unknown", _quantity=3)
-        self.spot_with_docs = mommy.make(Spot)
-        mommy.make(Document, spot=self.spot_with_docs, _quantity=3)
+        baker.make(Spot, locatie_id=seq('test_'), actiehouders="Unknown", _quantity=3)
+        self.spot_with_docs = baker.make(Spot)
+        baker.make(Document, spot=self.spot_with_docs, _quantity=3)
 
     def assertStatusCode(self, url, response, expected_status=200):
         """
@@ -69,7 +68,7 @@ class TestAPIEndpoints(TestCase):
         self.assertEqual(len(data.get('features')), 4)
 
     def test_spot_detail_get(self):
-        url = reverse('spot-detail', [self.spot_with_docs.locatie_id])
+        url = reverse('spot-detail', [self.spot_with_docs.id])
         response = self.rest_client.get(url)
 
         self.assertStatusCode(url, response)
@@ -96,7 +95,8 @@ class TestAPIEndpoints(TestCase):
         self.assertTrue(Spot.objects.filter(**data).exists())
 
     def test_spot_detail_patch(self):
-        url = reverse('spot-detail', ["test_1"])
+        spot = Spot.objects.get(locatie_id='test_1')
+        url = reverse('spot-detail', [spot.id])
         data = {
             'actiehouders': 'Someone',
         }
@@ -118,9 +118,9 @@ class TestAPIEndpoints(TestCase):
             'status': 'voorbereiding',
             'jaar_blackspotlijst': 2019
         }
-        Spot.objects.create(**initial_data)
+        created_spot = Spot.objects.create(**initial_data)
 
-        url = reverse('spot-detail', [locatie_id])
+        url = reverse('spot-detail', [created_spot.id])
         new_data = {
             'locatie_id': locatie_id,
             'spot_type': Spot.SpotType.risico,
@@ -139,15 +139,16 @@ class TestAPIEndpoints(TestCase):
 
     def test_spot_detail_delete(self):
         self.assertTrue(Spot.objects.filter(locatie_id='test_2').exists())
+        spot = Spot.objects.get(locatie_id='test_2')
 
-        url = reverse('spot-detail', ["test_2"])
+        url = reverse('spot-detail', [spot.id])
         response = self.rest_client.delete(url)
         self.assertStatusCode(url, response, expected_status=204)
         self.assertFalse(Spot.objects.filter(locatie_id='test_2').exists())
 
     def test_spot_detail_geojson(self):
         url = reverse('spot-detail', kwargs={
-            'locatie_id': self.spot_with_docs.locatie_id,
+            'id': self.spot_with_docs.id,
             'format': 'geojson',
          })
 

@@ -19,7 +19,7 @@ datapunt-objectstore
 # Test Libraries
 flake8
 tox
-model_mommy
+model_bakery
 isort
 pytest
 pytest-cov
