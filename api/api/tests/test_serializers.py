@@ -1,5 +1,6 @@
 from unittest import TestCase, mock
 
+from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import ValidationError
 
 from api.serializers import SpotSerializer
@@ -20,7 +21,7 @@ class TestSerializers(TestCase):
             exception_details = context.exception.detail
             self.assertIn('jaar_blackspotlijst', exception_details.keys())
             self.assertEqual(str(exception_details['jaar_blackspotlijst'][0]),
-                             "jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'")
+                             _("jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'"))
 
     def test_jaar_ongeval_quickscan_missing_validation(self):
         for spot_type in [Spot.SpotType.protocol_dodelijk, Spot.SpotType.protocol_ernstig]:
@@ -31,8 +32,8 @@ class TestSerializers(TestCase):
             exception_details = context.exception.detail
             self.assertIn('jaar_ongeval_quickscan', exception_details.keys())
             self.assertEqual(str(exception_details['jaar_ongeval_quickscan'][0]),
-                             "jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' "
-                             "and 'protocol_dodelijk'")
+                             _("jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' "
+                             "and 'protocol_dodelijk'"))
 
     def test_jaar_blackspotlijst_wrong_validation(self):
         for spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
@@ -43,7 +44,7 @@ class TestSerializers(TestCase):
             exception_details = context.exception.detail
             self.assertIn('jaar_blackspotlijst', exception_details.keys())
             self.assertEqual(str(exception_details['jaar_blackspotlijst'][0]),
-                             "jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'")
+                             _("jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'"))
 
     def test_jaar_ongeval_quickscan_wrong_validation(self):
         for spot_type in [Spot.SpotType.protocol_dodelijk, Spot.SpotType.protocol_ernstig]:
@@ -54,8 +55,8 @@ class TestSerializers(TestCase):
             exception_details = context.exception.detail
             self.assertIn('jaar_ongeval_quickscan', exception_details.keys())
             self.assertEqual(str(exception_details['jaar_ongeval_quickscan'][0]),
-                             "jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' "
-                             "and 'protocol_dodelijk'")
+                             _("jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' "
+                             "and 'protocol_dodelijk'"))
 
     def test_jaar_blackspotlijst_validation_success(self):
         for spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
@@ -79,7 +80,7 @@ class TestSerializers(TestCase):
 
         exception_details = context.exception.detail
         self.assertEqual(str(exception_details['point'][0]),
-                         'Point is outside Gemeente Amsterdam. To which stadsdeel does the location belong?')
+                         _('Point is outside Gemeente Amsterdam. To which stadsdeel does the location belong?'))
 
     @mock.patch('api.serializers.SpotSerializer.determine_stadsdeel')
     def test_coordinate_error(self, determine_stadsdeel):
@@ -91,7 +92,7 @@ class TestSerializers(TestCase):
 
         exception_details = context.exception.detail
         self.assertEqual(str(exception_details['point'][0]),
-                         'An error occured finding the stadsdeel. To which stadsdeel does the location belong?')
+                         _('An error occured finding the stadsdeel. To which stadsdeel does the location belong?'))
 
     def test_jaar_blackspotlijst_none(self):
         # Assert that the jaar_blackspotlijst property is changed to None
@@ -135,7 +136,7 @@ class TestSerializers(TestCase):
 
         exception_details = context.exception.detail
         self.assertEqual(str(exception_details['jaar_blackspotlijst'][0]),
-                         "jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'")
+                         _("jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'"))
 
     def test_validate_spot_types_missing_jaarquickscan(self):
         # Assert that a ValidationError is raised when 'jaar_ongeval_quickscan' is missing
@@ -147,7 +148,8 @@ class TestSerializers(TestCase):
 
         exception_details = context.exception.detail
         self.assertEqual(str(exception_details['jaar_ongeval_quickscan'][0]),
-                         "jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' and 'protocol_dodelijk'")
+                         _("jaar_ongeval_quickscan is required for spot types "
+                           "'protocol_ernstig' and 'protocol_dodelijk'"))
 
     def test_validate_spot_types_unset_jaarquickscan(self):
         for spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
