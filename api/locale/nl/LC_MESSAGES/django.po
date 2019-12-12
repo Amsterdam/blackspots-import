@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-12 10:25+0000\n"
+"PO-Revision-Date: 2019-12-12 11:07+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+msgid "jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'"
+msgstr ""
+"'Jaar blackspotlijst' is veriest als het spot type 'blackspot' of 'wegvak' is"
+
+msgid ""
+"jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' and "
+"'protocol_dodelijk'"
+msgstr ""
+"'Jaar ongeval quickscan' is vereist als het spot type 'protocol_ernstig' of "
+"'protocol_dodelijk' is"
+
+msgid ""
+"Point is outside Gemeente Amsterdam. To which stadsdeel does the location "
+"belong?"
+msgstr "Locatie valt buiten de gemeente. Bij welk stadsdeel hoor de locatie?"
+
+msgid ""
+"An error occured finding the stadsdeel. To which stadsdeel does the location "
+"belong?"
+msgstr "Stadsdeel is niet gevonden. Bij welk stadsdeel hoort de locatie?"
+
+msgid "Dutch"
+msgstr "Nederlands"
+
+msgid ""
+"Invalid format: string or unicode input unrecognized as GeoJSON, WKT EWKT or "
+"HEXEWKB."
+msgstr ""
+"Ongeldig formaat: string of unicode input is geen GeoJSON, WKT EWKT of "
+"HEXEWKB."
+
+msgid ""
+"Unable to convert to python object: Invalid geometry pointer returned from "
+"'OGR_G_CreateGeometryFromJson'."
+msgstr "Kon JSON niet omzetten naar geldig geometrie punt."
+
+msgid ""
+"Unable to convert to python object: String input unrecognized as WKT EWKT, "
+"and HEXEWKB."
+msgstr "String input niet herkend als GeoJSON, WKT EWKT of HEXEWKB."
+
+msgid ""
+"Unable to convert to python object: String or unicode input unrecognized as "
+"WKT EWKT, and HEXEWKB."
+msgstr "String of unicode input niet herkend als GeoJSON, WKT EWKT of HEXEWKB."
+
+msgid "Unable to convert to python object: Improper geometry input type:"
+msgstr "Ongeldig geometrie input type:"
