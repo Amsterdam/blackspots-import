@@ -6,7 +6,7 @@ from api.serializers import SpotCSVSerializer
 from datasets.blackspots.models import Spot
 
 
-class TestSpotSerializers(TestCase):
+class TestSpotCSVSerializers(TestCase):
 
     def setUp(self):
         self.serializer = SpotCSVSerializer()
