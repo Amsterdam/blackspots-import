@@ -78,7 +78,8 @@ class TestSerializers(TestCase):
             self.serializer.validate(attrs)
 
         exception_details = context.exception.detail
-        self.assertEqual(str(exception_details['point'][0]), 'Point could not be matched to stadsdeel')
+        self.assertEqual(str(exception_details['point'][0]),
+                         'Point is outside Gemeente Amsterdam. To which stadsdeel does the location belong?')
 
     @mock.patch('api.serializers.SpotSerializer.determine_stadsdeel')
     def test_coordinate_error(self, determine_stadsdeel):
@@ -89,7 +90,8 @@ class TestSerializers(TestCase):
             self.serializer.validate(attrs)
 
         exception_details = context.exception.detail
-        self.assertEqual(str(exception_details['point'][0]), 'Failed to get stadsdeel for point')
+        self.assertEqual(str(exception_details['point'][0]),
+                         'An error occured finding the stadsdeel. To which stadsdeel does the location belong?')
 
     def test_jaar_blackspotlijst_none(self):
         # Assert that the jaar_blackspotlijst property is changed to None

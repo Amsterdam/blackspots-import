@@ -4,6 +4,8 @@ Django common settings.
 import os
 import sys
 
+from django.utils.translation import gettext_lazy as _
+
 # SECURITY WARNING: keep the secret key used in production secret!
 insecure_key = "insecure"
 SECRET_KEY = os.getenv("SECRET_KEY", insecure_key)
@@ -29,7 +31,10 @@ INTERNAL_IPS = ("127.0.0.1", "0.0.0.0")
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "nl-NL"
+LANGUAGES = [
+    ('nl', _('Dutch')),
+]
 
 TIME_ZONE = "UTC"
 

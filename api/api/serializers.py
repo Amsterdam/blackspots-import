@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import query
 from django.utils import six
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
@@ -86,7 +87,7 @@ class SpotSerializer(HALSerializer):
             if not attrs.get('jaar_blackspotlijst'):
                 raise serializers.ValidationError({
                     'jaar_blackspotlijst': [
-                        "jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'"
+                        _("jaar_blackspotlijst is required for spot types 'blackspot' and 'wegvak'")
                     ]
                 })
         else:
@@ -98,7 +99,8 @@ class SpotSerializer(HALSerializer):
             if not attrs.get('jaar_ongeval_quickscan'):
                 raise serializers.ValidationError({
                     'jaar_ongeval_quickscan': [
-                        "jaar_ongeval_quickscan is required for spot types 'protocol_ernstig' and 'protocol_dodelijk'"
+                        _("jaar_ongeval_quickscan is required for spot types "
+                          "'protocol_ernstig' and 'protocol_dodelijk'")
                     ]
                 })
         else:
@@ -113,9 +115,12 @@ class SpotSerializer(HALSerializer):
             # only do a stadsdeel lookup if we did not get it from the request
             stadsdeel = self.determine_stadsdeel(point)
             if stadsdeel == Spot.Stadsdelen.Geen:
-                raise serializers.ValidationError({'point': ['Point could not be matched to stadsdeel']})
+                raise serializers.ValidationError(
+                    {'point': [_('Point is outside Gemeente Amsterdam. To which stadsdeel does the location belong?')]})
             elif stadsdeel == Spot.Stadsdelen.BagFout:
-                raise serializers.ValidationError({'point': ['Failed to get stadsdeel for point']})
+                raise serializers.ValidationError(
+                    {'point': [_('An error occured finding the stadsdeel. '
+                                 'To which stadsdeel does the location belong?')]})
             attrs['stadsdeel'] = stadsdeel
 
     def determine_stadsdeel(self, point):
