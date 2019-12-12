@@ -31,10 +31,11 @@ INTERNAL_IPS = ("127.0.0.1", "0.0.0.0")
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
-LANGUAGE_CODE = "nl-NL"
+LANGUAGE_CODE = "nl-nl"
 LANGUAGES = [
     ('nl', _('Dutch')),
 ]
+LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 
 TIME_ZONE = "UTC"
 
@@ -70,7 +71,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 
 # Password validation
