@@ -225,17 +225,10 @@ class SpotCSVSerializer(ModelSerializer):
     stadsdeel = serializers.CharField(source='get_stadsdeel_display')
     type = serializers.CharField(source='spot_type')
     nummer = serializers.CharField(source='locatie_id')
-    naam = serializers.CharField(source='description')
-    jaar = serializers.SerializerMethodField()
+    locatie_omschrijving = serializers.CharField(source='description')
+    status = serializers.CharField(source='get_status_display')
     taken = serializers.CharField(source='tasks')
     aantekeningen = serializers.CharField(source='notes')
-
-    def get_jaar(self, obj):
-        if obj.spot_type in [Spot.SpotType.blackspot, Spot.SpotType.wegvak]:
-            return obj.jaar_blackspotlijst
-        if obj.spot_type in [Spot.SpotType.protocol_dodelijk, Spot.SpotType.protocol_ernstig]:
-            return obj.jaar_ongeval_quickscan
-        return ''
 
     class Meta:
         model = Spot
@@ -243,12 +236,15 @@ class SpotCSVSerializer(ModelSerializer):
             'stadsdeel',
             'type',
             'nummer',
-            'naam',
+            'locatie_omschrijving',
             'status',
+            'actiehouders',
+            'taken',
             'start_uitvoering',
             'eind_uitvoering',
-            'jaar',
-            'taken',
+            'jaar_blackspotlijst',
+            'jaar_ongeval_quickscan',
+            'jaar_oplevering',
             'aantekeningen'
 
         ]
