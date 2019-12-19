@@ -7,7 +7,7 @@ from rest_framework_csv.misc import Echo
 class StreamingCSVRenderer:
 
     def render(self, data, fieldnames):
-        writer = csv.DictWriter(Echo(), fieldnames=fieldnames, dialect="excel")
+        writer = csv.DictWriter(Echo(), fieldnames=fieldnames, dialect="excel", delimiter=";")
         yield writer.writerow({name: name for name in fieldnames})
 
         for obj in data:
