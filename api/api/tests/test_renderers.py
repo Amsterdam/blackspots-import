@@ -17,10 +17,10 @@ class RenderersTestCase(TestCase):
         """
         renderer = StreamingCSVRenderer()
         generator = renderer.render(self.data, self.fieldnames)
-        self.assertEqual(next(generator), "a,b,c,d\r\n")
-        self.assertEqual(next(generator), "1,2,3,4\r\n")
-        self.assertEqual(next(generator), "11,12,13,14\r\n")
-        self.assertEqual(next(generator), "21,22,23,24\r\n")
+        self.assertEqual(next(generator), "a;b;c;d\r\n")
+        self.assertEqual(next(generator), "1;2;3;4\r\n")
+        self.assertEqual(next(generator), "11;12;13;14\r\n")
+        self.assertEqual(next(generator), "21;22;23;24\r\n")
         with self.assertRaises(StopIteration):
             next(generator)
 
@@ -30,6 +30,6 @@ class RenderersTestCase(TestCase):
         """
         renderer = StreamingCSVRenderer()
         generator = renderer.render([], self.fieldnames)
-        self.assertEqual(next(generator), "a,b,c,d\r\n")
+        self.assertEqual(next(generator), "a;b;c;d\r\n")
         with self.assertRaises(StopIteration):
             next(generator)
