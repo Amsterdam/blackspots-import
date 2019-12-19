@@ -78,7 +78,7 @@ class Document(models.Model):
         super().save(force_insert, force_update, using, update_fields)
 
     def _generate_filename(self):
-        if not self.spot:
+        if not self.spot_id:
             raise Exception("Spot must be set")
 
         doc_type = "ontwerp" if self.type == Document.DocumentType.Ontwerp else "rapportage"

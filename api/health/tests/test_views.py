@@ -1,15 +1,24 @@
-from unittest import TestCase
+from unittest import mock
 
-import pytest
-from django.test import Client
+from django.test import TestCase, override_settings
 
 
 class TestViews(TestCase):
-    def setUp(self):
-        self.http_client = Client()
 
-    @pytest.mark.django_db
     def test_health_view(self):
-        response = self.http_client.get('/status/health')
-        assert response.status_code == 200
-        assert response.content == b"Connectivity OK"
+        response = self.client.get('/status/health')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"Connectivity OK")
+
+    @override_settings(DEBUG=True)
+    def test_debug(self):
+        response = self.client.get('/status/health')
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.content, b"Debug mode not allowed in production")
+
+    @mock.patch("health.views.connection.cursor")
+    def test_database_error(self, mocked_cursor):
+        mocked_cursor.side_effect = Exception
+        response = self.client.get('/status/health')
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.content, b"Database connectivity failed")

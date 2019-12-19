@@ -50,7 +50,7 @@ class TestDocument(TestCase):
         lowercase.
         """
         spot = baker.prepare(Spot, locatie_id='EFGHIJ', description='test desc')
-        document = baker.prepare(Document, type=Document.DocumentType.Ontwerp, spot=spot)
+        document = baker.prepare(Document, type=Document.DocumentType.Ontwerp, spot=spot, spot_id=1)
         self.assertEqual(document._generate_filename(), 'EFGHIJ_ontwerp_test_desc.pdf')
 
     def test_generate_filename_exception(self):
@@ -59,6 +59,10 @@ class TestDocument(TestCase):
         filename for a document that has no Spot. The Spot is needed because
         its location_id and description will be part of the filename.
         """
-        document = baker.prepare(Document, type=Document.DocumentType.Ontwerp, spot=None)
+        document = baker.prepare(Document, spot=None)
         with self.assertRaises(Exception, msg='Spot must be set'):
             document._generate_filename()
+
+    def test_str(self):
+        document = baker.prepare(Document, filename='mocked_filename')
+        self.assertEqual(str(document), 'mocked_filename')

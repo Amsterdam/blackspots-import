@@ -1,5 +1,6 @@
 from unittest import TestCase, mock
 
+from django.contrib.gis.geos import Point
 from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import ValidationError
 
@@ -7,7 +8,7 @@ from api.serializers import SpotSerializer
 from datasets.blackspots.models import Spot
 
 
-class TestSerializers(TestCase):
+class TestSpotSerializers(TestCase):
 
     def setUp(self):
         self.serializer = SpotSerializer()
@@ -169,3 +170,11 @@ class TestSerializers(TestCase):
             self.serializer.validate_spot_types(attrs)
             self.assertEqual(attrs['jaar_blackspotlijst'], None)
             self.assertEqual(attrs['jaar_ongeval_quickscan'], None)
+
+    @mock.patch("api.serializers.BagGeoSearchAPI.get_stadsdeel")
+    def test_determine_stadsdeel(self, mocked_get_stadsdeel):
+        mocked_get_stadsdeel.return_value = 'test'
+        result = self.serializer.determine_stadsdeel(Point(x=123, y=789))
+
+        mocked_get_stadsdeel.assert_called_with(lat=789, lon=123)
+        self.assertEqual(result, 'test')
