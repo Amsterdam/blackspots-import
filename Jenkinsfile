@@ -32,7 +32,8 @@ node {
 
     stage("Build develop image") {
         tryStep "build", {
-            def image = docker.build("repo.data.amsterdam.nl/datapunt/blackspots:${env.BUILD_NUMBER}", "./api")
+            docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
+            def image = docker.build("datapunt/blackspots:${env.BUILD_NUMBER}", "./api")
             image.push()
         }
     }
@@ -44,9 +45,11 @@ if (BRANCH == "master" || BRANCH == "authentication") {
     node {
         stage('Push acceptance image') {
             tryStep "image tagging", {
-                def image = docker.image("repo.data.amsterdam.nl/datapunt/blackspots:${env.BUILD_NUMBER}")
+                docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
+                def image = docker.image("datapunt/blackspots:${env.BUILD_NUMBER}")
                 image.pull()
                 image.push("acceptance")
+                }
             }
         }
     }
@@ -71,7 +74,8 @@ if (BRANCH == "master" || BRANCH == "authentication") {
     node {
         stage('Push production image') {
             tryStep "image tagging", {
-                def image = docker.image("repo.data.amsterdam.nl/datapunt/blackspots:${env.BUILD_NUMBER}")
+            docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
+                def image = docker.image("datapunt/blackspots:${env.BUILD_NUMBER}")
                 image.pull()
                 image.push("production")
                 image.push("latest")
