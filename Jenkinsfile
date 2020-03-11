@@ -2,16 +2,16 @@
 
 def tryStep(String message, Closure block, Closure tearDown = null) {
     try {
-        block();
+        block()
     }
     catch (Throwable t) {
         slackSend message: "${env.JOB_NAME}: ${message} failure ${env.BUILD_URL}", channel: '#ci-channel', color: 'danger'
 
-        throw t;
+        throw t
     }
     finally {
         if (tearDown) {
-            tearDown();
+            tearDown()
         }
     }
 }
@@ -35,6 +35,7 @@ node {
             docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
             def image = docker.build("datapunt/blackspots:${env.BUILD_NUMBER}", "./api")
             image.push()
+            }
         }
     }
 }
@@ -79,6 +80,7 @@ if (BRANCH == "master" || BRANCH == "authentication") {
                 image.pull()
                 image.push("production")
                 image.push("latest")
+                }
             }
         }
     }
