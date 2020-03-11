@@ -9,7 +9,7 @@ services:
       - ./backups:/tmp/backups
 
   importer:
-    image: repo.data.amsterdam.nl/datapunt/blackspots:${ENVIRONMENT}
+    image: docker-registry.data.amsterdam.nl/datapunt/blackspots:${ENVIRONMENT}
     links:
       - database
     environment:
