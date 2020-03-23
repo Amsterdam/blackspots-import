@@ -8,7 +8,6 @@ RUN apt-get update \
 
 RUN adduser --system datapunt
 
-RUN mkdir -p /static && chown datapunt /static
 RUN mkdir -p /src && chown datapunt /src
 RUN mkdir -p /deploy && chown datapunt /deploy
 RUN mkdir -p /var/log/gatekeeper && chown datapunt /var/log/gatekeeper
