@@ -4,10 +4,6 @@ set -u   # crash on missing env variables
 set -e   # stop on any error
 set -x   # print what we are doing
 
-/deploy/docker-wait.sh
-
-cd /app
-
 python manage.py migrate
 python manage.py import_spots
 python manage.py check_imported_spots

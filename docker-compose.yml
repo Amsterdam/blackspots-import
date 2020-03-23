@@ -58,6 +58,7 @@ services:
       - DATABASE_NAME=blackspots
       - DATABASE_USER=blackspots
       - DATABASE_PASSWORD=insecure
+    entrypoint: /deploy/wait-for-it.sh database:5432 --
     command: deploy/docker-update-stadsdelen.sh
 
   test:
@@ -75,3 +76,5 @@ services:
       PYTEST_ADDOPTS:
     depends_on:
       - database
+    entrypoint: /deploy/wait-for-it.sh database:5432 --
+    command: pytest
