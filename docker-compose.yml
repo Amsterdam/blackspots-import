@@ -54,10 +54,10 @@ services:
     links:
       - database
     environment:
-      - SECRET_KEY=insecure
-      - DATABASE_NAME=blackspots
-      - DATABASE_USER=blackspots
-      - DATABASE_PASSWORD=insecure
+      CRET_KEY: "dev"
+      TABASE_NAME: "dev"
+      TABASE_USER: "dev"
+      TABASE_PASSWORD: "dev"
     entrypoint: /deploy/wait-for-it.sh database:5432 --
     command: deploy/docker-update-stadsdelen.sh
 
