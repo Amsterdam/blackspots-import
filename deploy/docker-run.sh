@@ -9,8 +9,6 @@ set -x
 echo Collecting static files
 python manage.py collectstatic --no-input
 
-chmod -R 777 /static
-
 # run gatekeeper
 echo "Starting gatekeeper"
 if [ ${USE_PROXY} = true ]; then
@@ -24,4 +22,4 @@ fi
 
 # run uwsgi
 echo "Starting uwsgi"
-exec uwsgi -i --show-config  2>&1 | tee /var/log/uwsgi/uwsgi.log
+exec uwsgi --ini uwsgi.ini

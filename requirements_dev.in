@@ -1,0 +1,17 @@
+# Base dependencies
+-r ./requirements.txt
+
+# Test Libraries
+flake8
+tox
+model_bakery
+isort
+pytest
+pytest-cov
+pytest-django
+coverage
+ipdb
+
+# Development Libraries
+django-cors-headers
+django_debug_toolbar

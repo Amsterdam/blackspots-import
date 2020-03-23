@@ -25,7 +25,7 @@ node {
 
     stage('Test') {
         tryStep "Test", {
-            sh "api/deploy/test/jenkins-script.sh api/deploy/test/"
+            sh "make test"
         }
     }
 

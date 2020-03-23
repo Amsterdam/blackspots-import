@@ -1,0 +1,11 @@
+version: '3.5'
+
+services:
+  app: &app
+    user: 1000:1000
+    ports:
+      - 8000:8000
+      - 8001:8001
+
+  dev:
+    <<: *app

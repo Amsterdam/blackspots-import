@@ -5,7 +5,4 @@ set -e   # stop on any error
 set -x   # print what we are doing
 
 /deploy/docker-wait.sh
-
-cd /app
-
 python manage.py update_faulty_stadsdelen

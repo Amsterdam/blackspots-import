@@ -1,12 +1,15 @@
-Django
+# Pinned django
+# https://github.com/jpadilla/django-rest-framework-xml/issues/45
+Django >= 2, <3
+
 python-swiftclient
 python-keystoneclient
-git+https://github.com/Amsterdam/objectstore.git
 xlrd
 djangorestframework
 djangorestframework-gis
 django-extensions
 django-filter
+django-rest-swagger
 drf-amsterdam
 drf_extensions
 pyyaml>=4.2b1
@@ -15,17 +18,3 @@ sentry-sdk
 drf_yasg
 django-choices
 datapunt-objectstore
-
-# Test Libraries
-flake8
-tox
-model_bakery
-isort
-pytest
-pytest-cov
-pytest-django
-coverage
-
-# Development Libraries
-django-cors-headers
-django_debug_toolbar
