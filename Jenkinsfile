@@ -49,8 +49,10 @@ pipeline {
             stages {
                 stage('Push') {
                     steps {
-                        docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
-                            sh 'make push'
+                        script {
+                            docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
+                                sh 'make push'
+                            }
                         }
                     }
                 }
