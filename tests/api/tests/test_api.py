@@ -23,7 +23,8 @@ class TestAPIEndpoints(TestCase):
         self.rest_client = APIClient()
 
         # generate 3 spots with locatie_ids test_1, test_2 and test_3
-        baker.make(Spot, locatie_id=seq('test_'), actiehouders="Unknown", _quantity=3)
+        baker.prepare(Document)  # because of this line the next bakery will work
+        baker.make(Spot, locatie_id=seq("test_"), actiehouders="Unknown", _quantity=3)
         self.spot_with_docs = baker.make(Spot)
         baker.make(Document, spot=self.spot_with_docs, _quantity=3)
 
