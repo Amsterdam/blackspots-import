@@ -1,6 +1,6 @@
 # Pinned django
 # https://github.com/jpadilla/django-rest-framework-xml/issues/45
-Django
+Django >= 2, <3
 
 python-swiftclient
 python-keystoneclient
