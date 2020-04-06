@@ -39,10 +39,9 @@ services:
       PROXY_REDIRECTION_URL: "${GATEKEEPER_REDIRECTION_URL}"
       OBJECTSTORE_UPLOAD_CONTAINER_NAME: dev
 
-
   app:
     <<: *app
-    image: repo.data.amsterdam.nl/datapunt/blackspots:${VERSION:-latest}
+    image: docker-registry.data.amsterdam.nl/datapunt/blackspots:${VERSION:-latest}
 
   dev:
     <<: *app

@@ -27,8 +27,13 @@ migrate:
 build:
 	$(dc) build
 
-push:
+push: build
 	$(dc) push
+
+push_semver:
+	VERSION=$${VERSION} $(MAKE) push
+	VERSION=$${VERSION%\.*} $(MAKE) push
+	VERSION=$${VERSION%%\.*} $(MAKE) push
 
 app:
 	$(dc) up app
