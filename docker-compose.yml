@@ -73,7 +73,9 @@ services:
       SECRET_KEY: "tests"
       AUTHORIZATION_TOKEN: "dev"
       DJANGO_SETTINGS_MODULE: "main.settings"
+      OBJECTSTORE_UPLOAD_CONTAINER_NAME: test
       PYTEST_ADDOPTS:
+      PYTHONBREAKPOINT:
     depends_on:
       - database
     entrypoint: /deploy/wait-for-it.sh database:5432 --
