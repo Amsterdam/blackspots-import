@@ -4,9 +4,10 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
+asgiref==3.2.7            # via django
 attrs==19.3.0             # via jsonschema
 babel==2.8.0              # via oslo.i18n
-certifi==2019.11.28       # via requests, sentry-sdk
+certifi==2020.4.5.1       # via requests, sentry-sdk
 chardet==3.0.4            # via requests
 coreapi==2.3.3            # via django-rest-swagger, drf-yasg, openapi-codec
 coreschema==0.0.4         # via coreapi, drf-yasg
@@ -15,10 +16,10 @@ datapunt-objectstore==2019.4.8  # via -r requirements.in
 debtcollector==2.0.0      # via oslo.config, oslo.serialization, oslo.utils, python-keystoneclient
 defusedxml==0.6.0         # via djangorestframework-xml
 django-choices==1.7.1     # via -r requirements.in
-django-extensions==2.2.8  # via -r requirements.in
+django-extensions==2.2.9  # via -r requirements.in
 django-filter==2.2.0      # via -r requirements.in
 django-rest-swagger==2.2.0  # via -r requirements.in
-django==2.2.11            # via -r requirements.in, django-choices, django-filter, djangorestframework, drf-yasg
+django==3.0.5             # via -r requirements.in, django-choices, django-filter, djangorestframework, drf-yasg
 djangorestframework-csv==2.1.0  # via drf-amsterdam
 djangorestframework-gis==0.15  # via -r requirements.in
 djangorestframework-xml==1.4.0  # via drf-amsterdam
@@ -32,7 +33,7 @@ iso8601==0.1.12           # via keystoneauth1, oslo.utils
 itypes==1.1.0             # via coreapi
 jinja2==2.11.1            # via coreschema
 jsonschema==3.2.0         # via datapunt-config-loader
-keystoneauth1==3.18.0     # via python-keystoneclient
+keystoneauth1==4.0.0      # via python-keystoneclient
 markupsafe==1.1.1         # via jinja2
 msgpack==1.0.0            # via oslo.serialization
 netaddr==0.7.19           # via oslo.config, oslo.utils
@@ -45,9 +46,9 @@ oslo.serialization==3.1.0  # via python-keystoneclient
 oslo.utils==4.1.0         # via oslo.serialization, python-keystoneclient
 packaging==20.3           # via drf-yasg
 pbr==5.4.4                # via debtcollector, keystoneauth1, os-service-types, oslo.i18n, oslo.serialization, oslo.utils, python-keystoneclient, stevedore
-psycopg2-binary==2.8.4    # via -r requirements.in
-pyparsing==2.4.6          # via oslo.utils, packaging
-pyrsistent==0.15.7        # via jsonschema
+psycopg2-binary==2.8.5    # via -r requirements.in
+pyparsing==2.4.7          # via oslo.utils, packaging
+pyrsistent==0.16.0        # via jsonschema
 python-keystoneclient==3.22.0  # via -r requirements.in, datapunt-objectstore
 python-swiftclient==3.9.0  # via -r requirements.in, datapunt-objectstore
 pytz==2019.3              # via babel, django, oslo.serialization, oslo.utils
