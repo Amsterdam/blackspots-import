@@ -10,11 +10,10 @@ services:
       POSTGRES_USER: dev
       POSTGRES_PASSWORD: dev
 
-  app: &app
+  x-app: &app
     build:
       context: .
       target: app
-    image: repo.data.amsterdam.nl/datapunt/blackspots:${VERSION:-latest}
     ports:
     - 8000
     - 8001
@@ -36,6 +35,12 @@ services:
       PROXY_UPSTREAM_URL: "${GATEKEEPER_UPSTREAM_URL}"
       PROXY_DISCOVERY_URL: "${GATEKEEPER_DISCOVERY_URL}"
       PROXY_REDIRECTION_URL: "${GATEKEEPER_REDIRECTION_URL}"
+      OBJECTSTORE_UPLOAD_CONTAINER_NAME: dev
+
+
+  app:
+    <<: *app
+    image: repo.data.amsterdam.nl/datapunt/blackspots:${VERSION:-latest}
 
   dev:
     <<: *app

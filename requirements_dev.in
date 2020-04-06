@@ -14,4 +14,4 @@ ipdb
 
 # Development Libraries
 django-cors-headers
-django_debug_toolbar
+django-debug-toolbar
