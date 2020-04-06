@@ -33,7 +33,7 @@ node {
     stage("Build develop image") {
         tryStep "build", {
             docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
-            def image = docker.build("datapunt/blackspots:${env.BUILD_NUMBER}", "./src")
+            def image = docker.build("datapunt/blackspots:${env.BUILD_NUMBER}", "--target app .")
             image.push()
             }
         }
