@@ -70,7 +70,7 @@ pipeline {
                 }
 
                 stage('Deploy to production') {
-                    when { buildingTag() }
+                    when { tag pattern: "\\d+\\.\\d+\\.\\d+\\.*", comparator: "REGEXP" }
                     steps {
                         build job: 'Subtask_Openstack_Playbook', parameters: [
                             string(name: 'PLAYBOOK', value: PLAYBOOK),
