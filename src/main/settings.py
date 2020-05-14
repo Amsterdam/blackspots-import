@@ -190,12 +190,12 @@ oBJECTSTORE_UPLOAD_CONTAINER_NAME = os.environ["OBJECTSTORE_UPLOAD_CONTAINER_NAM
 # objectstore settings used in data export
 EXPORT_OBJECTSTORE_CONF = dict(
     VERSION='2.0',
-    AUTHURL=os.getenv('EXPORT_OS_AUTH_URL'),
+    AUTHURL="https://identity.stack.cloudvps.com/v2.0",
     TENANT_NAME=os.getenv('EXPORT_OS_TENANT_NAME'),
     TENANT_ID=os.getenv('EXPORT_OS_TENANT_ID'),
     USER=os.getenv('EXPORT_OS_USERNAME'),
     PASSWORD=os.getenv('EXPORT_OS_PASSWORD'),
-    REGION_NAME=os.getenv('EXPORT_OS_REGION_NAME'),
+    REGION_NAME="NL",
 )
 
 EXPORT_OBJECTSTORE_CONTAINER = os.getenv('EXPORT_OBJECTSTORE_CONTAINER', 'blackspots')
