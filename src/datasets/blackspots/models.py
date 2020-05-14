@@ -84,3 +84,20 @@ class Document(models.Model):
         doc_type = "ontwerp" if self.type == Document.DocumentType.Ontwerp else "rapportage"
         base_filename = f"{self.spot.locatie_id}_{doc_type}_{self.spot.description}.pdf"
         return get_valid_filename(base_filename)
+
+
+class SpotExport(models.Model):
+    locatie_id = models.CharField(unique=True, max_length=16)
+    spot_type = models.CharField(max_length=24, choices=Spot.SpotType.choices)
+    point = models.PointField(srid=4326)
+    stadsdeel = models.CharField(max_length=3, choices=Spot.Stadsdelen.choices)
+    status = models.CharField(
+        max_length=32,
+        choices=Spot.StatusChoice.choices
+    )
+
+    start_uitvoering = models.CharField(null=True, blank=True, max_length=64)
+    eind_uitvoering = models.CharField(null=True, blank=True, max_length=64)
+    jaar_blackspotlijst = models.IntegerField(null=True, blank=True)
+    jaar_ongeval_quickscan = models.IntegerField(null=True, blank=True)
+    jaar_oplevering = models.IntegerField(null=True, blank=True)
