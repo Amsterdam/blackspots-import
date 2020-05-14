@@ -60,13 +60,10 @@ pipeline {
                 stage('Deploy to acceptance') {
                     when { environment name: 'IS_RELEASE', value: 'true' }
                     steps {
+                        sh 'VERSION=acceptance make push'
                         build job: 'Subtask_Openstack_Playbook', parameters: [
                             string(name: 'PLAYBOOK', value: PLAYBOOK),
-                            string(name: 'INVENTORY', value: "acceptance"),
-                            string(
-                                name: 'PLAYBOOKPARAMS', 
-                                value: "-e deployversion=${VERSION}"
-                            )
+                            string(name: 'INVENTORY', value: "acceptance")
                         ], wait: true
                     }
                 }
@@ -74,13 +71,10 @@ pipeline {
                 stage('Deploy to production') {
                     when { tag pattern: "\\d+\\.\\d+\\.\\d+\\.*", comparator: "REGEXP" }
                     steps {
+                        sh 'VERSION=production make push'
                         build job: 'Subtask_Openstack_Playbook', parameters: [
                             string(name: 'PLAYBOOK', value: PLAYBOOK),
-                            string(name: 'INVENTORY', value: "production"),
-                            string(
-                                name: 'PLAYBOOKPARAMS', 
-                                value: "-e deployversion=${VERSION}"
-                            )
+                            string(name: 'INVENTORY', value: "production")
                         ], wait: true
 
                         slackSend(channel: SLACK_CHANNEL, attachments: [SLACK_MESSAGE << 
