@@ -1,99 +1,111 @@
 #!groovy
-
-def tryStep(String message, Closure block, Closure tearDown = null) {
-    try {
-        block()
-    }
-    catch (Throwable t) {
-        slackSend message: "${env.JOB_NAME}: ${message} failure ${env.BUILD_URL}", channel: '#ci-channel', color: 'danger'
-
-        throw t
-    }
-    finally {
-        if (tearDown) {
-            tearDown()
-        }
-    }
-}
+def PROJECT_NAME = "blackspots-backend"
+def SLACK_CHANNEL = '#opdrachten-deployments'
+def PLAYBOOK = 'deploy-blackspots.yml'
+def SLACK_MESSAGE = [
+    "title_link": BUILD_URL,
+    "fields": [
+        ["title": "Project","value": PROJECT_NAME],
+        ["title":"Branch", "value": BRANCH_NAME, "short":true],
+        ["title":"Build number", "value": BUILD_NUMBER, "short":true]
+    ]
+]
 
 
-node {
-    stage("Checkout") {
-        checkout scm
-    }
 
+pipeline {
+    agent any
 
-    stage('Test') {
-        tryStep "Test", {
-            sh "api/deploy/test/jenkins-script.sh api/deploy/test/"
-        }
+    environment {
+        SHORT_UUID = sh( script: "head /dev/urandom | tr -dc A-Za-z0-9 | head -c10", returnStdout: true).trim()
+        COMPOSE_PROJECT_NAME = "${PROJECT_NAME}-${env.SHORT_UUID}"
+        VERSION = env.BRANCH_NAME.replace('/', '-').toLowerCase().replace(
+            'master', 'latest'
+        )
+        IS_RELEASE = "${env.BRANCH_NAME ==~ "release/.*"}"
     }
 
-
-    stage("Build develop image") {
-        tryStep "build", {
-            docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
-            def image = docker.build("datapunt/blackspots:${env.BUILD_NUMBER}", "./api")
-            image.push()
+    stages {
+        stage('Test') {
+            steps {
+                sh 'make test'
             }
         }
-    }
-}
 
-String BRANCH = "${env.BRANCH_NAME}"
+        stage('Build') {
+            steps {
+                sh 'make build'
+            }
+        }
 
-if (BRANCH == "master" || BRANCH == "authentication") {
-    node {
-        stage('Push acceptance image') {
-            tryStep "image tagging", {
-                docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
-                def image = docker.image("datapunt/blackspots:${env.BUILD_NUMBER}")
-                image.pull()
-                image.push("acceptance")
+        stage('Push and deploy') {
+            when { 
+                anyOf {
+                    branch 'master'
+                    buildingTag()
+                    environment name: 'IS_RELEASE', value: 'true'
+                }
+            }
+            stages {
+                stage('Push') {
+                    steps {
+                        script {
+                            docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
+                                sh 'make push'
+                            }
+                        }
+                    }
+                }
+
+                stage('Deploy to acceptance') {
+                    when { environment name: 'IS_RELEASE', value: 'true' }
+                    steps {
+                        build job: 'Subtask_Openstack_Playbook', parameters: [
+                            string(name: 'PLAYBOOK', value: PLAYBOOK),
+                            string(name: 'INVENTORY', value: "acceptance"),
+                            string(
+                                name: 'PLAYBOOKPARAMS', 
+                                value: "-e deployversion=${VERSION}"
+                            )
+                        ], wait: true
+                    }
+                }
+
+                stage('Deploy to production') {
+                    when { tag pattern: "\\d+\\.\\d+\\.\\d+\\.*", comparator: "REGEXP" }
+                    steps {
+                        build job: 'Subtask_Openstack_Playbook', parameters: [
+                            string(name: 'PLAYBOOK', value: PLAYBOOK),
+                            string(name: 'INVENTORY', value: "production"),
+                            string(
+                                name: 'PLAYBOOKPARAMS', 
+                                value: "-e deployversion=${VERSION}"
+                            )
+                        ], wait: true
+
+                        slackSend(channel: SLACK_CHANNEL, attachments: [SLACK_MESSAGE << 
+                            [
+                                "color": "#36a64f",
+                                "title": "Deploy to production succeeded :rocket:",
+                            ]
+                        ])
+                    }
                 }
             }
         }
-    }
 
-    node {
-        stage("Deploy to ACC") {
-            tryStep "deployment", {
-                build job: 'Subtask_Openstack_Playbook',
-                        parameters: [
-                                [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
-                                [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-blackspots.yml'],
-                        ]
-            }
+    }
+    post {
+        always {
+            sh 'make clean'
         }
-    }
-
-    stage('Waiting for approval') {
-        slackSend channel: '#ci-channel', color: 'warning', message: 'Blackspots is waiting for Production Release - please confirm'
-        input "Deploy to Production?"
-    }
-
-    node {
-        stage('Push production image') {
-            tryStep "image tagging", {
-            docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
-                def image = docker.image("datapunt/blackspots:${env.BUILD_NUMBER}")
-                image.pull()
-                image.push("production")
-                image.push("latest")
-                }
-            }
-        }
-    }
-
-    node {
-        stage("Deploy") {
-            tryStep "deployment", {
-                build job: 'Subtask_Openstack_Playbook',
-                        parameters: [
-                                [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
-                                [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-blackspots.yml'],
-                        ]
-            }
+        failure {
+            slackSend(channel: SLACK_CHANNEL, attachments: [SLACK_MESSAGE << 
+                [
+                    "color": "#D53030",
+                    "title": "Build failed :fire:",
+                ]
+            ])
         }
     }
 }

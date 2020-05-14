@@ -1,0 +1,20 @@
+# Pinned django
+# https://github.com/jpadilla/django-rest-framework-xml/issues/45
+Django >= 2, <3
+
+python-swiftclient
+python-keystoneclient
+xlrd
+djangorestframework
+djangorestframework-gis
+django-extensions
+django-filter
+django-rest-swagger
+drf-amsterdam
+drf_extensions
+pyyaml>=4.2b1
+psycopg2-binary
+sentry-sdk
+drf_yasg
+django-choices
+datapunt-objectstore
