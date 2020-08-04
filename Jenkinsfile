@@ -63,6 +63,7 @@ pipeline {
                         sh 'VERSION=acceptance make push'
                         build job: 'Subtask_Openstack_Playbook', parameters: [
                             string(name: 'PLAYBOOK', value: PLAYBOOK),
+                            string(name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_blackspots"),
                             string(name: 'INVENTORY', value: "acceptance")
                         ], wait: true
                     }
@@ -74,6 +75,7 @@ pipeline {
                         sh 'VERSION=production make push'
                         build job: 'Subtask_Openstack_Playbook', parameters: [
                             string(name: 'PLAYBOOK', value: PLAYBOOK),
+                            string(name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_blackspots"),
                             string(name: 'INVENTORY', value: "production")
                         ], wait: true
 
