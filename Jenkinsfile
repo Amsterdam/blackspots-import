@@ -1,7 +1,7 @@
 #!groovy
 def PROJECT_NAME = "blackspots-backend"
 def SLACK_CHANNEL = '#opdrachten-deployments'
-def PLAYBOOK = 'deploy-blackspots.yml'
+def PLAYBOOK = 'deploy.yml'
 def SLACK_MESSAGE = [
     "title_link": BUILD_URL,
     "fields": [
