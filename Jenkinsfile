@@ -22,7 +22,7 @@ pipeline {
         VERSION = env.BRANCH_NAME.replace('/', '-').toLowerCase().replace(
             'master', 'latest'
         )
-        IS_RELEASE = "${env.BRANCH_NAME ==~ "release/.*"}"
+        IS_PRE_RELEASE_BRANCH = "${env.BRANCH_NAME ==~ "release/.*"}"
     }
 
     stages {
@@ -43,7 +43,7 @@ pipeline {
                 anyOf {
                     branch 'master'
                     buildingTag()
-                    environment name: 'IS_RELEASE', value: 'true'
+                    environment name: 'IS_PRE_RELEASE_BRANCH', value: 'true'
                 }
             }
             stages {
@@ -62,7 +62,7 @@ pipeline {
                         anyOf {
                             branch 'master'
                             buildingTag()
-                            environment name: 'IS_RELEASE', value: 'true'
+                            environment name: 'IS_PRE_RELEASE_BRANCH', value: 'true'
                         }
                     }
                     steps {
