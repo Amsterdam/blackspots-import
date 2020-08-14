@@ -11,6 +11,24 @@ Authorization is done by passing requests through **Gatekeeper**.
 The API itself is only accessible through Gatekeeper.  
 
 
+# Deployments
+
+Deployments are triggered automatically after pushing considering the following rules:
+
+## Acceptance deployments
+Jenkins will deploy to acceptance in these situations:
+- Any push to master
+- Any push to a release/* (pre-release branches used for final testing)
+- Any pushed tag with semver formatting (x.y.z)
+
+## Production deployments
+Jenkins will deploy to production in the following situation:
+- Any pushed tag with semver formatting (x.y.z) 
+
+Note that given these rules, any semver tag that is pushed will first be deployed to ACC,
+and immediately after to PROD.
+
+
 # Install
 
 ```
