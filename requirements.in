@@ -5,7 +5,13 @@ Django >= 2, <3
 python-swiftclient
 python-keystoneclient
 xlrd
-djangorestframework
+
+# Pinned DRF. drf_yasg is not compatible yet
+# https://github.com/axnsan12/drf-yasg/issues/640
+# https://github.com/axnsan12/drf-yasg/issues/641
+# https://github.com/axnsan12/drf-yasg/issues/643
+djangorestframework < 3.12
+
 djangorestframework-gis
 django-extensions
 django-filter
