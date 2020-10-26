@@ -21,7 +21,7 @@ django==2.2.16            # via -r requirements.in, django-choices, django-filte
 djangorestframework-csv==2.1.0  # via drf-amsterdam
 djangorestframework-gis==0.16  # via -r requirements.in
 djangorestframework-xml==2.0.0  # via drf-amsterdam
-djangorestframework==3.11.2  # via -r requirements.in, django-rest-swagger, djangorestframework-csv, djangorestframework-gis, drf-amsterdam, drf-extensions, drf-yasg
+djangorestframework==3.12.1  # via -r requirements.in, django-rest-swagger, djangorestframework-csv, djangorestframework-gis, drf-amsterdam, drf-extensions, drf-yasg
 drf-amsterdam==0.4.0      # via -r requirements.in
 drf-extensions==0.6.0     # via -r requirements.in, drf-amsterdam
 drf-yasg==1.20.0          # via -r requirements.in
