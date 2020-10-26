@@ -28,20 +28,20 @@ django==2.2.16            # via -r ./requirements.txt, django-choices, django-co
 djangorestframework-csv==2.1.0  # via -r ./requirements.txt, drf-amsterdam
 djangorestframework-gis==0.16  # via -r ./requirements.txt
 djangorestframework-xml==2.0.0  # via -r ./requirements.txt, drf-amsterdam
-djangorestframework==3.11.2  # via -r ./requirements.txt, django-rest-swagger, djangorestframework-csv, djangorestframework-gis, drf-amsterdam, drf-extensions, drf-yasg
+djangorestframework==3.12.1  # via -r ./requirements.txt, django-rest-swagger, djangorestframework-csv, djangorestframework-gis, drf-amsterdam, drf-extensions, drf-yasg
 drf-amsterdam==0.4.0      # via -r ./requirements.txt
 drf-extensions==0.6.0     # via -r ./requirements.txt, drf-amsterdam
-drf-yasg==1.17.1          # via -r ./requirements.txt
+drf-yasg==1.20.0          # via -r ./requirements.txt
 filelock==3.0.12          # via tox, virtualenv
 flake8==3.8.4             # via -r requirements_dev.in
 idna==2.10                # via -r ./requirements.txt, requests
 inflection==0.5.1         # via -r ./requirements.txt, drf-yasg
-iniconfig==1.0.1          # via pytest
+iniconfig==1.1.1          # via pytest
 ipdb==0.13.4              # via -r requirements_dev.in
 ipython-genutils==0.2.0   # via traitlets
 ipython==7.18.1           # via ipdb
 iso8601==0.1.13           # via -r ./requirements.txt, keystoneauth1, oslo.utils
-isort==5.6.3              # via -r requirements_dev.in
+isort==5.6.4              # via -r requirements_dev.in
 itypes==1.2.0             # via -r ./requirements.txt, coreapi
 jedi==0.17.2              # via ipython
 jinja2==2.11.2            # via -r ./requirements.txt, coreschema
@@ -61,21 +61,21 @@ oslo.serialization==4.0.1  # via -r ./requirements.txt, python-keystoneclient
 oslo.utils==4.6.0         # via -r ./requirements.txt, oslo.serialization, python-keystoneclient
 packaging==20.4           # via -r ./requirements.txt, drf-yasg, oslo.utils, pytest, tox
 parso==0.7.1              # via jedi
-pbr==5.5.0                # via -r ./requirements.txt, debtcollector, keystoneauth1, os-service-types, oslo.i18n, oslo.serialization, oslo.utils, python-keystoneclient, stevedore
+pbr==5.5.1                # via -r ./requirements.txt, debtcollector, keystoneauth1, os-service-types, oslo.i18n, oslo.serialization, oslo.utils, python-keystoneclient, stevedore
 pexpect==4.8.0            # via ipython
 pickleshare==0.7.5        # via ipython
 pluggy==0.13.1            # via pytest, tox
-prompt-toolkit==3.0.7     # via ipython
+prompt-toolkit==3.0.8     # via ipython
 psycopg2-binary==2.8.6    # via -r ./requirements.txt
 ptyprocess==0.6.0         # via pexpect
 py==1.9.0                 # via pytest, tox
 pycodestyle==2.6.0        # via flake8
 pyflakes==2.2.0           # via flake8
-pygments==2.7.1           # via ipython
+pygments==2.7.2           # via ipython
 pyparsing==2.4.7          # via -r ./requirements.txt, oslo.utils, packaging
 pyrsistent==0.17.3        # via -r ./requirements.txt, jsonschema
 pytest-cov==2.10.1        # via -r requirements_dev.in
-pytest-django==3.10.0     # via -r requirements_dev.in
+pytest-django==4.1.0      # via -r requirements_dev.in
 pytest==6.1.1             # via -r requirements_dev.in, pytest-cov, pytest-django
 python-dateutil==2.8.1    # via -r ./requirements.txt, datapunt-objectstore
 python-keystoneclient==4.1.1  # via -r ./requirements.txt, datapunt-objectstore
@@ -86,18 +86,18 @@ requests==2.24.0          # via -r ./requirements.txt, coreapi, keystoneauth1, o
 rfc3986==1.4.0            # via -r ./requirements.txt, oslo.config
 ruamel.yaml.clib==0.2.2   # via -r ./requirements.txt, ruamel.yaml
 ruamel.yaml==0.16.12      # via -r ./requirements.txt, drf-yasg
-sentry-sdk==0.18.0        # via -r ./requirements.txt
+sentry-sdk==0.19.1        # via -r ./requirements.txt
 simplejson==3.17.2        # via -r ./requirements.txt, django-rest-swagger
-six==1.15.0               # via -r ./requirements.txt, debtcollector, django-choices, djangorestframework-csv, drf-yasg, jsonschema, keystoneauth1, oslo.i18n, oslo.utils, packaging, python-dateutil, python-keystoneclient, python-swiftclient, tox, virtualenv
+six==1.15.0               # via -r ./requirements.txt, debtcollector, django-choices, djangorestframework-csv, jsonschema, keystoneauth1, oslo.i18n, oslo.utils, packaging, python-dateutil, python-keystoneclient, python-swiftclient, tox, virtualenv
 sqlparse==0.4.1           # via -r ./requirements.txt, django, django-debug-toolbar
 stevedore==3.2.2          # via -r ./requirements.txt, keystoneauth1, oslo.config, python-keystoneclient
 toml==0.10.1              # via pytest, tox
 tox==3.20.1               # via -r requirements_dev.in
-traitlets==5.0.4          # via ipython
+traitlets==5.0.5          # via ipython
 unicodecsv==0.14.1        # via -r ./requirements.txt, djangorestframework-csv
 uritemplate==3.0.1        # via -r ./requirements.txt, coreapi, drf-yasg
-urllib3==1.25.10          # via -r ./requirements.txt, requests, sentry-sdk
-virtualenv==20.0.33       # via tox
+urllib3==1.25.11          # via -r ./requirements.txt, requests, sentry-sdk
+virtualenv==20.1.0        # via tox
 wcwidth==0.2.5            # via prompt-toolkit
 wrapt==1.12.1             # via -r ./requirements.txt, debtcollector
 xlrd==1.2.0               # via -r ./requirements.txt
