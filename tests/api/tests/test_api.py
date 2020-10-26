@@ -1,7 +1,7 @@
 import logging
 from unittest import mock
 
-from django.test import TestCase
+from django.test import TransactionTestCase
 from model_bakery import baker, seq
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
@@ -12,10 +12,11 @@ from datasets.blackspots.models import Document, Spot
 log = logging.getLogger(__name__)
 
 
-class TestAPIEndpoints(TestCase):
+class TestAPIEndpoints(TransactionTestCase):
     """
     Verifies that browsing the API works correctly.
     """
+    reset_sequences = True
 
     def setUp(self):
         # use the DRF api client. See why:
