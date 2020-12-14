@@ -17,7 +17,7 @@ class AuthorizationSetup(object):
     """
     anon_client = None
     read_client = None
-    read_write_client = None
+    write_client = None
 
     def setup_clients(self):
         # use the DRF api client. See why:
@@ -28,9 +28,9 @@ class AuthorizationSetup(object):
         self.read_client = APIClient()
         self.read_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token_read))
 
-        token_read_write = self._get_token(settings.SCOPE_BS_READ_WRITE)
-        self.read_write_client = APIClient()
-        self.read_write_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token_read_write))
+        token_read_write = self._get_token(settings.SCOPE_BS_WRITE)
+        self.write_client = APIClient()
+        self.write_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token_read_write))
 
     def _get_token(self, scope):
         """

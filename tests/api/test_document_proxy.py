@@ -8,16 +8,19 @@ from swiftclient import ClientException
 
 from datasets.blackspots import models
 from datasets.blackspots.models import Document
+from tests.api.authzsetup import AuthorizationSetup
 
 log = logging.getLogger(__name__)
 
 
-class TestDocumentProxy(TestCase):
+class TestDocumentProxy(TestCase, AuthorizationSetup):
     """
     Verifies objectstore proxy working correctly
     """
 
     def setUp(self):
+        self.setup_clients()
+        
         self.document = baker.make(
             Document,
             type='Ontwerp',
@@ -37,7 +40,7 @@ class TestDocumentProxy(TestCase):
             'blob'
         ]
 
-        response = self.client.get(reverse('document-get-file', [self.document.id]))
+        response = self.read_client.get(reverse('document-get-file', [self.document.id]))
 
         # note, container name test is defined in the environment OBJECTSTORE_UPLOAD_CONTAINER_NAME
         get_mock.assert_called_with('connection_object', 'test/doc/ontwerp', 'foo.pdf')
@@ -52,7 +55,7 @@ class TestDocumentProxy(TestCase):
         get_mock.return_value = 'dontcare'
         get_mock.side_effect = ClientException('Something, something Object GET failed foo bar')
 
-        response = self.client.get(reverse('document-get-file', [self.document.id]))
+        response = self.read_client.get(reverse('document-get-file', [self.document.id]))
 
         self.assertEqual(404, response.status_code)
 
@@ -63,7 +66,7 @@ class TestDocumentProxy(TestCase):
         get_mock.return_value = 'dontcare'
         get_mock.side_effect = ClientException('Something something Unauthorized foo bar')
 
-        response = self.client.get(reverse('document-get-file', [self.document.id]))
+        response = self.read_client.get(reverse('document-get-file', [self.document.id]))
 
         self.assertEqual(500, response.status_code)
 
@@ -74,6 +77,6 @@ class TestDocumentProxy(TestCase):
         get_mock.return_value = 'dontcare'
         get_mock.side_effect = ClientException('Unknown error')
 
-        response = self.client.get(reverse('document-get-file', [self.document.id]))
+        response = self.read_client.get(reverse('document-get-file', [self.document.id]))
 
         self.assertEqual(500, response.status_code)
