@@ -10,6 +10,8 @@ ADW users or Datapunt identity provider users can login with the Keycloak JS lib
 Authorization is done by passing requests through **Gatekeeper**.
 The API itself is only accessible through Gatekeeper.  
 
+# Project architecture
+This project follows the setup used in multiple projects and is described here: https://github.com/Amsterdam/opdrachten_team_dev.  
 
 # Deployments
 
