@@ -10,12 +10,7 @@ RUN adduser --system datapunt
 
 RUN mkdir -p /src && chown datapunt /src
 RUN mkdir -p /deploy && chown datapunt /deploy
-RUN mkdir -p /var/log/gatekeeper && chown datapunt /var/log/gatekeeper
 RUN mkdir -p /var/log/uwsgi && chown datapunt /var/log/uwsgi
-
-# ADD "https://nexus.data.amsterdam.nl/repository/keycloak/bin/keycloak-gatekeeper.latest" /app/keycloak-gatekeeper
-COPY src/lib/keycloak-gatekeeper.latest /src/keycloak-gatekeeper
-RUN chmod 755 /src/keycloak-gatekeeper
 
 WORKDIR /install
 ADD requirements.txt .
@@ -57,5 +52,6 @@ ADD tests .
 
 ENV COVERAGE_FILE=/tmp/.coverage
 ENV PYTHONPATH=/src
+ENV USE_JWKS_TEST_KEY=True
 
 CMD ["pytest"]

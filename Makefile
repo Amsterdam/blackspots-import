@@ -2,6 +2,7 @@
 # https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
 .PHONY: app
 dc = docker-compose
+run = $(dc) run
 
 help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -39,16 +40,19 @@ app:
 	$(dc) up app
 
 dev:
-	$(dc) run --service-ports dev
+	$(run) --service-ports dev
 
 test:
-	$(dc) run --rm test pytest $(ARGS)
+	$(run) --rm test pytest $(ARGS)
+
+pdb:
+	$(run) test pytest --pdb $(ARGS)
 
 clean:
 	$(dc) down -v
 
 bash:
-	$(dc) run --rm dev bash
+	$(run) --rm dev bash
 
 update_stadsdeel_errors:
 	$(dc) run --rm app /deploy/docker-update-stadsdelen.sh

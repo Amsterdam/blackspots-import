@@ -1,1 +1,0 @@
-Download of https://nexus.data.amsterdam.nl/repository/keycloak/bin/keycloak-gatekeeper.latest
