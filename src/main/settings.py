@@ -206,7 +206,7 @@ DATAPUNT_AUTHZ = {
 }
 
 # when testing we use a static test key
-if strtobool(os.getenv("USE_JWKS_TEST_KEY", "")):
+if strtobool(os.getenv("USE_JWKS_TEST_KEY", "False")):
     # The following JWKS data was obtained in the authz project :
     # jwkgen -create -alg ES256
     # This is a test public/private key def and added for testing.
