@@ -235,7 +235,7 @@ SWAGGER_SETTINGS = {
             "type": "oauth2",
             "authorizationUrl": "/oauth2/authorize",
             "flow": "implicit",
-            "scopes": {"bs_all": "Blackspots read/write", "bs_r": "Blackspots read"},
+            "scopes": {"bs_w": "Blackspots write", "bs_r": "Blackspots read"},
         }
     },
     "SECURITY_REQUIREMENTS": {},  # No global scope required, only per api
