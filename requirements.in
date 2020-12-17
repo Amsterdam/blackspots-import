@@ -18,4 +18,3 @@ sentry-sdk
 drf_yasg
 django-choices
 datapunt-objectstore
-datapunt-authorization-django

@@ -7,6 +7,8 @@ Finally the API acts as an authorization proxy for report documents belonging to
 
 Authentication is done using Keycloak.
 ADW users or Datapunt identity provider users can login with the Keycloak JS library (see [blackspots-frontend](https://github.com/Amsterdam/blackspots-frontend/)).
+Authorization is done by passing requests through **Gatekeeper**.
+The API itself is only accessible through Gatekeeper.  
 
 # Project architecture
 This project follows the setup used in multiple projects and is described here: https://github.com/Amsterdam/opdrachten_team_dev.  
@@ -91,10 +93,14 @@ The following endpoints (and more) are available:
 Alternatively everything can be started through Docker using:
 
 ```
+source .gatekeeper_env
 docker-compose up --build
 ```
 
+Note that in order to access the API through Gatekeeper you will need access to the Keycloak credentials.
+
 * The API is available on: `<docker-host>:8001`.
+* Gatekeeper is available on `<docker-host>:8000`.
 
 
 # Testing
