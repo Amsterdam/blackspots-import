@@ -3,12 +3,31 @@ The blackspots/wbakaart service exposes spots in Amsterdam which have been ident
 
 During an import process a remote XLS file is imported to the Postgres database.
 Through a Django rest framework API these spots are exposed in HAL json and geojson.
+Finally the API acts as an authorization proxy for report documents belonging to a particular spot.
 
 Authentication is done using Keycloak.
 ADW users or Datapunt identity provider users can login with the Keycloak JS library (see [blackspots-frontend](https://github.com/Amsterdam/blackspots-frontend/)).
 
 # Project architecture
 This project follows the setup used in multiple projects and is described here: https://github.com/Amsterdam/opdrachten_team_dev.  
+
+# Deployments
+
+Deployments are triggered automatically after pushing considering the following rules:
+
+## Acceptance deployments
+Jenkins will deploy to acceptance in these situations:
+- Any push to master
+- Any push to a release/* (pre-release branches used for final testing)
+- Any pushed tag with semver formatting (x.y.z)
+
+## Production deployments
+Jenkins will deploy to production in the following situation:
+- Any pushed tag with semver formatting (x.y.z) 
+
+Note that given these rules, any semver tag that is pushed will first be deployed to ACC,
+and immediately after to PROD.
+
 
 # Install
 
@@ -75,7 +94,7 @@ Alternatively everything can be started through Docker using:
 docker-compose up --build
 ```
 
-* The API is available on: `<docker-host>:8000`.
+* The API is available on: `<docker-host>:8001`.
 
 
 # Testing

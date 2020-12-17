@@ -18,6 +18,7 @@ services:
       target: app
     ports:
     - 8000
+    - 8001
     volumes:
       - ./src:/src
       - ./tests:/tests
