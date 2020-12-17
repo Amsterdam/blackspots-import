@@ -52,5 +52,6 @@ ADD tests .
 
 ENV COVERAGE_FILE=/tmp/.coverage
 ENV PYTHONPATH=/src
+ENV USE_JWKS_TEST_KEY=True
 
 CMD ["pytest"]
