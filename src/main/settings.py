@@ -78,6 +78,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "authorization_django.authorization_middleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -184,6 +185,61 @@ REST_FRAMEWORK = dict(
     # DEFAULT_VERSION='v0',
     # ALLOWED_VERSIONS=API_VERSIONS.keys(),
 )
+
+# The following JWKS data was obtained in the authz project :
+# jwkgen -create -alg ES256
+# This is a test public/private key def and added for testing.
+JWKS_TEST_KEY = """
+    {
+        "keys": [
+            {
+                "kty": "EC",
+                "key_ops": [
+                    "verify",
+                    "sign"
+                ],
+                "kid": "2aedafba-8170-4064-b704-ce92b7c89cc6",
+                "crv": "P-256",
+                "x": "6r8PYwqfZbq_QzoMA4tzJJsYUIIXdeyPA27qTgEJCDw=",
+                "y": "Cf2clfAfFuuCB06NMfIat9ultkMyrMQO9Hd2H7O9ZVE=",
+                "d": "N1vu0UQUp0vLfaNeM0EDbl4quvvL6m_ltjoAXXzkI3U="
+            }
+        ]
+    }
+"""
+
+
+SCOPE_BS_READ = 'bs_r'
+SCOPE_BS_WRITE = 'bs_w'
+
+DATAPUNT_AUTHZ = {
+    "JWKS": os.getenv("PUB_JWKS", JWKS_TEST_KEY),
+    "MIN_SCOPE": (),
+    "FORCED_ANONYMOUS_ROUTES": (
+        "/status/",
+        "/blackspots/redoc/",
+        "/blackspots/swagger.yaml",
+        "/favicon.ico",
+    ),
+    "PROTECTED": [
+        ("/", ["GET", "HEAD", "TRACE"], [SCOPE_BS_READ]),
+        ("/", ["POST", "PUT", "DELETE", "PATCH"], [SCOPE_BS_WRITE]),
+    ]
+}
+
+# drf_yasg Swagger generation settings
+SWAGGER_SETTINGS = {
+    "USE_SESSION_AUTH": False,
+    "SECURITY_DEFINITIONS": {
+        "OAuth2": {
+            "type": "oauth2",
+            "authorizationUrl": "/oauth2/authorize",
+            "flow": "implicit",
+            "scopes": {"bs_all": "Blackspots read/write", "bs_r": "Blackspots read"},
+        }
+    },
+    "SECURITY_REQUIREMENTS": {},  # No global scope required, only per api
+}
 
 OBJECTSTORE_UPLOAD_CONTAINER_NAME = os.environ["OBJECTSTORE_UPLOAD_CONTAINER_NAME"]
 
