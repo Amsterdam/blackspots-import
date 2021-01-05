@@ -187,8 +187,11 @@ REST_FRAMEWORK = dict(
 )
 
 
-SCOPE_BS_READ = 'bs_r'
-SCOPE_BS_WRITE = 'bs_w'
+# Note! Scopes from keycloak are converted to uppercase,
+# and underscores are replaced by slashes.
+# Therefore bs_r and bs_w in keycloak become BS/R and BS/W.
+SCOPE_BS_READ = 'BS/R'
+SCOPE_BS_WRITE = 'BS/W'
 
 DATAPUNT_AUTHZ = {
     "JWKS_URL": os.getenv("KEYCLOAK_JWKS_URL"),
