@@ -1,10 +1,10 @@
 import logging
 
+import six
 from datapunt_api.rest import HALSerializer
 from django.conf import settings
 from django.db import models
 from django.db.models import query
-from django.utils import six
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer

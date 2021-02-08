@@ -5,6 +5,7 @@
 #    pip-compile --output-file=requirements_dev.txt requirements_dev.in
 #
 appdirs==1.4.4            # via virtualenv
+asgiref==3.3.1            # via -r ./requirements.txt, django
 attrs==20.3.0             # via -r ./requirements.txt, jsonschema, pytest
 backcall==0.2.0           # via ipython
 certifi==2020.12.5        # via -r ./requirements.txt, requests, sentry-sdk
@@ -27,7 +28,7 @@ django-debug-toolbar==3.2  # via -r requirements_dev.in
 django-extensions==3.1.1  # via -r ./requirements.txt
 django-filter==2.4.0      # via -r ./requirements.txt
 django-rest-swagger==2.2.0  # via -r ./requirements.txt
-django==2.2.18            # via -r ./requirements.txt, datapunt-authorization-django, django-choices, django-cors-headers, django-debug-toolbar, django-filter, djangorestframework, drf-yasg, model-bakery
+django==3.0.12            # via -r ./requirements.txt, datapunt-authorization-django, django-choices, django-cors-headers, django-debug-toolbar, django-filter, djangorestframework, drf-yasg, model-bakery
 djangorestframework-csv==2.1.0  # via -r ./requirements.txt, drf-amsterdam
 djangorestframework-gis==0.17  # via -r ./requirements.txt
 djangorestframework-xml==2.0.0  # via -r ./requirements.txt, drf-amsterdam

@@ -1,7 +1,5 @@
-# Pinned django
-# https://github.com/jpadilla/django-rest-framework-xml/issues/45
-Django >= 2, <3
-
+# https://github.com/chibisov/drf-extensions/issues/294
+django<3.1
 python-swiftclient
 python-keystoneclient
 xlrd
