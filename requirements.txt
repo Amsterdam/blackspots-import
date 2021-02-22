@@ -48,7 +48,7 @@ django-filter==2.4.0
     # via -r requirements.in
 django-rest-swagger==2.2.0
     # via -r requirements.in
-django==3.0.13
+django==3.1.7
     # via
     #   -r requirements.in
     #   datapunt-authorization-django
