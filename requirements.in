@@ -1,5 +1,4 @@
-# https://github.com/chibisov/drf-extensions/issues/294
-django<3.1
+django
 python-swiftclient
 python-keystoneclient
 xlrd
