@@ -3,6 +3,7 @@
 .PHONY: app
 dc = docker-compose
 run = $(dc) run
+manage = $(run) --rm app python manage.py
 
 help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -20,10 +21,10 @@ requirements: pip-tools             ## Upgrade requirements (in requirements.in)
 upgrade: requirements install       ## Run 'requirements' and 'install' targets
 
 migrations:
-	$(dc) run --rm app python manage.py makemigrations
+	$(manage) makemigrations
 
 migrate:
-	$(dc) run --rm app python manage.py migrate
+	$(manage) migrate
 
 build:
 	$(dc) build
@@ -53,6 +54,9 @@ clean:
 
 bash:
 	$(run) --rm dev bash
+
+shell:
+	$(manage) shell_plus
 
 update_stadsdeel_errors:
 	$(dc) run --rm app /deploy/docker-update-stadsdelen.sh
