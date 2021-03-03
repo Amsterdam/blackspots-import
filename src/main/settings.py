@@ -87,7 +87,7 @@ ROOT_URLCONF = 'main.urls'
 BASE_URL = os.getenv('BASE_URL', '')
 FORCE_SCRIPT_NAME = BASE_URL
 
-STATIC_URL = BASE_URL + '/static/'
+STATIC_URL = os.path.join(BASE_URL, '/static/')
 STATIC_ROOT = "static"
 
 
