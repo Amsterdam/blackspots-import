@@ -83,9 +83,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "main.urls"
+ROOT_URLCONF = 'main.urls'
+BASE_URL = os.getenv('BASE_URL', '')
+FORCE_SCRIPT_NAME = BASE_URL
 
-STATIC_URL = "/blackspots/static/"
+STATIC_URL = BASE_URL + '/static/'
 STATIC_ROOT = "static"
 
 
@@ -198,8 +200,8 @@ DATAPUNT_AUTHZ = {
     "MIN_SCOPE": (),
     "FORCED_ANONYMOUS_ROUTES": (
         "/status/",
-        "/blackspots/redoc/",
-        "/blackspots/swagger.yaml",
+        "/redoc/",
+        "/swagger.yaml",
         "/favicon.ico",
     ),
     "PROTECTED": [
