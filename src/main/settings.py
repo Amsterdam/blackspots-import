@@ -215,7 +215,7 @@ if BASE_URL:
     # Requests that come directly from consul internally will have
     # the base url prepended. This is mainly the case for the health check
     # used during deploy. Therefore explicitly add it here
-    DATAPUNT_AUTHZ['FORCED_ANONYMOUS_ROUTES'].append(os.path.join(BASE_URL, '/status/'))
+    DATAPUNT_AUTHZ['FORCED_ANONYMOUS_ROUTES'].append(f"{BASE_URL}/status/")
 
 # when testing we use a static test key
 if strtobool(os.getenv("USE_JWKS_TEST_KEY", "False")):
