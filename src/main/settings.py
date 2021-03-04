@@ -199,10 +199,10 @@ DATAPUNT_AUTHZ = {
     "JWKS_URL": os.getenv("KEYCLOAK_JWKS_URL"),
     "MIN_SCOPE": (),
     "FORCED_ANONYMOUS_ROUTES": (
-        f"{BASE_URL}/status/",
-        f"{BASE_URL}/redoc/",
-        f"{BASE_URL}/swagger.yaml",
-        f"{BASE_URL}/favicon.ico",
+        "/status/",
+        "/redoc/",
+        "/swagger.yaml",
+        "/favicon.ico",
     ),
     "PROTECTED": [
         ("/", ["GET", "HEAD", "TRACE"], [SCOPE_BS_READ]),
