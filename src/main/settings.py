@@ -87,7 +87,7 @@ ROOT_URLCONF = 'main.urls'
 BASE_URL = os.getenv('BASE_URL', '')
 FORCE_SCRIPT_NAME = BASE_URL
 
-STATIC_URL = BASE_URL + '/static/'
+STATIC_URL = os.path.join(BASE_URL, '/static/')
 STATIC_ROOT = "static"
 
 
@@ -199,10 +199,10 @@ DATAPUNT_AUTHZ = {
     "JWKS_URL": os.getenv("KEYCLOAK_JWKS_URL"),
     "MIN_SCOPE": (),
     "FORCED_ANONYMOUS_ROUTES": (
-        "/status/",
-        "/redoc/",
-        "/swagger.yaml",
-        "/favicon.ico",
+        f"{BASE_URL}/status/",
+        f"{BASE_URL}/redoc/",
+        f"{BASE_URL}/swagger.yaml",
+        f"{BASE_URL}/favicon.ico",
     ),
     "PROTECTED": [
         ("/", ["GET", "HEAD", "TRACE"], [SCOPE_BS_READ]),
