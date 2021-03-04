@@ -198,17 +198,24 @@ SCOPE_BS_WRITE = 'BS/W'
 DATAPUNT_AUTHZ = {
     "JWKS_URL": os.getenv("KEYCLOAK_JWKS_URL"),
     "MIN_SCOPE": (),
-    "FORCED_ANONYMOUS_ROUTES": (
+    "FORCED_ANONYMOUS_ROUTES": [
         "/status/",
         "/redoc/",
         "/swagger.yaml",
         "/favicon.ico",
-    ),
+    ],
     "PROTECTED": [
         ("/", ["GET", "HEAD", "TRACE"], [SCOPE_BS_READ]),
         ("/", ["POST", "PUT", "DELETE", "PATCH"], [SCOPE_BS_WRITE]),
     ]
 }
+
+if BASE_URL:
+    # We are running into issues when the base url is set.
+    # Requests that come directly from consul internally will have
+    # the base url prepended. This is mainly the case for the health check
+    # used during deploy. Therefore explicitly add it here
+    DATAPUNT_AUTHZ['FORCED_ANONYMOUS_ROUTES'].append(os.path.join(BASE_URL, '/status/'))
 
 # when testing we use a static test key
 if strtobool(os.getenv("USE_JWKS_TEST_KEY", "False")):
