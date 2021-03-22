@@ -65,7 +65,7 @@ debtcollector==2.2.0
     #   python-keystoneclient
 decorator==4.4.2
     # via ipython
-defusedxml==0.7.0
+defusedxml==0.7.1
     # via
     #   -r ./requirements.txt
     #   djangorestframework-xml
@@ -113,7 +113,7 @@ djangorestframework==3.12.2
     #   drf-amsterdam
     #   drf-extensions
     #   drf-yasg
-drf-amsterdam==0.4.0
+drf-amsterdam==0.4.1
     # via -r ./requirements.txt
 drf-extensions==0.7.0
     # via
@@ -125,7 +125,7 @@ filelock==3.0.12
     # via
     #   tox
     #   virtualenv
-flake8==3.8.4
+flake8==3.9.0
     # via -r requirements_dev.in
 idna==2.10
     # via
@@ -137,7 +137,7 @@ inflection==0.5.1
     #   drf-yasg
 iniconfig==1.1.1
     # via pytest
-ipdb==0.13.5
+ipdb==0.13.7
     # via -r requirements_dev.in
 ipython-genutils==0.2.0
     # via traitlets
@@ -148,7 +148,7 @@ iso8601==0.1.14
     #   -r ./requirements.txt
     #   keystoneauth1
     #   oslo.utils
-isort==5.7.0
+isort==5.8.0
     # via -r requirements_dev.in
 itypes==1.2.0
     # via
@@ -248,7 +248,7 @@ pluggy==0.13.1
     # via
     #   pytest
     #   tox
-prompt-toolkit==3.0.16
+prompt-toolkit==3.0.17
     # via ipython
 psycopg2-binary==2.8.6
     # via -r ./requirements.txt
@@ -258,13 +258,13 @@ py==1.10.0
     # via
     #   pytest
     #   tox
-pycodestyle==2.6.0
+pycodestyle==2.7.0
     # via flake8
 pycparser==2.20
     # via
     #   -r ./requirements.txt
     #   cffi
-pyflakes==2.2.0
+pyflakes==2.3.0
     # via flake8
 pygments==2.8.1
     # via ipython
@@ -294,7 +294,7 @@ python-keystoneclient==4.2.0
     # via
     #   -r ./requirements.txt
     #   datapunt-objectstore
-python-swiftclient==3.11.0
+python-swiftclient==3.11.1
     # via
     #   -r ./requirements.txt
     #   datapunt-objectstore
@@ -363,6 +363,7 @@ stevedore==3.3.0
     #   python-keystoneclient
 toml==0.10.2
     # via
+    #   ipdb
     #   pytest
     #   tox
 tox==3.23.0
@@ -378,12 +379,12 @@ uritemplate==3.0.1
     #   -r ./requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.3
+urllib3==1.26.4
     # via
     #   -r ./requirements.txt
     #   requests
     #   sentry-sdk
-virtualenv==20.4.2
+virtualenv==20.4.3
     # via tox
 wcwidth==0.2.5
     # via prompt-toolkit
