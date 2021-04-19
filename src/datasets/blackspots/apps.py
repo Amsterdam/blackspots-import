@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class BlackspotsConfig(AppConfig):
-    name = 'blackspots'
+    name = 'datasets.blackspots'
