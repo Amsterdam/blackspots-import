@@ -229,6 +229,14 @@ class SpotCSVSerializer(ModelSerializer):
     status = serializers.CharField(source='get_status_display')
     taken = serializers.CharField(source='tasks')
     aantekeningen = serializers.CharField(source='notes')
+    latitude = serializers.SerializerMethodField()
+    longitude = serializers.SerializerMethodField()
+
+    def get_latitude(self, obj):
+        return obj.point.y if obj.point else None
+
+    def get_longitude(self, obj):
+        return obj.point.x if obj.point else None
 
     class Meta:
         model = Spot
@@ -245,8 +253,9 @@ class SpotCSVSerializer(ModelSerializer):
             'jaar_blackspotlijst',
             'jaar_ongeval_quickscan',
             'jaar_oplevering',
-            'aantekeningen'
-
+            'aantekeningen',
+            'latitude',
+            'longitude',
         ]
 
         list_serializer_class = GeneratorListSerializer
