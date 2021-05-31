@@ -17,7 +17,7 @@ attrs==21.2.0
     #   pytest
 backcall==0.2.0
     # via ipython
-certifi==2020.12.5
+certifi==2021.5.30
     # via
     #   -r ./requirements.txt
     #   requests
@@ -64,12 +64,14 @@ debtcollector==2.2.0
     #   oslo.utils
     #   python-keystoneclient
 decorator==5.0.9
-    # via ipython
+    # via
+    #   ipdb
+    #   ipython
 defusedxml==0.7.1
     # via
     #   -r ./requirements.txt
     #   djangorestframework-xml
-distlib==0.3.1
+distlib==0.3.2
     # via virtualenv
 django-choices==1.7.1
     # via -r ./requirements.txt
@@ -138,11 +140,11 @@ inflection==0.5.1
     #   drf-yasg
 iniconfig==1.1.1
     # via pytest
-ipdb==0.13.7
+ipdb==0.13.8
     # via -r requirements_dev.in
 ipython-genutils==0.2.0
     # via traitlets
-ipython==7.23.1
+ipython==7.24.0
     # via ipdb
 iso8601==0.1.14
     # via
@@ -157,7 +159,7 @@ itypes==1.2.0
     #   coreapi
 jedi==0.18.0
     # via ipython
-jinja2==3.0.0
+jinja2==3.0.1
     # via
     #   -r ./requirements.txt
     #   coreschema
@@ -173,7 +175,7 @@ keystoneauth1==4.3.1
     # via
     #   -r ./requirements.txt
     #   python-keystoneclient
-markupsafe==2.0.0
+markupsafe==2.0.1
     # via
     #   -r ./requirements.txt
     #   jinja2
@@ -192,7 +194,7 @@ netaddr==0.8.0
     #   -r ./requirements.txt
     #   oslo.config
     #   oslo.utils
-netifaces==0.10.9
+netifaces==0.11.0
     # via
     #   -r ./requirements.txt
     #   oslo.utils
@@ -329,7 +331,7 @@ ruamel.yaml.clib==0.2.2
     # via
     #   -r ./requirements.txt
     #   ruamel.yaml
-ruamel.yaml==0.17.4
+ruamel.yaml==0.17.6
     # via
     #   -r ./requirements.txt
     #   drf-yasg
@@ -385,12 +387,12 @@ uritemplate==3.0.1
     #   -r ./requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.4
+urllib3==1.26.5
     # via
     #   -r ./requirements.txt
     #   requests
     #   sentry-sdk
-virtualenv==20.4.6
+virtualenv==20.4.7
     # via tox
 wcwidth==0.2.5
     # via prompt-toolkit
